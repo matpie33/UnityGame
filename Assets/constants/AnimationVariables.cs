@@ -10,4 +10,6 @@ public class AnimationVariables
     public const string IS_GRABBING_LEDGE = "isGrabbingLedge";
     public const string IS_CLIMBING_LEDGE = "isClimbingLedge";
     public const string IS_CROUCHING = "isCrouching";
+    public const string IS_KICKING = "isKicking";
+    public const string IS_PUNCHING = "isPunching";
 }

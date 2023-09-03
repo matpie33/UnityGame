@@ -61,4 +61,14 @@ public class AnimationsManager : MonoBehaviour
     {
         animator.SetBool(AnimationVariables.IS_CROUCHING, true);
     }
+
+    public void setAnimationToPunch()
+    {
+        animator.SetTrigger(AnimationVariables.IS_PUNCHING);
+    }
+
+    public void setAnimationToKick()
+    {
+        animator.SetTrigger(AnimationVariables.IS_KICKING);
+    }
 }

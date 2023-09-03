@@ -43,6 +43,7 @@ public class CharacterController : MonoBehaviour
     private bool isJumping;
     private bool isGrabbing;
     private bool isCrouching;
+    private bool isPlayingAnimation;
 
     private void Start()
     {
@@ -64,7 +65,7 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (isGrounded)
+        if (isGrounded && !isPlayingAnimation)
         {
             Vector3 _moveInputVector = new Vector3(
                 playerInputs.MoveAxisRightRaw,
@@ -102,8 +103,10 @@ public class CharacterController : MonoBehaviour
                 transform.rotation = newRotation;
             }
         }
-
-        transform.Translate(newVelocity * Time.deltaTime, Space.World);
+        if (!isPlayingAnimation)
+        {
+            transform.Translate(newVelocity * Time.deltaTime, Space.World);
+        }
         animationsManager.setRunningSpeedParameter(newSpeed);
 
         handleJumpAndLedgeClimb();
@@ -112,6 +115,29 @@ public class CharacterController : MonoBehaviour
         handleFallingDown();
         handleReleasingGrab();
         handleCrouching();
+        handleAttack();
+    }
+
+    public void animationDone()
+    {
+        isPlayingAnimation = false;
+    }
+
+    private void handleAttack()
+    {
+        if (isGrounded && !isCrouching)
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.P))
+            {
+                animationsManager.setAnimationToPunch();
+                isPlayingAnimation = true;
+            }
+            else if (UnityEngine.Input.GetKeyDown(KeyCode.K))
+            {
+                animationsManager.setAnimationToKick();
+                isPlayingAnimation = true;
+            }
+        }
     }
 
     public void doLand()
@@ -162,7 +188,7 @@ public class CharacterController : MonoBehaviour
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded && !isCrouching)
+            if (isGrounded && !isCrouching && !isPlayingAnimation)
             {
                 rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 isGrounded = false;
