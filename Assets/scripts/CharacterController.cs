@@ -3,77 +3,74 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class CharacterController : MonoBehaviour
+{
+    [Header("Movement")]
+    [SerializeField]
+    private float crouchSpeed = 3f;
 
-    public class CharacterController : MonoBehaviour
-    {
+    [SerializeField]
+    private float runSpeed = 6f;
 
-        [Header("Movement")]
+    [SerializeField]
+    private float sprintSpeed = 8f;
 
-        [SerializeField]
-        private float crouchSpeed = 3f;
+    [Header("Sharpness")]
+    [SerializeField]
+    private float rotationSharpness = 10;
 
-        [SerializeField]
-        private float runSpeed = 6f;
+    [SerializeField]
+    private float moveSharpness = 10;
 
-        [SerializeField]
-        private float sprintSpeed = 8f;
+    private CameraController cameraController;
+    private PlayerInputs playerInputs;
+    private Rigidbody rigidBody;
+    private AnimationsManager animationsManager;
+    private CapsuleCollider capsuleCollider;
+    private WallAboveDetector wallAboveDetector;
 
-        [Header("Sharpness")]
-        [SerializeField]
-        private float rotationSharpness = 10;
+    private float targetSpeed;
+    private Vector3 newVelocity;
+    private Quaternion targetRotation;
+    private float newSpeed;
+    private Quaternion newRotation;
 
-        [SerializeField]
-        private float moveSharpness = 10;
-        
-        private CameraController cameraController;
-        private PlayerInputs playerInputs;
-        private Rigidbody rigidBody;
-        private AnimationsManager animationsManager;
-        private CapsuleCollider capsuleCollider;
-        private WallAboveDetector wallAboveDetector;
+    public float jumpForce = 5;
+    public float gravity = 4;
+    private float initialHeight;
 
-        private float targetSpeed;
-        private Vector3 newVelocity;
-        private Quaternion targetRotation;
-        private float newSpeed;
-        private Quaternion newRotation;
-
-        public float jumpForce = 5;
-        public float gravity = 4;
-        private float initialHeight;
-
-        public bool isGrounded = true;
-        private bool isJumping;
-        private bool isGrabbing;
+    public bool isGrounded = true;
+    private bool isJumping;
+    private bool isGrabbing;
     private bool isCrouching;
-    
 
     private void Start()
-        {
-            
-            cameraController = GetComponent<CameraController>();
-            playerInputs = GetComponent<PlayerInputs>();
-            wallAboveDetector = GetComponentInChildren<WallAboveDetector>();
+    {
+        cameraController = GetComponent<CameraController>();
+        playerInputs = GetComponent<PlayerInputs>();
+        wallAboveDetector = GetComponentInChildren<WallAboveDetector>();
 
-            
-            rigidBody = GetComponent<Rigidbody>();
-            animationsManager = GetComponent<AnimationsManager>();
-            capsuleCollider = GetComponent<CapsuleCollider>();
-            initialHeight = capsuleCollider.height;
+        rigidBody = GetComponent<Rigidbody>();
+        animationsManager = GetComponent<AnimationsManager>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        initialHeight = capsuleCollider.height;
+    }
 
-        }
-        public void setKinematicFalse()
-        {
-            rigidBody.isKinematic = false;
-            isGrounded = true;
+    public void setKinematicFalse()
+    {
+        rigidBody.isKinematic = false;
+        isGrounded = true;
+    }
 
-        }
-
-        private void Update()
+    private void Update()
     {
         if (isGrounded)
         {
-            Vector3 _moveInputVector = new Vector3(playerInputs.MoveAxisRightRaw, 0, playerInputs.MoveAxisForwardRaw).normalized;
+            Vector3 _moveInputVector = new Vector3(
+                playerInputs.MoveAxisRightRaw,
+                0,
+                playerInputs.MoveAxisForwardRaw
+            ).normalized;
             Vector3 _cameraPlanarDirection = cameraController.cameraPlanarDirection;
             Quaternion _cameraPlanarRotation = Quaternion.LookRotation(_cameraPlanarDirection);
 
@@ -97,7 +94,11 @@ using UnityEngine;
             if (targetSpeed != 0)
             {
                 targetRotation = Quaternion.LookRotation(_moveInputVector);
-                newRotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSharpness);
+                newRotation = Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    Time.deltaTime * rotationSharpness
+                );
                 transform.rotation = newRotation;
             }
         }
@@ -111,7 +112,6 @@ using UnityEngine;
         handleFallingDown();
         handleReleasingGrab();
         handleCrouching();
-
     }
 
     private void handleCrouching()
@@ -123,14 +123,12 @@ using UnityEngine;
                 isCrouching = false;
                 animationsManager.setAnimationToWalk();
                 changeHeight(true);
-
             }
             else
             {
                 isCrouching = true;
                 animationsManager.setAnimationToCrouch();
                 changeHeight(false);
-
             }
         }
     }
@@ -172,7 +170,7 @@ using UnityEngine;
         }
     }
 
-    public void changeHeight (bool toStanding)
+    public void changeHeight(bool toStanding)
     {
         if (toStanding)
         {
@@ -186,27 +184,28 @@ using UnityEngine;
         }
     }
 
-
-        public void grabLedge()
+    public void grabLedge()
+    {
+        if (!isGrounded)
         {
-             if (!isGrounded)
-            {
-                rigidBody.isKinematic = true;
-                animationsManager.setAnimationToLedgeGrab();
-                isGrabbing = true;
-                isJumping = false;
-            }
+            rigidBody.isKinematic = true;
+            animationsManager.setAnimationToLedgeGrab();
+            isGrabbing = true;
+            isJumping = false;
         }
+    }
 
-        private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("ground"))
         {
-            if (collision.collider.CompareTag("ground"))
-            {
-                isGrounded = true;                
-                isJumping = false;
-                animationsManager.setAnimationToGrounded();
-            }
+            isGrounded = true;
+            isJumping = false;
+            animationsManager.setAnimationToGrounded();
         }
-
+        if (isGrounded)
+        {
+            Debug.Log("");
+        }
+    }
 }
-

@@ -2,101 +2,96 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class Input
+{
+    public KeyCode primary;
+    public KeyCode alternate;
 
-    [System.Serializable]
-    public class Input
+    public bool Pressed()
     {
-        public KeyCode primary; 
-        public KeyCode alternate;
-
-        public bool Pressed()
-        {
-            return UnityEngine.Input.GetKey(primary) || UnityEngine.Input.GetKey(alternate);
-        }
-
-        public bool PressedDown()
-        {
-            return UnityEngine.Input.GetKeyDown(primary) || UnityEngine.Input.GetKeyDown(alternate);
-        }
-
-        public bool PressedUp()
-        {
-            return UnityEngine.Input.GetKeyUp(primary) || UnityEngine.Input.GetKeyUp(alternate);
-        }
-
+        return UnityEngine.Input.GetKey(primary) || UnityEngine.Input.GetKey(alternate);
     }
 
-    public class PlayerInputs : MonoBehaviour
+    public bool PressedDown()
     {
-        public const string MouseXString = "Mouse X";
-        public const string MouseYString = "Mouse Y";
-        public const string MouseScrollString = "Mouse ScrollWheel";
+        return UnityEngine.Input.GetKeyDown(primary) || UnityEngine.Input.GetKeyDown(alternate);
+    }
 
-        public Input forward;
-        public Input backward;
-        public Input left;
-        public Input right;
-        public Input sprint;
+    public bool PressedUp()
+    {
+        return UnityEngine.Input.GetKeyUp(primary) || UnityEngine.Input.GetKeyUp(alternate);
+    }
+}
 
-        public int MoveAxisForwardRaw
+public class PlayerInputs : MonoBehaviour
+{
+    public const string MouseXString = "Mouse X";
+    public const string MouseYString = "Mouse Y";
+    public const string MouseScrollString = "Mouse ScrollWheel";
+
+    public Input forward;
+    public Input backward;
+    public Input left;
+    public Input right;
+    public Input sprint;
+
+    public int MoveAxisForwardRaw
+    {
+        get
         {
-            get
+            if (forward.Pressed() && backward.Pressed())
             {
-                if (forward.Pressed() && backward.Pressed())
-                {
-                    return 0;
-                }
-                else if (forward.Pressed())
-                {
-                    return 1;
-                }
-                else if (backward.Pressed())
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 0;
-                }
+                return 0;
+            }
+            else if (forward.Pressed())
+            {
+                return 1;
+            }
+            else if (backward.Pressed())
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
             }
         }
+    }
 
-        public int MoveAxisRightRaw
+    public int MoveAxisRightRaw
+    {
+        get
         {
-            get
+            if (right.Pressed() && left.Pressed())
             {
-                if (right.Pressed() && left.Pressed())
-                {
-                    return 0;
-                }
-                else if (right.Pressed())
-                {
-                    return 1;
-                }
-                else if (left.Pressed())
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 0;
-                }
+                return 0;
+            }
+            else if (right.Pressed())
+            {
+                return 1;
+            }
+            else if (left.Pressed())
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
             }
         }
+    }
 
-        public static float MouseXInput
-        {
-            get => UnityEngine.Input.GetAxis(MouseXString);
-        }
-        public static float MouseYInput
-        {
-            get => UnityEngine.Input.GetAxis(MouseYString);
-        }
-        public static float MouseScrollInput
-        {
-            get => UnityEngine.Input.GetAxis(MouseScrollString);
-        }
-
-    
-
+    public static float MouseXInput
+    {
+        get => UnityEngine.Input.GetAxis(MouseXString);
+    }
+    public static float MouseYInput
+    {
+        get => UnityEngine.Input.GetAxis(MouseYString);
+    }
+    public static float MouseScrollInput
+    {
+        get => UnityEngine.Input.GetAxis(MouseScrollString);
+    }
 }

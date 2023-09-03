@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationsManager: MonoBehaviour
+public class AnimationsManager : MonoBehaviour
 {
     private Animator animator;
 
@@ -47,7 +47,7 @@ public class AnimationsManager: MonoBehaviour
         animator.SetBool(AnimationVariables.IS_GROUNDED, false);
     }
 
-    public void setRunningSpeedParameter (float speed)
+    public void setRunningSpeedParameter(float speed)
     {
         animator.SetFloat("Forward", speed);
     }
