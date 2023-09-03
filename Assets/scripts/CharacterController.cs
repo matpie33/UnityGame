@@ -43,7 +43,9 @@ public class CharacterController : MonoBehaviour
     private bool isJumping;
     private bool isGrabbing;
     private bool isCrouching;
-    private bool isPlayingAnimation;
+    private bool isAttacking;
+
+    private List<Observer> observers = new List<Observer>();
 
     private void Start()
     {
@@ -57,6 +59,11 @@ public class CharacterController : MonoBehaviour
         initialHeight = capsuleCollider.height;
     }
 
+    public void AddObserver(Observer observer)
+    {
+        observers.Add(observer);
+    }
+
     public void setKinematicFalse()
     {
         rigidBody.isKinematic = false;
@@ -65,7 +72,7 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (isGrounded && !isPlayingAnimation)
+        if (isGrounded && !isAttacking)
         {
             Vector3 _moveInputVector = new Vector3(
                 playerInputs.MoveAxisRightRaw,
@@ -103,7 +110,7 @@ public class CharacterController : MonoBehaviour
                 transform.rotation = newRotation;
             }
         }
-        if (!isPlayingAnimation)
+        if (!isAttacking)
         {
             transform.Translate(newVelocity * Time.deltaTime, Space.World);
         }
@@ -118,9 +125,15 @@ public class CharacterController : MonoBehaviour
         handleAttack();
     }
 
-    public void animationDone()
+    public void attackAnimationFinish()
     {
-        isPlayingAnimation = false;
+        isAttacking = false;
+        notifyObservers(false);
+    }
+
+    public void attackAnimationStart()
+    {
+        notifyObservers(true);
     }
 
     private void handleAttack()
@@ -130,13 +143,22 @@ public class CharacterController : MonoBehaviour
             if (UnityEngine.Input.GetKeyDown(KeyCode.P))
             {
                 animationsManager.setAnimationToPunch();
-                isPlayingAnimation = true;
+                isAttacking = true;
             }
             else if (UnityEngine.Input.GetKeyDown(KeyCode.K))
             {
                 animationsManager.setAnimationToKick();
-                isPlayingAnimation = true;
+                isAttacking = true;
             }
+        }
+    }
+
+    private void notifyObservers(bool isAttacking)
+    {
+        EventDTO eventDTO = EventDTO.createEventPlayerAttack(isAttacking);
+        foreach (Observer observer in observers)
+        {
+            observer.Notify(eventDTO);
         }
     }
 
@@ -188,7 +210,7 @@ public class CharacterController : MonoBehaviour
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded && !isCrouching && !isPlayingAnimation)
+            if (isGrounded && !isCrouching && !isAttacking)
             {
                 rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 isGrounded = false;
