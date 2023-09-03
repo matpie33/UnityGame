@@ -114,6 +114,13 @@ public class CharacterController : MonoBehaviour
         handleCrouching();
     }
 
+    public void doLand()
+    {
+        isGrounded = true;
+        isJumping = false;
+        animationsManager.setAnimationToGrounded();
+    }
+
     private void handleCrouching()
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftControl) && isGrounded)
@@ -192,20 +199,6 @@ public class CharacterController : MonoBehaviour
             animationsManager.setAnimationToLedgeGrab();
             isGrabbing = true;
             isJumping = false;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.CompareTag("ground"))
-        {
-            isGrounded = true;
-            isJumping = false;
-            animationsManager.setAnimationToGrounded();
-        }
-        if (isGrounded)
-        {
-            Debug.Log("");
         }
     }
 }
