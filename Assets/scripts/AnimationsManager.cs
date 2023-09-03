@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,7 +52,13 @@ public class AnimationsManager: MonoBehaviour
         animator.SetFloat("Forward", speed);
     }
 
+    internal void setAnimationToWalk()
+    {
+        animator.SetBool(AnimationVariables.IS_CROUCHING, false);
+    }
 
-
-
+    internal void setAnimationToCrouch()
+    {
+        animator.SetBool(AnimationVariables.IS_CROUCHING, true);
+    }
 }
