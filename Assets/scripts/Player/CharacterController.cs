@@ -25,7 +25,7 @@ public class CharacterController : MonoBehaviour
     private CameraController cameraController;
     private PlayerInputs playerInputs;
     private Rigidbody rigidBody;
-    private AnimationsManager animationsManager;
+    private PlayerAnimationsManager animationsManager;
     private CapsuleCollider capsuleCollider;
     private WallAboveDetector wallAboveDetector;
 
@@ -54,7 +54,7 @@ public class CharacterController : MonoBehaviour
         wallAboveDetector = GetComponentInChildren<WallAboveDetector>();
 
         rigidBody = GetComponent<Rigidbody>();
-        animationsManager = GetComponent<AnimationsManager>();
+        animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         initialHeight = capsuleCollider.height;
     }
