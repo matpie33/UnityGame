@@ -5,12 +5,13 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    private EnemyState enemyState = new EnemyState();
+    private HealthState enemyState = new HealthState();
 
     private CharacterController characterController;
     private readonly float minimumDistanceToChase = 10;
     private Animator animator;
     private float minimumDistanceToAttack = 2;
+    private bool isAttacking;
 
     public NavMeshAgent navMeshAgent { get; private set; }
 
@@ -19,6 +20,29 @@ public class Enemy : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = FindObjectOfType<CharacterController>();
         animator = GetComponent<Animator>();
+    }
+
+    public bool GetIsAttacking()
+    {
+        if (isAttacking)
+        {
+            isAttacking = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void AttackStarts()
+    {
+        isAttacking = true;
+    }
+
+    public void FinishedAttack()
+    {
+        isAttacking = false;
     }
 
     public void DecreaseHealth(int byValue)
@@ -33,6 +57,7 @@ public class Enemy : MonoBehaviour
         if (distance < minimumDistanceToChase)
         {
             navMeshAgent.SetDestination(playerPosition);
+
             if (distance < minimumDistanceToAttack)
             {
                 animator.SetBool(WolfAnimationVariables.IS_ATTACKING, true);

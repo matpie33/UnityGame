@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyState
+public class HealthState
 {
     private int healthPercent;
 
     private int maxHealth = 100;
 
-    public EnemyState()
+    public HealthState()
     {
         healthPercent = maxHealth;
     }

@@ -47,6 +47,8 @@ public class CharacterController : MonoBehaviour
 
     private List<Observer> observers = new List<Observer>();
 
+    private HealthState healthState;
+
     private void Start()
     {
         cameraController = GetComponent<CameraController>();
@@ -57,6 +59,12 @@ public class CharacterController : MonoBehaviour
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         initialHeight = capsuleCollider.height;
+        healthState = new HealthState();
+    }
+
+    public void DecreaseHealth(int percent)
+    {
+        healthState.DecreaseHealth(percent);
     }
 
     public void AddObserver(Observer observer)

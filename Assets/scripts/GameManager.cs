@@ -41,6 +41,10 @@ public class GameManager : MonoBehaviour, Observer
                 Debug.Log("decrease");
                 isPlayerAttacking = false;
             }
+            if (enemy.GetIsAttacking())
+            {
+                characterController.DecreaseHealth(10);
+            }
         }
     }
 
