@@ -1109,6 +1109,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wolf (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4287683510188715675, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4525773121103665179, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 9.458205
@@ -1454,14 +1458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5425f544e49edf84791cb5a35f4b8f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crouchSpeed: 3
-  runSpeed: 6
-  sprintSpeed: 8
-  rotationSharpness: 10
-  moveSharpness: 10
-  jumpForce: 12
-  gravity: 4
-  isGrounded: 1
+  animator: {fileID: 0}
 --- !u!136 &1781776610
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1609,6 +1606,7 @@ GameObject:
   - component: {fileID: 2053403851}
   - component: {fileID: 2053403850}
   - component: {fileID: 2053403849}
+  - component: {fileID: 2053403852}
   m_Layer: 0
   m_Name: GroundLandingDetector
   m_TagString: Untagged
@@ -1624,8 +1622,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2053403847}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.026, z: 0.028}
-  m_LocalScale: {x: 0.61926234, y: 0.04357226, z: 0.31738}
+  m_LocalPosition: {x: -0, y: -0.021, z: 0.04}
+  m_LocalScale: {x: 0.61926234, y: 0.113525175, z: 0.18075387}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1781776608}
@@ -1664,6 +1662,48 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2053403847}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &2053403852
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053403847}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &2061969533
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1874,6 +1914,10 @@ PrefabInstance:
     - target: {fileID: 4287683510188715675, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
       propertyPath: m_Name
       value: wolf (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287683510188715675, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4525773121103665179, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2275,6 +2319,10 @@ PrefabInstance:
     - target: {fileID: 4287683510188715675, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
       propertyPath: m_Name
       value: wolf
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287683510188715675, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4525773121103665179, guid: 65cc801dfcab80e42b3600b378138c6f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

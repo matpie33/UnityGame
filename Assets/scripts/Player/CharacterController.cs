@@ -5,61 +5,49 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    [Header("Movement")]
-    [SerializeField]
-    private float crouchSpeed = 3f;
+    public PlayerAnimationsManager animationsManager { get; private set; }
+    public CapsuleCollider capsuleCollider { get; private set; }
+    public CameraController cameraController { get; private set; }
+    public PlayerInputs playerInputs { get; private set; }
 
-    [SerializeField]
-    private float runSpeed = 6f;
+    public float initialHeight { get; private set; }
 
-    [SerializeField]
-    private float sprintSpeed = 8f;
-
-    [Header("Sharpness")]
-    [SerializeField]
-    private float rotationSharpness = 10;
-
-    [SerializeField]
-    private float moveSharpness = 10;
-
-    private CameraController cameraController;
-    private PlayerInputs playerInputs;
-    private Rigidbody rigidBody;
-    private PlayerAnimationsManager animationsManager;
-    private CapsuleCollider capsuleCollider;
-    private WallAboveDetector wallAboveDetector;
-
-    private float targetSpeed;
-    private Vector3 newVelocity;
-    private Quaternion targetRotation;
-    private float newSpeed;
-    private Quaternion newRotation;
-
-    public float jumpForce = 5;
-    public float gravity = 4;
-    private float initialHeight;
-
-    public bool isGrounded = true;
-    private bool isJumping;
-    private bool isGrabbing;
-    private bool isCrouching;
-    private bool isAttacking;
+    public Rigidbody rigidbody { get; private set; }
 
     private List<Observer> observers = new List<Observer>();
 
     private HealthState healthState;
 
+    private StateMachine stateMachine;
+
+    public Animator animator;
+
+    public RunState runState { get; private set; }
+    public JumpState jumpState { get; private set; }
+    public SprintState sprintState { get; private set; }
+    public CrouchState crouchState { get; private set; }
+    public LedgeGrabState ledgeGrabState { get; private set; }
+    public AttackState attackState { get; private set; }
+
     private void Start()
     {
         cameraController = GetComponent<CameraController>();
         playerInputs = GetComponent<PlayerInputs>();
-        wallAboveDetector = GetComponentInChildren<WallAboveDetector>();
-
-        rigidBody = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        rigidbody = GetComponent<Rigidbody>();
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         initialHeight = capsuleCollider.height;
         healthState = new HealthState();
+
+        stateMachine = new StateMachine();
+        runState = new RunState(this, stateMachine);
+        ledgeGrabState = new LedgeGrabState(this, stateMachine);
+        sprintState = new SprintState(this, stateMachine);
+        crouchState = new CrouchState(this, stateMachine);
+        jumpState = new JumpState(this, stateMachine);
+        attackState = new AttackState(this);
+        stateMachine.Initialize(runState);
     }
 
     public void DecreaseHealth(int percent)
@@ -72,93 +60,30 @@ public class CharacterController : MonoBehaviour
         observers.Add(observer);
     }
 
-    public void setKinematicFalse()
+    public void ClimbingFinished()
     {
-        rigidBody.isKinematic = false;
-        isGrounded = true;
+        stateMachine.currentState.OnTrigger(TriggerType.CLIMBING_FINISHED);
+    }
+
+    private void FixedUpdate()
+    {
+        stateMachine.currentState.PhysicsUpdate();
     }
 
     private void Update()
     {
-        if (isGrounded && !isAttacking)
-        {
-            Vector3 _moveInputVector = new Vector3(
-                playerInputs.MoveAxisRightRaw,
-                0,
-                playerInputs.MoveAxisForwardRaw
-            ).normalized;
-            Vector3 _cameraPlanarDirection = cameraController.cameraPlanarDirection;
-            Quaternion _cameraPlanarRotation = Quaternion.LookRotation(_cameraPlanarDirection);
-
-            _moveInputVector = _cameraPlanarRotation * _moveInputVector;
-
-            if (isCrouching)
-            {
-                targetSpeed = _moveInputVector != Vector3.zero ? crouchSpeed : 0;
-            }
-            else if (playerInputs.sprint.Pressed())
-            {
-                targetSpeed = _moveInputVector != Vector3.zero ? sprintSpeed : 0;
-            }
-            else
-            {
-                targetSpeed = _moveInputVector != Vector3.zero ? runSpeed : 0;
-            }
-
-            newSpeed = Mathf.Lerp(newSpeed, targetSpeed, Time.deltaTime * moveSharpness);
-            newVelocity = _moveInputVector * newSpeed;
-            if (targetSpeed != 0)
-            {
-                targetRotation = Quaternion.LookRotation(_moveInputVector);
-                newRotation = Quaternion.Slerp(
-                    transform.rotation,
-                    targetRotation,
-                    Time.deltaTime * rotationSharpness
-                );
-                transform.rotation = newRotation;
-            }
-        }
-        if (!isAttacking)
-        {
-            transform.Translate(newVelocity * Time.deltaTime, Space.World);
-        }
-        animationsManager.setRunningSpeedParameter(newSpeed);
-
-        handleJumpAndLedgeClimb();
-
-        rigidBody.AddForce(Vector3.up * -1 * gravity, ForceMode.Force);
-        handleFallingDown();
-        handleReleasingGrab();
-        handleCrouching();
-        handleAttack();
+        stateMachine.currentState.FrameUpdate();
     }
 
     public void attackAnimationFinish()
     {
-        isAttacking = false;
         notifyObservers(false);
+        stateMachine.ChangeState(runState);
     }
 
     public void attackAnimationStart()
     {
         notifyObservers(true);
-    }
-
-    private void handleAttack()
-    {
-        if (isGrounded && !isCrouching)
-        {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.P))
-            {
-                animationsManager.setAnimationToPunch();
-                isAttacking = true;
-            }
-            else if (UnityEngine.Input.GetKeyDown(KeyCode.K))
-            {
-                animationsManager.setAnimationToKick();
-                isAttacking = true;
-            }
-        }
     }
 
     private void notifyObservers(bool isAttacking)
@@ -170,67 +95,9 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    public void doLand()
+    public void GroundDetected()
     {
-        isGrounded = true;
-        isJumping = false;
-        animationsManager.setAnimationToGrounded();
-    }
-
-    private void handleCrouching()
-    {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.LeftControl) && isGrounded)
-        {
-            if (isCrouching && !wallAboveDetector.isWallAbove)
-            {
-                isCrouching = false;
-                animationsManager.setAnimationToWalk();
-                changeHeight(true);
-            }
-            else
-            {
-                isCrouching = true;
-                animationsManager.setAnimationToCrouch();
-                changeHeight(false);
-            }
-        }
-    }
-
-    private void handleReleasingGrab()
-    {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift) && isGrabbing)
-        {
-            animationsManager.setAnimationToFalling();
-            rigidBody.isKinematic = false;
-            isGrabbing = false;
-        }
-    }
-
-    private void handleFallingDown()
-    {
-        if ((isJumping && rigidBody.velocity.y < 0) || rigidBody.velocity.y < -2)
-        {
-            animationsManager.setAnimationToFalling();
-        }
-    }
-
-    private void handleJumpAndLedgeClimb()
-    {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
-        {
-            if (isGrounded && !isCrouching && !isAttacking)
-            {
-                rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                isGrounded = false;
-                isJumping = true;
-                animationsManager.setAnimationToJumping();
-            }
-            else if (isGrabbing)
-            {
-                animationsManager.setAnimationToLedgeClimbing();
-                isGrabbing = false;
-            }
-        }
+        stateMachine.currentState.OnTrigger(TriggerType.GROUND_DETECTED);
     }
 
     public void changeHeight(bool toStanding)
@@ -249,12 +116,11 @@ public class CharacterController : MonoBehaviour
 
     public void grabLedge()
     {
-        if (!isGrounded)
-        {
-            rigidBody.isKinematic = true;
-            animationsManager.setAnimationToLedgeGrab();
-            isGrabbing = true;
-            isJumping = false;
-        }
+        stateMachine.currentState.OnTrigger(TriggerType.LEDGE_DETECTED);
+    }
+
+    internal void switchToIdleAnimation()
+    {
+        stateMachine.ChangeState(runState);
     }
 }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class GroundLandingDetector : MonoBehaviour
 {
-    public bool isGrounded { get; private set; }
-
     private CharacterController characterController;
 
     private void Start()
@@ -15,12 +13,6 @@ public class GroundLandingDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        isGrounded = true;
-        characterController.doLand();
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        isGrounded = false;
+        characterController.GroundDetected();
     }
 }
