@@ -15,11 +15,6 @@ public class JumpState : MovementState
         characterController.animationsManager.setAnimationToJumping();
     }
 
-    public void SetHorizontalSpeed(Vector3 newVelocity)
-    {
-        this.newVelocity = newVelocity;
-    }
-
     public override float getTargetSpeed()
     {
         return 3f;
@@ -27,15 +22,15 @@ public class JumpState : MovementState
 
     public override void FrameUpdate()
     {
-        base.Move(newVelocity);
+        base.Move(characterController.currentVelocity);
     }
 
     public override void PhysicsUpdate()
     {
         characterController.rigidbody.AddForce(Vector3.up * -1 * gravity, ForceMode.Force);
-        if (characterController.rigidbody.velocity.y < 0)
+        if (characterController.rigidbody.velocity.y < -0.5)
         {
-            characterController.animationsManager.setAnimationToFalling();
+            stateMachine.ChangeState(characterController.fallingState);
         }
     }
 

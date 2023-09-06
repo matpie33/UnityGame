@@ -39,8 +39,8 @@ public class LedgeGrabState : State
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift))
         {
-            characterController.animationsManager.setAnimationToFalling();
             characterController.rigidbody.isKinematic = false;
+            stateMachine.ChangeState(characterController.fallingState);
         }
         else if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
         {

@@ -16,6 +16,8 @@ public class CharacterController : MonoBehaviour
 
     private List<Observer> observers = new List<Observer>();
 
+    public Vector3 currentVelocity { get; set; }
+
     private HealthState healthState;
 
     private StateMachine stateMachine;
@@ -28,6 +30,7 @@ public class CharacterController : MonoBehaviour
     public CrouchState crouchState { get; private set; }
     public LedgeGrabState ledgeGrabState { get; private set; }
     public AttackState attackState { get; private set; }
+    public FallingState fallingState { get; private set; }
 
     private void Start()
     {
@@ -47,6 +50,7 @@ public class CharacterController : MonoBehaviour
         crouchState = new CrouchState(this, stateMachine);
         jumpState = new JumpState(this, stateMachine);
         attackState = new AttackState(this);
+        fallingState = new FallingState(this, stateMachine);
         stateMachine.Initialize(runState);
     }
 
@@ -67,6 +71,10 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (rigidbody.velocity.y < -0.5)
+        {
+            stateMachine.ChangeState(fallingState);
+        }
         stateMachine.currentState.PhysicsUpdate();
     }
 

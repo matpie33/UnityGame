@@ -27,11 +27,10 @@ public abstract class MovementState : State
 
     public override void FrameUpdate()
     {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
+        if (this.GetType() != typeof(CrouchState) && UnityEngine.Input.GetKeyDown(KeyCode.Space))
         {
             JumpState jumpState = characterController.jumpState;
             stateMachine.ChangeState(jumpState);
-            jumpState.SetHorizontalSpeed(newVelocity);
         }
 
         Vector3 _moveInputVector = new Vector3(
@@ -60,6 +59,7 @@ public abstract class MovementState : State
         }
         characterController.animationsManager.setRunningSpeedParameter(newSpeed);
         Move(newVelocity);
+        characterController.currentVelocity = newVelocity;
     }
 
     protected void Move(Vector3 newVelocity)

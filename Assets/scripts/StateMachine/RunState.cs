@@ -30,6 +30,15 @@ public class RunState : MovementState
         }
     }
 
+    public override void OnTrigger(TriggerType triggerType)
+    {
+        if (triggerType.Equals(TriggerType.GROUND_DETECTED))
+        {
+            characterController.animationsManager.setAnimationToGrounded();
+            stateMachine.ChangeState(characterController.runState);
+        }
+    }
+
     public override float getTargetSpeed()
     {
         return runSpeed;
