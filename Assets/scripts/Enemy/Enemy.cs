@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     private float minimumDistanceToAttack = 2;
     private bool isAttacking;
+    private Image healthBar;
 
     public NavMeshAgent navMeshAgent { get; private set; }
 
@@ -20,6 +22,21 @@ public class Enemy : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = FindObjectOfType<CharacterController>();
         animator = GetComponent<Animator>();
+        GetHealthbarForeground();
+        healthBar.fillAmount = 1;
+    }
+
+    private void GetHealthbarForeground()
+    {
+        Image[] images = GetComponentsInChildren<Image>();
+        for (int i = 0; i < images.Length; i++)
+        {
+            if (images[i].name.Equals("Foreground"))
+            {
+                healthBar = images[i];
+                break;
+            }
+        }
     }
 
     public bool GetIsAttacking()
@@ -48,6 +65,7 @@ public class Enemy : MonoBehaviour
     public void DecreaseHealth(int byValue)
     {
         enemyState.DecreaseHealth(byValue);
+        healthBar.fillAmount = (float)enemyState.healthPercent / 100f;
     }
 
     private void Update()

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class CharacterController : MonoBehaviour
     public Vector3 currentVelocity { get; set; }
 
     private HealthState healthState;
+
+    [SerializeField]
+    private Image healthBarForeground;
 
     private StateMachine stateMachine;
 
@@ -52,6 +56,8 @@ public class CharacterController : MonoBehaviour
         attackState = new AttackState(this);
         fallingState = new FallingState(this, stateMachine);
         stateMachine.Initialize(runState);
+
+        healthBarForeground.fillAmount = 1;
     }
 
     public void DecreaseHealth(int percent)
@@ -81,6 +87,11 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.FrameUpdate();
+        healthBarForeground.fillAmount = Mathf.MoveTowards(
+            healthBarForeground.fillAmount,
+            (float)healthState.healthPercent / 100f,
+            Time.deltaTime * 1
+        );
     }
 
     public void attackAnimationFinish()

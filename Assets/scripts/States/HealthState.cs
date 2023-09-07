@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HealthState
 {
-    private int healthPercent;
+    public int healthPercent { get; private set; }
 
     private int maxHealth = 100;
 
@@ -18,7 +18,6 @@ public class HealthState
         if (healthPercent > 0)
         {
             healthPercent -= value;
-            Debug.Log("health: " + healthPercent);
         }
     }
 
