@@ -65,11 +65,16 @@ public class Enemy : MonoBehaviour
     public void DecreaseHealth(int byValue)
     {
         enemyState.DecreaseHealth(byValue);
-        healthBar.fillAmount = (float)enemyState.healthPercent / 100f;
+    }
+
+    public bool IsAlive()
+    {
+        return enemyState.IsAlive();
     }
 
     private void Update()
     {
+        HealthBarUIUpdater.UpdateUI(healthBar, enemyState);
         Vector3 playerPosition = characterController.transform.position;
         float distance = Vector3.Distance(navMeshAgent.transform.position, playerPosition);
         if (distance < minimumDistanceToChase)

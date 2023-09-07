@@ -87,11 +87,7 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.FrameUpdate();
-        healthBarForeground.fillAmount = Mathf.MoveTowards(
-            healthBarForeground.fillAmount,
-            (float)healthState.healthPercent / 100f,
-            Time.deltaTime * 1
-        );
+        HealthBarUIUpdater.UpdateUI(healthBarForeground, healthState);
     }
 
     public void attackAnimationFinish()

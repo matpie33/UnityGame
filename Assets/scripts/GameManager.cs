@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour, Observer
 {
@@ -14,6 +12,8 @@ public class GameManager : MonoBehaviour, Observer
     private float minDistanceToAttack = 2;
 
     private CharacterController characterController;
+
+    private ISet<Enemy> objectsToDelete = new HashSet<Enemy>();
 
     private void Start()
     {
@@ -29,8 +29,15 @@ public class GameManager : MonoBehaviour, Observer
 
     void Update()
     {
+        objectsToDelete.Clear();
         foreach (Enemy enemy in enemies)
         {
+            if (!enemy.IsAlive())
+            {
+                Destroy(enemy.gameObject);
+                objectsToDelete.Add(enemy);
+                continue;
+            }
             float distance = Vector3.Distance(
                 enemy.navMeshAgent.transform.position,
                 characterController.transform.position
@@ -45,6 +52,10 @@ public class GameManager : MonoBehaviour, Observer
             {
                 characterController.DecreaseHealth(10);
             }
+        }
+        foreach (Enemy e in objectsToDelete)
+        {
+            enemies.Remove(e);
         }
     }
 
