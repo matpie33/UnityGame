@@ -28,7 +28,7 @@ public class FallingState : MovementState
 
     public override void ExitState()
     {
-        characterController.animationsManager.setAnimationToGrounded();
+        characterController.animationsManager.setAnimationToMoving();
     }
 
     public override float getTargetSpeed()

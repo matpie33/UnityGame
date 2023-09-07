@@ -42,7 +42,7 @@ public class JumpState : MovementState
         }
         if (triggerType.Equals(TriggerType.GROUND_DETECTED))
         {
-            characterController.animationsManager.setAnimationToGrounded();
+            characterController.animationsManager.setAnimationToMoving();
             stateMachine.ChangeState(characterController.runState);
         }
     }

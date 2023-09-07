@@ -10,7 +10,7 @@ public class RunState : MovementState
 
     public override void EnterState()
     {
-        characterController.animationsManager.setAnimationToWalk();
+        characterController.animationsManager.setAnimationToMoving();
     }
 
     public override void FrameUpdate()
@@ -34,7 +34,7 @@ public class RunState : MovementState
     {
         if (triggerType.Equals(TriggerType.GROUND_DETECTED))
         {
-            characterController.animationsManager.setAnimationToGrounded();
+            characterController.animationsManager.setAnimationToMoving();
             stateMachine.ChangeState(characterController.runState);
         }
     }
