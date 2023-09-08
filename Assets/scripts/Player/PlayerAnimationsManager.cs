@@ -18,12 +18,18 @@ public class PlayerAnimationsManager : MonoBehaviour
         moving,
         crouching,
         punching,
-        kicking
+        kicking,
+        Pickup
     }
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        animator.applyRootMotion = false;
+    }
+
+    public void disableRootMotion()
+    {
         animator.applyRootMotion = false;
     }
 
@@ -71,6 +77,11 @@ public class PlayerAnimationsManager : MonoBehaviour
     public void setAnimationToKick()
     {
         animator.CrossFade(anim(AnimationName.kicking), 0.1f);
+    }
+
+    public void setAnimationToPickup()
+    {
+        animator.CrossFade(anim(AnimationName.Pickup), 0.1f);
     }
 
     private String anim(AnimationName animationName)

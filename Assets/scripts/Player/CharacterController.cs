@@ -26,8 +26,6 @@ public class CharacterController : MonoBehaviour
 
     private StateMachine stateMachine;
 
-    public Animator animator;
-
     public RunState runState { get; private set; }
     public JumpState jumpState { get; private set; }
     public SprintState sprintState { get; private set; }
@@ -35,15 +33,23 @@ public class CharacterController : MonoBehaviour
     public LedgeGrabState ledgeGrabState { get; private set; }
     public AttackState attackState { get; private set; }
     public FallingState fallingState { get; private set; }
+    public PickupObjectsState pickupObjectsState { get; private set; }
+
+    [SerializeField]
+    private GameObject rightHandObject;
+
+    private PickupObjectsController pickupObjectsController;
+
+    private GameObject pickedObject;
 
     private void Start()
     {
         cameraController = GetComponent<CameraController>();
         playerInputs = GetComponent<PlayerInputs>();
-        animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody>();
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+        pickupObjectsController = GetComponent<PickupObjectsController>();
         initialHeight = capsuleCollider.height;
         healthState = new HealthState();
 
@@ -55,9 +61,24 @@ public class CharacterController : MonoBehaviour
         jumpState = new JumpState(this, stateMachine);
         attackState = new AttackState(this);
         fallingState = new FallingState(this, stateMachine);
+        pickupObjectsState = new PickupObjectsState(this);
         stateMachine.Initialize(runState);
 
         healthBarForeground.fillAmount = 1;
+    }
+
+    public void AttachObjectToHand()
+    {
+        pickedObject = pickupObjectsController.objectInFront;
+        pickedObject.GetComponent<BoxCollider>().enabled = false;
+        pickedObject.transform.SetParent(rightHandObject.transform);
+        pickedObject.transform.localPosition = new Vector3(0, 0, 0);
+    }
+
+    public void DestroyPickedObject()
+    {
+        Destroy(pickedObject);
+        pickedObject = null;
     }
 
     public void DecreaseHealth(int percent)
@@ -82,6 +103,11 @@ public class CharacterController : MonoBehaviour
             stateMachine.ChangeState(fallingState);
         }
         stateMachine.currentState.PhysicsUpdate();
+    }
+
+    public void PickupObject()
+    {
+        stateMachine.ChangeState(pickupObjectsState);
     }
 
     private void Update()

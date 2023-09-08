@@ -101,11 +101,6 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        Debug.DrawLine(
-            _followTransform.position,
-            _followTransform.position + _followTransform.forward * 10,
-            Color.green
-        );
         if (Cursor.lockState != CursorLockMode.Locked)
         {
             return;
@@ -146,11 +141,6 @@ public class CameraController : MonoBehaviour
             _obstructionLayers
         ); //cast ray from player model, ray is a sphere, ray toward camera, sphere is moving "_targetDistance" towards destination
 
-        Debug.DrawLine(
-            _followTransform.position,
-            _followTransform.position + _targetRotation * -Vector3.forward,
-            Color.cyan
-        );
         // and has radius = checkRadius
 
         if (_hits.Length != 0)
