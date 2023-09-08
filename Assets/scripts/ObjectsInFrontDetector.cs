@@ -10,6 +10,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private Transform feetLevel;
 
+    [SerializeField]
     private GameObject pickupHint;
 
     private PickupObjectsController pickupObjectsController;
@@ -17,16 +18,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
     private void Start()
     {
         pickupObjectsController = GetComponent<PickupObjectsController>();
-
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Hint"))
-        {
-            if (g.name.StartsWith("Pickup"))
-            {
-                pickupHint = g;
-                break;
-            }
-            g.SetActive(false);
-        }
     }
 
     private void Update()
@@ -39,20 +30,17 @@ public class ObjectsInFrontDetector : MonoBehaviour
             if (hit.collider.tag.Equals("Pickable") && distance < minDistance)
             {
                 pickupHint.SetActive(true);
-                pickupObjectsController.hasObjectInFront = true;
                 pickupObjectsController.objectInFront = hit.collider.gameObject;
             }
             else
             {
                 pickupHint.SetActive(false);
-                pickupObjectsController.hasObjectInFront = false;
                 pickupObjectsController.objectInFront = null;
             }
         }
         else
         {
             pickupHint.SetActive(false);
-            pickupObjectsController.hasObjectInFront = false;
             pickupObjectsController.objectInFront = null;
         }
     }

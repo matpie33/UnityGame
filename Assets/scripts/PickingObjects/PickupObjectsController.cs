@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class PickupObjectsController : MonoBehaviour
 {
-    public bool hasObjectInFront { get; set; }
-
     private CharacterController characterController;
-
     public GameObject objectInFront { get; set; }
 
     private void Start()
@@ -17,10 +14,10 @@ public class PickupObjectsController : MonoBehaviour
 
     private void Update()
     {
-        if (hasObjectInFront && UnityEngine.Input.GetKeyDown(KeyCode.E))
+        if (objectInFront != null && UnityEngine.Input.GetKeyDown(KeyCode.E))
         {
             characterController.PickupObject();
-            hasObjectInFront = false;
+            objectInFront = null;
         }
     }
 }
