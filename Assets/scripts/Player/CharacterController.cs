@@ -42,6 +42,10 @@ public class CharacterController : MonoBehaviour
 
     private GameObject pickedObject;
 
+    private PlayerState playerState;
+
+    private UIUpdater uiUpdater;
+
     private void Start()
     {
         cameraController = GetComponent<CameraController>();
@@ -65,11 +69,18 @@ public class CharacterController : MonoBehaviour
         stateMachine.Initialize(runState);
 
         healthBarForeground.fillAmount = 1;
+        playerState = new PlayerState();
+        uiUpdater = GetComponent<UIUpdater>();
     }
 
     public void AttachObjectToHand()
     {
         pickedObject = pickupObjectsController.objectInFront;
+        if (pickedObject.GetComponent<Medkit>() != null)
+        {
+            playerState.increaseMedipacksAmount();
+            uiUpdater.UpdateMedipackAmount(playerState.numberOfMedipacks);
+        }
         pickedObject.GetComponent<BoxCollider>().enabled = false;
         pickedObject.transform.SetParent(rightHandObject.transform);
         pickedObject.transform.localPosition = new Vector3(0, 0, 0);
