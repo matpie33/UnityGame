@@ -45,17 +45,16 @@ public class CharacterController : MonoBehaviour
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         pickupObjectsController = GetComponent<PickupObjectsController>();
+        uiUpdater = GetComponent<UIUpdater>();
+        healthState = new HealthState();
+        playerState = new PlayerState();
+        initialHeight = capsuleCollider.height;
+        healthBarForeground.fillAmount = 1;
     }
 
     private void Start()
     {
         stateMachine = GetComponent<StateMachine>();
-        initialHeight = capsuleCollider.height;
-        healthState = new HealthState();
-
-        healthBarForeground.fillAmount = 1;
-        playerState = new PlayerState();
-        uiUpdater = GetComponent<UIUpdater>();
     }
 
     public void AttachObjectToHand()

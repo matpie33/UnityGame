@@ -17,6 +17,10 @@ public class StateMachine : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+    }
+
+    private void Start()
+    {
         runState = new RunState(characterController, this);
         ledgeGrabState = new LedgeGrabState(characterController, this);
         sprintState = new SprintState(characterController, this);
@@ -25,10 +29,7 @@ public class StateMachine : MonoBehaviour
         attackState = new AttackState(characterController);
         fallingState = new FallingState(characterController, this);
         pickupObjectsState = new PickupObjectsState(characterController);
-    }
 
-    private void Start()
-    {
         currentState = runState;
         currentState.EnterState();
     }
