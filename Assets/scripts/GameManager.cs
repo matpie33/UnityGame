@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviour, Observer
             if (isPlayerAttacking && distance < minDistanceToAttack)
             {
                 enemy.DecreaseHealth(healthDecreaseValue);
-                Debug.Log("decrease");
                 isPlayerAttacking = false;
             }
             if (enemy.GetIsAttacking())

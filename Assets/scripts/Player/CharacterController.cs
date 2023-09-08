@@ -26,15 +26,6 @@ public class CharacterController : MonoBehaviour
 
     private StateMachine stateMachine;
 
-    public RunState runState { get; private set; }
-    public JumpState jumpState { get; private set; }
-    public SprintState sprintState { get; private set; }
-    public CrouchState crouchState { get; private set; }
-    public LedgeGrabState ledgeGrabState { get; private set; }
-    public AttackState attackState { get; private set; }
-    public FallingState fallingState { get; private set; }
-    public PickupObjectsState pickupObjectsState { get; private set; }
-
     [SerializeField]
     private GameObject rightHandObject;
 
@@ -46,7 +37,7 @@ public class CharacterController : MonoBehaviour
 
     private UIUpdater uiUpdater;
 
-    private void Start()
+    private void Awake()
     {
         cameraController = GetComponent<CameraController>();
         playerInputs = GetComponent<PlayerInputs>();
@@ -54,19 +45,13 @@ public class CharacterController : MonoBehaviour
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         pickupObjectsController = GetComponent<PickupObjectsController>();
+    }
+
+    private void Start()
+    {
+        stateMachine = GetComponent<StateMachine>();
         initialHeight = capsuleCollider.height;
         healthState = new HealthState();
-
-        stateMachine = new StateMachine();
-        runState = new RunState(this, stateMachine);
-        ledgeGrabState = new LedgeGrabState(this, stateMachine);
-        sprintState = new SprintState(this, stateMachine);
-        crouchState = new CrouchState(this, stateMachine);
-        jumpState = new JumpState(this, stateMachine);
-        attackState = new AttackState(this);
-        fallingState = new FallingState(this, stateMachine);
-        pickupObjectsState = new PickupObjectsState(this);
-        stateMachine.Initialize(runState);
 
         healthBarForeground.fillAmount = 1;
         playerState = new PlayerState();
@@ -104,33 +89,23 @@ public class CharacterController : MonoBehaviour
 
     public void ClimbingFinished()
     {
-        stateMachine.currentState.OnTrigger(TriggerType.CLIMBING_FINISHED);
+        stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 
-    private void FixedUpdate()
+    public void PickupObjectsKeyPressed()
     {
-        if (rigidbody.velocity.y < -0.5)
-        {
-            stateMachine.ChangeState(fallingState);
-        }
-        stateMachine.currentState.PhysicsUpdate();
-    }
-
-    public void PickupObject()
-    {
-        stateMachine.ChangeState(pickupObjectsState);
+        stateMachine.OnTriggerType(TriggerType.PICKUP_STARTED);
     }
 
     private void Update()
     {
-        stateMachine.currentState.FrameUpdate();
         HealthBarUIUpdater.UpdateUI(healthBarForeground, healthState);
     }
 
     public void attackAnimationFinish()
     {
         notifyObservers(false);
-        stateMachine.ChangeState(runState);
+        stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 
     public void attackAnimationStart()
@@ -149,7 +124,7 @@ public class CharacterController : MonoBehaviour
 
     public void GroundDetected()
     {
-        stateMachine.currentState.OnTrigger(TriggerType.GROUND_DETECTED);
+        stateMachine.OnTriggerType(TriggerType.GROUND_DETECTED);
     }
 
     public void changeHeight(bool toStanding)
@@ -166,13 +141,13 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    public void grabLedge()
+    public void ledgeDetected()
     {
-        stateMachine.currentState.OnTrigger(TriggerType.LEDGE_DETECTED);
+        stateMachine.OnTriggerType(TriggerType.LEDGE_DETECTED);
     }
 
-    internal void switchToIdleAnimation()
+    internal void pickupAnimationFinished()
     {
-        stateMachine.ChangeState(runState);
+        stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 }

@@ -26,7 +26,7 @@ public class CrouchState : MovementState
         base.FrameUpdate();
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftControl))
         {
-            stateMachine.ChangeState(characterController.runState);
+            stateMachine.ChangeState(stateMachine.runState);
         }
     }
 

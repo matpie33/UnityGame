@@ -30,7 +30,7 @@ public class JumpState : MovementState
         characterController.rigidbody.AddForce(Vector3.up * -1 * gravity, ForceMode.Force);
         if (characterController.rigidbody.velocity.y < -0.5)
         {
-            stateMachine.ChangeState(characterController.fallingState);
+            stateMachine.ChangeState(stateMachine.fallingState);
         }
     }
 
@@ -38,12 +38,12 @@ public class JumpState : MovementState
     {
         if (triggerType.Equals(TriggerType.LEDGE_DETECTED))
         {
-            stateMachine.ChangeState(characterController.ledgeGrabState);
+            stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
         if (triggerType.Equals(TriggerType.GROUND_DETECTED))
         {
             characterController.animationsManager.setAnimationToMoving();
-            stateMachine.ChangeState(characterController.runState);
+            stateMachine.ChangeState(stateMachine.runState);
         }
     }
 }

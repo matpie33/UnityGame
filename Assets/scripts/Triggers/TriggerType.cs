@@ -4,6 +4,8 @@ using UnityEngine;
 public enum TriggerType
 {
     LEDGE_DETECTED,
-    CLIMBING_FINISHED,
-    GROUND_DETECTED
+    GROUND_DETECTED,
+    PICKUP_STARTED,
+    ANIMATION_FINISHED,
+    CLIMBING_FINISHED
 }

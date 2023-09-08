@@ -13,14 +13,8 @@ public class WallDetector : MonoBehaviour
 
     void Update() { }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("wall detected");
-    }
-
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("wall gone");
         ledgeController.ledgeReadyToGrab();
     }
 }

@@ -7,6 +7,6 @@ public class PickupAnimationFinished : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         CharacterController charController = FindObjectOfType<CharacterController>();
-        charController.switchToIdleAnimation();
+        charController.pickupAnimationFinished();
     }
 }

@@ -18,15 +18,15 @@ public class RunState : MovementState
         base.FrameUpdate();
         if (UnityEngine.Input.GetKeyDown(KeyCode.P) || UnityEngine.Input.GetKeyDown(KeyCode.K))
         {
-            stateMachine.ChangeState(characterController.attackState);
+            stateMachine.ChangeState(stateMachine.attackState);
         }
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift))
         {
-            stateMachine.ChangeState(characterController.sprintState);
+            stateMachine.ChangeState(stateMachine.sprintState);
         }
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftControl))
         {
-            stateMachine.ChangeState(characterController.crouchState);
+            stateMachine.ChangeState(stateMachine.crouchState);
         }
     }
 
@@ -35,7 +35,7 @@ public class RunState : MovementState
         if (triggerType.Equals(TriggerType.GROUND_DETECTED))
         {
             characterController.animationsManager.setAnimationToMoving();
-            stateMachine.ChangeState(characterController.runState);
+            stateMachine.ChangeState(stateMachine.runState);
         }
     }
 

@@ -20,16 +20,16 @@ public abstract class MovementState : State
     public MovementState(CharacterController characterController, StateMachine stateMachine)
     {
         this.characterController = characterController;
-        playerInputs = characterController.playerInputs;
-        cameraController = characterController.cameraController;
         this.stateMachine = stateMachine;
     }
 
     public override void FrameUpdate()
     {
+        playerInputs = characterController.playerInputs;
+        cameraController = characterController.cameraController;
         if (this.GetType() != typeof(CrouchState) && UnityEngine.Input.GetKeyDown(KeyCode.Space))
         {
-            JumpState jumpState = characterController.jumpState;
+            JumpState jumpState = stateMachine.jumpState;
             stateMachine.ChangeState(jumpState);
         }
 

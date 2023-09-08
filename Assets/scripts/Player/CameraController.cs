@@ -109,10 +109,6 @@ public class CameraController : MonoBehaviour
         float _zoom = -PlayerInputs.MouseScrollInput * _zoomSpeed; // -0.5 lub 0.5
         float mouseX = PlayerInputs.MouseXInput; //wartosc od okolo -40 do 40 - 40 bardzo szybki ruch, 10 srednio szybki,
         float mouseY = -PlayerInputs.MouseYInput;
-        if (_zoom != 0)
-        {
-            Debug.Log(_zoom);
-        }
         if (_invertX)
         {
             mouseX *= -1;

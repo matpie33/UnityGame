@@ -31,7 +31,7 @@ public class LedgeGrabState : State
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift))
         {
             characterController.rigidbody.isKinematic = false;
-            characterController.jumpState.PhysicsUpdate();
+            stateMachine.jumpState.PhysicsUpdate();
         }
     }
 
@@ -40,19 +40,11 @@ public class LedgeGrabState : State
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift))
         {
             characterController.rigidbody.isKinematic = false;
-            stateMachine.ChangeState(characterController.fallingState);
+            stateMachine.ChangeState(stateMachine.fallingState);
         }
         else if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
         {
             characterController.animationsManager.setAnimationToLedgeClimbing();
-        }
-    }
-
-    public override void OnTrigger(TriggerType triggerType)
-    {
-        if (triggerType.Equals(TriggerType.CLIMBING_FINISHED))
-        {
-            stateMachine.ChangeState(characterController.runState);
         }
     }
 }

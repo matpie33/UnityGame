@@ -13,7 +13,7 @@ public class SprintState : MovementState
         base.FrameUpdate();
         if (UnityEngine.Input.GetKeyUp(KeyCode.LeftShift))
         {
-            stateMachine.ChangeState(characterController.runState);
+            stateMachine.ChangeState(stateMachine.runState);
         }
     }
 

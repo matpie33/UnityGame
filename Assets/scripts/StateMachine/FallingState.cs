@@ -16,13 +16,12 @@ public class FallingState : MovementState
         characterController.rigidbody.AddForce(Vector3.up * -1 * 4, ForceMode.Force);
         if (characterController.rigidbody.velocity.y > -0.5)
         {
-            stateMachine.ChangeState(characterController.runState);
+            stateMachine.ChangeState(stateMachine.runState);
         }
     }
 
     public override void FrameUpdate()
     {
-        Debug.Log(characterController.currentVelocity);
         base.Move(characterController.currentVelocity);
     }
 

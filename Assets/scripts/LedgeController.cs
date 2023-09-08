@@ -15,6 +15,6 @@ public class LedgeController : MonoBehaviour
 
     public void ledgeReadyToGrab()
     {
-        compCharacterController.grabLedge();
+        compCharacterController.ledgeDetected();
     }
 }
