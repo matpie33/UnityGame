@@ -11,7 +11,7 @@ public class PlayerState
 
     public PlayerState()
     {
-        attackPower = 10;
+        attackPower = 40;
     }
 
     public void increaseMedipacksAmount()

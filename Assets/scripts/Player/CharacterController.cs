@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +25,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private Image healthBarForeground;
 
+    [SerializeField]
+    private TextMeshProUGUI healthText;
+
     private StateMachine stateMachine;
 
     [SerializeField]
@@ -37,8 +41,18 @@ public class CharacterController : MonoBehaviour
 
     private UIUpdater uiUpdater;
 
+    private PlayerUI playerUI;
+
+    private LevelData levelData;
+
     private void Awake()
     {
+        levelData = new LevelData();
+        levelData.level = 1;
+        levelData.experience = 0;
+        levelData.experienceNeededForNextLevel = 1000;
+
+        playerUI = GetComponent<PlayerUI>();
         cameraController = GetComponent<CameraController>();
         playerInputs = GetComponent<PlayerInputs>();
         rigidbody = GetComponent<Rigidbody>();
@@ -63,7 +77,10 @@ public class CharacterController : MonoBehaviour
         if (pickedObject.GetComponent<Medkit>() != null)
         {
             playerState.increaseMedipacksAmount();
-            uiUpdater.UpdateMedipackAmount(playerState.numberOfMedipacks);
+            uiUpdater.UpdateMedipackAmount(
+                playerUI.medipackAmountText,
+                playerState.numberOfMedipacks
+            );
         }
         pickedObject.GetComponent<BoxCollider>().enabled = false;
         pickedObject.transform.SetParent(rightHandObject.transform);
@@ -102,14 +119,24 @@ public class CharacterController : MonoBehaviour
         {
             stateMachine.OnTriggerType(TriggerType.MEDIPACK_USED);
         }
-        HealthBarUIUpdater.UpdateUI(healthBarForeground, healthState);
+        uiUpdater.UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
+        uiUpdater.UpdateExperience(
+            levelData,
+            playerUI.experienceText,
+            playerUI.experienceBar,
+            playerUI.levelText
+        );
     }
 
     public void UseMedipack()
     {
+        if (healthState.value == healthState.maxHealth)
+        {
+            return;
+        }
         healthState.IncreaseHealth(30);
         playerState.decreaseMedipacksAmount();
-        uiUpdater.UpdateMedipackAmount(playerState.numberOfMedipacks);
+        uiUpdater.UpdateMedipackAmount(playerUI.medipackAmountText, playerState.numberOfMedipacks);
     }
 
     public void attackAnimationFinish()

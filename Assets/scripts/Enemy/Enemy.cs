@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    private HealthState enemyState;
+    private HealthState healthState;
 
     [SerializeField]
     private int maxHealth;
@@ -21,12 +22,18 @@ public class Enemy : MonoBehaviour
     private bool isAttacking;
     private Image healthBar;
 
+    [SerializeField]
+    private TextMeshProUGUI healthText;
+
     public NavMeshAgent navMeshAgent { get; private set; }
+
+    private UIUpdater uiUpdater;
 
     private void Start()
     {
-        attackPower = 100;
-        enemyState = new HealthState(maxHealth);
+        uiUpdater = FindObjectOfType<UIUpdater>();
+        attackPower = 20;
+        healthState = new HealthState(maxHealth);
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = FindObjectOfType<CharacterController>();
         animator = GetComponent<Animator>();
@@ -77,17 +84,17 @@ public class Enemy : MonoBehaviour
 
     public void DecreaseHealth(int byValue)
     {
-        enemyState.DecreaseHealth(byValue);
+        healthState.DecreaseHealth(byValue);
     }
 
     public bool IsAlive()
     {
-        return enemyState.IsAlive();
+        return healthState.IsAlive();
     }
 
     private void Update()
     {
-        HealthBarUIUpdater.UpdateUI(healthBar, enemyState);
+        uiUpdater.UpdateHealthBar(healthState, healthText, healthBar);
         Vector3 playerPosition = characterController.transform.position;
         float distance = Vector3.Distance(navMeshAgent.transform.position, playerPosition);
         if (distance < minimumDistanceToChase)

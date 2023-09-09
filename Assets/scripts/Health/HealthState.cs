@@ -25,6 +25,10 @@ public class HealthState
     public void IncreaseHealth(int value)
     {
         this.value += value;
+        if (this.value > maxHealth)
+        {
+            this.value = maxHealth;
+        }
     }
 
     public bool IsAlive()
