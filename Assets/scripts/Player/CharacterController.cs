@@ -91,14 +91,25 @@ public class CharacterController : MonoBehaviour
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 
-    public void PickupObjectsKeyPressed()
+    public void PickingObjectsStarted()
     {
         stateMachine.OnTriggerType(TriggerType.PICKUP_STARTED);
     }
 
     private void Update()
     {
+        if (playerState.HasMedipacks() && UnityEngine.Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            stateMachine.OnTriggerType(TriggerType.MEDIPACK_USED);
+        }
         HealthBarUIUpdater.UpdateUI(healthBarForeground, healthState);
+    }
+
+    public void UseMedipack()
+    {
+        healthState.IncreaseHealth(30);
+        playerState.decreaseMedipacksAmount();
+        uiUpdater.UpdateMedipackAmount(playerState.numberOfMedipacks);
     }
 
     public void attackAnimationFinish()

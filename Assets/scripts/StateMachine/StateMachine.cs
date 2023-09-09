@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    public State currentState { get; private set; }
+    private State currentState;
     public RunState runState { get; private set; }
     public JumpState jumpState { get; private set; }
     public SprintState sprintState { get; private set; }
@@ -59,15 +59,12 @@ public class StateMachine : MonoBehaviour
         switch (triggerType)
         {
             case TriggerType.LEDGE_DETECTED:
-                currentState.OnTrigger(triggerType);
-                break;
+            case TriggerType.MEDIPACK_USED:
             case TriggerType.GROUND_DETECTED:
                 currentState.OnTrigger(triggerType);
                 break;
 
             case TriggerType.ANIMATION_FINISHED:
-                ChangeState(runState);
-                break;
             case TriggerType.CLIMBING_FINISHED:
                 ChangeState(runState);
                 break;

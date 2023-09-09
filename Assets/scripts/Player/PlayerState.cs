@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,5 +15,10 @@ public class PlayerState
     public void decreaseMedipacksAmount()
     {
         numberOfMedipacks--;
+    }
+
+    internal bool HasMedipacks()
+    {
+        return numberOfMedipacks > 0;
     }
 }

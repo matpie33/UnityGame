@@ -30,6 +30,14 @@ public class CrouchState : MovementState
         }
     }
 
+    public override void OnTrigger(TriggerType triggerType)
+    {
+        if (triggerType.Equals(TriggerType.MEDIPACK_USED))
+        {
+            characterController.UseMedipack();
+        }
+    }
+
     public override float getTargetSpeed()
     {
         return crouchSpeed;

@@ -21,6 +21,11 @@ public class HealthState
         }
     }
 
+    public void IncreaseHealth(int value)
+    {
+        healthPercent += value;
+    }
+
     public bool IsAlive()
     {
         return healthPercent > 0;

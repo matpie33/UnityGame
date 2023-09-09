@@ -37,6 +37,10 @@ public class RunState : MovementState
             characterController.animationsManager.setAnimationToMoving();
             stateMachine.ChangeState(stateMachine.runState);
         }
+        else if (triggerType.Equals(TriggerType.MEDIPACK_USED))
+        {
+            characterController.UseMedipack();
+        }
     }
 
     public override float getTargetSpeed()
