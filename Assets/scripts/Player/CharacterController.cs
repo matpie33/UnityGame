@@ -66,6 +66,11 @@ public class CharacterController : MonoBehaviour
         healthBarForeground.fillAmount = 1;
     }
 
+    public void AddExperience(int value)
+    {
+        levelData.AddExperience(value);
+    }
+
     private void Start()
     {
         stateMachine = GetComponent<StateMachine>();

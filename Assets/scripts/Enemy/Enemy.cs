@@ -29,8 +29,11 @@ public class Enemy : MonoBehaviour
 
     private UIUpdater uiUpdater;
 
+    public int experienceValue { get; private set; }
+
     private void Start()
     {
+        experienceValue = 400;
         uiUpdater = FindObjectOfType<UIUpdater>();
         attackPower = 20;
         healthState = new HealthState(maxHealth);

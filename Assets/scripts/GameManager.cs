@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour, Observer
             {
                 Destroy(enemy.gameObject);
                 objectsToDelete.Add(enemy);
+                characterController.AddExperience(enemy.experienceValue);
                 continue;
             }
             float distance = Vector3.Distance(
