@@ -7,6 +7,13 @@ public class PlayerState
 {
     public int numberOfMedipacks { get; private set; }
 
+    public int attackPower { get; private set; }
+
+    public PlayerState()
+    {
+        attackPower = 10;
+    }
+
     public void increaseMedipacksAmount()
     {
         numberOfMedipacks++;

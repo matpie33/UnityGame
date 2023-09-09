@@ -4,30 +4,31 @@ using UnityEngine;
 
 public class HealthState
 {
-    public int healthPercent { get; private set; }
+    public int value { get; private set; }
 
-    private int maxHealth = 100;
+    public int maxHealth { get; private set; }
 
-    public HealthState()
+    public HealthState(int maxHealth)
     {
-        healthPercent = maxHealth;
+        value = maxHealth;
+        this.maxHealth = maxHealth;
     }
 
     public void DecreaseHealth(int value)
     {
-        if (healthPercent > 0)
+        if (this.value > 0)
         {
-            healthPercent -= value;
+            this.value -= value;
         }
     }
 
     public void IncreaseHealth(int value)
     {
-        healthPercent += value;
+        this.value += value;
     }
 
     public bool IsAlive()
     {
-        return healthPercent > 0;
+        return value > 0;
     }
 }

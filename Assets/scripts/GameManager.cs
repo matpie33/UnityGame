@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour, Observer
 {
-    private const int healthDecreaseValue = 30;
     private bool isPlayerAttacking;
 
     private List<Enemy> enemies;
@@ -44,12 +43,12 @@ public class GameManager : MonoBehaviour, Observer
             );
             if (isPlayerAttacking && distance < minDistanceToAttack)
             {
-                enemy.DecreaseHealth(healthDecreaseValue);
+                enemy.DecreaseHealth(characterController.playerState.attackPower);
                 isPlayerAttacking = false;
             }
             if (enemy.GetIsAttacking())
             {
-                characterController.DecreaseHealth(10);
+                characterController.DecreaseHealth(enemy.getAttackPower());
             }
         }
         foreach (Enemy e in objectsToDelete)

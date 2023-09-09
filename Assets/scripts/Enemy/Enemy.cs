@@ -6,7 +6,13 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    private HealthState enemyState = new HealthState();
+    private HealthState enemyState;
+
+    [SerializeField]
+    private int maxHealth;
+
+    [SerializeField]
+    private int attackPower;
 
     private CharacterController characterController;
     private readonly float minimumDistanceToChase = 10;
@@ -19,11 +25,18 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        attackPower = 100;
+        enemyState = new HealthState(maxHealth);
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = FindObjectOfType<CharacterController>();
         animator = GetComponent<Animator>();
         GetHealthbarForeground();
         healthBar.fillAmount = 1;
+    }
+
+    public int getAttackPower()
+    {
+        return attackPower;
     }
 
     private void GetHealthbarForeground()

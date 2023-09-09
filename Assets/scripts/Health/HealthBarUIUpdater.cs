@@ -8,7 +8,7 @@ public class HealthBarUIUpdater : ScriptableObject
     {
         healthBar.fillAmount = Mathf.MoveTowards(
             healthBar.fillAmount,
-            (float)healthState.healthPercent / 100f,
+            (float)healthState.value / (float)healthState.maxHealth,
             Time.deltaTime * 1
         );
     }

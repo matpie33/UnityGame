@@ -33,7 +33,7 @@ public class CharacterController : MonoBehaviour
 
     private GameObject pickedObject;
 
-    private PlayerState playerState;
+    public PlayerState playerState { get; private set; }
 
     private UIUpdater uiUpdater;
 
@@ -46,7 +46,7 @@ public class CharacterController : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         pickupObjectsController = GetComponent<PickupObjectsController>();
         uiUpdater = GetComponent<UIUpdater>();
-        healthState = new HealthState();
+        healthState = new HealthState(200);
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
         healthBarForeground.fillAmount = 1;
