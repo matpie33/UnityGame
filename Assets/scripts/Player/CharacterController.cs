@@ -115,7 +115,7 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (playerState.HasMedipacks() && UnityEngine.Input.GetKeyDown(KeyCode.Alpha1))
+        if (playerState.HasMedipacks() && ActionKeys.IsKeyPressed(ActionKeys.USE_MEDIPACK))
         {
             stateMachine.OnTriggerType(TriggerType.MEDIPACK_USED);
         }

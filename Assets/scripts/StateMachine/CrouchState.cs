@@ -24,7 +24,7 @@ public class CrouchState : MovementState
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-        if (UnityEngine.Input.GetKeyDown(KeyCode.LeftControl))
+        if (ActionKeys.IsKeyPressed(ActionKeys.CROUCH))
         {
             stateMachine.ChangeState(stateMachine.runState);
         }

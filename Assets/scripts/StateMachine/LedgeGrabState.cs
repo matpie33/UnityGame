@@ -28,7 +28,7 @@ public class LedgeGrabState : State
 
     public override void PhysicsUpdate()
     {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift))
+        if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))
         {
             characterController.rigidbody.isKinematic = false;
             stateMachine.jumpState.PhysicsUpdate();
@@ -37,12 +37,12 @@ public class LedgeGrabState : State
 
     public override void FrameUpdate()
     {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift))
+        if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))
         {
             characterController.rigidbody.isKinematic = false;
             stateMachine.ChangeState(stateMachine.fallingState);
         }
-        else if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
+        else if (ActionKeys.IsKeyPressed(ActionKeys.CLIMB_LEDGE))
         {
             characterController.animationsManager.setAnimationToLedgeClimbing();
         }

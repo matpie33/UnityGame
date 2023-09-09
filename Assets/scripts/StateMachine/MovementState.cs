@@ -27,7 +27,7 @@ public abstract class MovementState : State
 
     public override void FrameUpdate()
     {
-        if (this.GetType() != typeof(CrouchState) && UnityEngine.Input.GetKeyDown(KeyCode.Space))
+        if (this.GetType() != typeof(CrouchState) && ActionKeys.IsKeyPressed(ActionKeys.JUMP))
         {
             JumpState jumpState = stateMachine.jumpState;
             stateMachine.ChangeState(jumpState);

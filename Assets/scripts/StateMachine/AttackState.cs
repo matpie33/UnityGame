@@ -12,11 +12,11 @@ public class AttackState : State
 
     public override void EnterState()
     {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.P))
+        if (ActionKeys.IsKeyPressed(ActionKeys.PUNCH))
         {
             characterController.animationsManager.setAnimationToPunch();
         }
-        else if (UnityEngine.Input.GetKeyDown(KeyCode.K))
+        else if (ActionKeys.IsKeyPressed(ActionKeys.KICK))
         {
             characterController.animationsManager.setAnimationToKick();
         }

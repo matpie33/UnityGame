@@ -14,7 +14,7 @@ public class PickupObjectsController : MonoBehaviour
 
     private void Update()
     {
-        if (objectInFront != null && UnityEngine.Input.GetKeyDown(KeyCode.E))
+        if (objectInFront != null && ActionKeys.IsKeyPressed(ActionKeys.PICKUP_OBJECT))
         {
             characterController.PickingObjectsStarted();
             objectInFront = null;

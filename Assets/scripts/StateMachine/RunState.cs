@@ -16,15 +16,15 @@ public class RunState : MovementState
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-        if (UnityEngine.Input.GetKeyDown(KeyCode.P) || UnityEngine.Input.GetKeyDown(KeyCode.K))
+        if (ActionKeys.IsKeyPressed(ActionKeys.PUNCH) || ActionKeys.IsKeyPressed(ActionKeys.KICK))
         {
             stateMachine.ChangeState(stateMachine.attackState);
         }
-        if (UnityEngine.Input.GetKeyDown(KeyCode.LeftShift))
+        if (ActionKeys.IsKeyPressed(ActionKeys.SPRINT))
         {
             stateMachine.ChangeState(stateMachine.sprintState);
         }
-        if (UnityEngine.Input.GetKeyDown(KeyCode.LeftControl))
+        if (ActionKeys.IsKeyPressed(ActionKeys.CROUCH))
         {
             stateMachine.ChangeState(stateMachine.crouchState);
         }
