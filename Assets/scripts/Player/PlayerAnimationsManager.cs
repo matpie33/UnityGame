@@ -13,7 +13,6 @@ public class PlayerAnimationsManager : MonoBehaviour
     {
         falling,
         climbing,
-        braced_hang,
         jumping,
         moving,
         crouching,
@@ -21,7 +20,8 @@ public class PlayerAnimationsManager : MonoBehaviour
         kicking,
         Pickup,
         climb_middle_ledge,
-        step_up
+        step_up,
+        hanging_idle
     }
 
     private void Awake()
@@ -60,7 +60,7 @@ public class PlayerAnimationsManager : MonoBehaviour
 
     public void setAnimationToLedgeGrab()
     {
-        animator.CrossFade(anim(AnimationName.braced_hang), 0.1f);
+        animator.CrossFade(anim(AnimationName.hanging_idle), 0.1f);
     }
 
     public void setAnimationToJumping()

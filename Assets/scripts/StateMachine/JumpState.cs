@@ -32,6 +32,10 @@ public class JumpState : MovementState
         {
             stateMachine.ChangeState(stateMachine.fallingState);
         }
+        if (characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
+        {
+            stateMachine.ChangeState(stateMachine.ledgeGrabState);
+        }
     }
 
     public override void OnTrigger(TriggerType triggerType)
