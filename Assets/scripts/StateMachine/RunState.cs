@@ -10,6 +10,8 @@ public class RunState : MovementState
 
     public override void EnterState()
     {
+        characterController.rigidbody.isKinematic = false;
+        characterController.animationsManager.disableRootMotion();
         characterController.animationsManager.setAnimationToMoving();
     }
 

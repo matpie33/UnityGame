@@ -45,6 +45,8 @@ public class CharacterController : MonoBehaviour
 
     private LevelData levelData;
 
+    public ObjectsInFrontDetector objectsInFrontDetector { get; private set; }
+
     private void Awake()
     {
         levelData = new LevelData();
@@ -52,6 +54,7 @@ public class CharacterController : MonoBehaviour
         levelData.experience = 0;
         levelData.experienceNeededForNextLevel = 1000;
 
+        objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
         playerUI = GetComponent<PlayerUI>();
         cameraController = GetComponent<CameraController>();
         playerInputs = GetComponent<PlayerInputs>();

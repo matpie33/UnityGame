@@ -5,32 +5,62 @@ using UnityEngine;
 
 public class ObjectsInFrontDetector : MonoBehaviour
 {
-    public float minDistance = 3;
+    public float minDistanceToPickup = 3;
 
     [SerializeField]
     private Transform feetLevel;
+
+    [SerializeField]
+    private Transform midLevel;
+
+    [SerializeField]
+    private Transform headLevel;
 
     [SerializeField]
     private GameObject pickupHint;
 
     private PickupObjectsController pickupObjectsController;
 
+    public WallType detectedWallType { get; private set; }
+
+    private const float minDistanceToClimbWall = 0.3f;
+
     private void Start()
     {
+        detectedWallType = WallType.NO_WALL;
         pickupObjectsController = GetComponent<PickupObjectsController>();
     }
 
     private void Update()
     {
-        Vector3 position = feetLevel.position;
-        RaycastHit hit;
-        if (Physics.Raycast(position, transform.forward, out hit, Mathf.Infinity))
+        RaycastHit feetHit = DoRaycast(feetLevel);
+        RaycastHit midHit = DoRaycast(midLevel);
+        RaycastHit headHit = DoRaycast(headLevel);
+
+        if (feetHit.collider != null && midHit.collider == null && headHit.collider == null)
         {
-            float distance = hit.distance;
-            if (hit.collider.tag.Equals("Pickable") && distance < minDistance)
+            detectedWallType = WallType.BELOW_HIPS;
+        }
+        else if (feetHit.collider != null && midHit.collider != null && headHit.collider == null)
+        {
+            detectedWallType = WallType.ABOVE_HIPS;
+        }
+        else if (feetHit.collider != null && midHit.collider != null && headHit.collider != null)
+        {
+            detectedWallType = WallType.ABOVE_HEAD;
+        }
+        else
+        {
+            detectedWallType = WallType.NO_WALL;
+        }
+
+        if (feetHit.collider != null)
+        {
+            float distance = feetHit.distance;
+            if (feetHit.collider.tag.Equals("Pickable") && distance < minDistanceToPickup)
             {
                 pickupHint.SetActive(true);
-                pickupObjectsController.objectInFront = hit.collider.gameObject;
+                pickupObjectsController.objectInFront = feetHit.collider.gameObject;
             }
             else
             {
@@ -43,5 +73,14 @@ public class ObjectsInFrontDetector : MonoBehaviour
             pickupHint.SetActive(false);
             pickupObjectsController.objectInFront = null;
         }
+    }
+
+    private RaycastHit DoRaycast(Transform transform)
+    {
+        Vector3 position = transform.position;
+        RaycastHit raycastHit;
+        Physics.Raycast(position, this.transform.forward, out raycastHit, minDistanceToClimbWall);
+
+        return raycastHit;
     }
 }

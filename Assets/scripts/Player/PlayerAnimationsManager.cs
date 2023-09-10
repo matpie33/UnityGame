@@ -19,7 +19,9 @@ public class PlayerAnimationsManager : MonoBehaviour
         crouching,
         punching,
         kicking,
-        Pickup
+        Pickup,
+        climb_middle_ledge,
+        step_up
     }
 
     private void Awake()
@@ -31,6 +33,18 @@ public class PlayerAnimationsManager : MonoBehaviour
     public void disableRootMotion()
     {
         animator.applyRootMotion = false;
+    }
+
+    public void setAnimationToStepUp()
+    {
+        animator.applyRootMotion = true;
+        animator.Play(AnimationName.step_up.ToString());
+    }
+
+    public void setAnimationToClimbMiddleLedge()
+    {
+        animator.applyRootMotion = true;
+        animator.Play(AnimationName.climb_middle_ledge.ToString());
     }
 
     public void setAnimationToFalling()

@@ -29,6 +29,25 @@ public abstract class MovementState : State
     {
         if (this.GetType() != typeof(CrouchState) && ActionKeys.IsKeyPressed(ActionKeys.JUMP))
         {
+            WallType detectedWallType = characterController.objectsInFrontDetector.detectedWallType;
+            if (detectedWallType.Equals(WallType.BELOW_HIPS))
+            {
+                characterController.animationsManager.setAnimationToStepUp();
+                characterController.rigidbody.isKinematic = true;
+                stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
+                return;
+            }
+            if (detectedWallType.Equals(WallType.ABOVE_HIPS))
+            {
+                Vector3 position = characterController.transform.position;
+                characterController.rigidbody.isKinematic = true;
+                characterController.transform.position =
+                    position + characterController.transform.forward * 0.007f;
+                characterController.animationsManager.setAnimationToClimbMiddleLedge();
+                stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
+                return;
+            }
+
             JumpState jumpState = stateMachine.jumpState;
             stateMachine.ChangeState(jumpState);
         }
