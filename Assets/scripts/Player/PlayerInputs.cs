@@ -10,17 +10,25 @@ public class Input
 
     public bool Pressed()
     {
-        return UnityEngine.Input.GetKey(primary) || UnityEngine.Input.GetKey(alternate);
+        return ControlNotPressed()
+            && (UnityEngine.Input.GetKey(primary) || UnityEngine.Input.GetKey(alternate));
+    }
+
+    private bool ControlNotPressed()
+    {
+        return !UnityEngine.Input.GetKey(KeyCode.LeftControl);
     }
 
     public bool PressedDown()
     {
-        return UnityEngine.Input.GetKeyDown(primary) || UnityEngine.Input.GetKeyDown(alternate);
+        return ControlNotPressed()
+            && (UnityEngine.Input.GetKeyDown(primary) || UnityEngine.Input.GetKeyDown(alternate));
     }
 
     public bool PressedUp()
     {
-        return UnityEngine.Input.GetKeyUp(primary) || UnityEngine.Input.GetKeyUp(alternate);
+        return ControlNotPressed()
+            && (UnityEngine.Input.GetKeyUp(primary) || UnityEngine.Input.GetKeyUp(alternate));
     }
 }
 

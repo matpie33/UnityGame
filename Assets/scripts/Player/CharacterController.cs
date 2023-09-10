@@ -47,8 +47,15 @@ public class CharacterController : MonoBehaviour
 
     public ObjectsInFrontDetector objectsInFrontDetector { get; private set; }
 
+    public int amountOfStatsToAddPerLevel { get; private set; }
+
+    private StatsAddingDTO statsAddingDTO;
+
     private void Awake()
     {
+        statsAddingDTO = new StatsAddingDTO();
+        amountOfStatsToAddPerLevel = 5;
+        statsAddingDTO.statsLeft = amountOfStatsToAddPerLevel;
         levelData = new LevelData();
         levelData.level = 1;
         levelData.experience = 0;
@@ -67,11 +74,36 @@ public class CharacterController : MonoBehaviour
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
         healthBarForeground.fillAmount = 1;
+        uiUpdater = FindObjectOfType<UIUpdater>();
+        uiUpdater.InitializeStatsPanel(playerState, playerUI, statsAddingDTO);
+        uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
+    }
+
+    public void ResetStats()
+    {
+        statsAddingDTO.Reset(amountOfStatsToAddPerLevel);
+        uiUpdater.UpdateStatsUI(playerState, playerUI);
+        uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
+    }
+
+    public void AcceptStats()
+    {
+        playerState.increaseAgility(statsAddingDTO.agilityIncrease);
+        playerState.increaseDefence(statsAddingDTO.defenceIncrease);
+        playerState.increaseHealth(statsAddingDTO.healthIncrease);
+        playerState.increaseStrength(statsAddingDTO.strengthIncrease);
+        statsAddingDTO.Reset(amountOfStatsToAddPerLevel);
+        uiUpdater.ToggleVisibilityOfStatsModification(false, playerUI);
+        uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
     }
 
     public void AddExperience(int value)
     {
-        levelData.AddExperience(value);
+        bool isNextLevel = levelData.AddExperience(value);
+        if (isNextLevel)
+        {
+            uiUpdater.ToggleVisibilityOfStatsModification(true, playerUI);
+        }
     }
 
     private void Start()

@@ -103,6 +103,7 @@ public class CameraController : MonoBehaviour
         _ignoreColliders.AddRange(GetComponentsInChildren<Collider>());
         planarDirection = _followTransform.forward;
 
+        Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Locked;
         _targetDistance = _defaultDistance;
         _targetVerticalAngle = _defaultVerticalAngle;
@@ -114,11 +115,6 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (Cursor.lockState != CursorLockMode.Locked)
-        {
-            return;
-        }
-
         float _zoom = -PlayerInputs.MouseScrollInput * _zoomSpeed; // -0.5 lub 0.5
         float mouseX = PlayerInputs.MouseXInput; //wartosc od okolo -40 do 40 - 40 bardzo szybki ruch, 10 srednio szybki,
         float mouseY = -PlayerInputs.MouseYInput;
