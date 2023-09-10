@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
     {
         experienceValue = 400;
         uiUpdater = FindObjectOfType<UIUpdater>();
-        attackPower = 20;
+        attackPower = 10;
         healthState = new HealthState(maxHealth);
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = FindObjectOfType<CharacterController>();

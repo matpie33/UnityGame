@@ -30,6 +30,11 @@ public class PlayerAnimationsManager : MonoBehaviour
         animator.applyRootMotion = false;
     }
 
+    public void setAttackSpeed(float speed)
+    {
+        animator.SetFloat("AttackSpeed", speed);
+    }
+
     public void disableRootMotion()
     {
         animator.applyRootMotion = false;

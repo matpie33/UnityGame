@@ -22,6 +22,11 @@ public class HealthState
         }
     }
 
+    public void IncreaseMaxHealth(int value)
+    {
+        this.maxHealth += value;
+    }
+
     public void IncreaseHealth(int value)
     {
         this.value += value;

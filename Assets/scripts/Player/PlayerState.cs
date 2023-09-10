@@ -9,8 +9,6 @@ public class PlayerState
 {
     public int numberOfMedipacks { get; private set; }
 
-    public int attackPower { get; private set; }
-
     public int strength { get; private set; }
 
     public int agility { get; private set; }
@@ -23,7 +21,6 @@ public class PlayerState
 
     public PlayerState()
     {
-        attackPower = 40;
         strength = 1;
         agility = 1;
         defence = 1;

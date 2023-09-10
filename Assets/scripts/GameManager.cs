@@ -12,9 +12,12 @@ public class GameManager : MonoBehaviour
 
     private ISet<Enemy> objectsToDelete = new HashSet<Enemy>();
 
+    private StatsToValuesConverter statsToValuesConverter;
+
     private void Start()
     {
         enemies = FindObjectsOfType<Enemy>().ToList<Enemy>();
+        statsToValuesConverter = GetComponent<StatsToValuesConverter>();
         characterController = FindObjectOfType<CharacterController>();
     }
 
@@ -36,11 +39,20 @@ public class GameManager : MonoBehaviour
             );
             if (characterController.IsAttacking() && distance < minDistanceToAttack)
             {
-                enemy.DecreaseHealth(characterController.playerState.attackPower);
+                enemy.DecreaseHealth(
+                    statsToValuesConverter.ConvertStrengthToHealthDecreaseValue(
+                        characterController.playerState.strength
+                    )
+                );
             }
             if (enemy.GetIsAttacking())
             {
-                characterController.DecreaseHealth(enemy.getAttackPower());
+                characterController.DecreaseHealth(
+                    statsToValuesConverter.ConvertDefenceToPlayerHealthDecrease(
+                        characterController.playerState.defence,
+                        enemy.getAttackPower()
+                    )
+                );
             }
         }
         characterController.attackEventChecked();

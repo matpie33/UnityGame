@@ -51,6 +51,8 @@ public class CharacterController : MonoBehaviour
 
     private StatsAddingDTO statsAddingDTO;
 
+    private StatsToValuesConverter statsToValuesConverter;
+
     private void Awake()
     {
         statsAddingDTO = new StatsAddingDTO();
@@ -69,6 +71,8 @@ public class CharacterController : MonoBehaviour
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         pickupObjectsController = GetComponent<PickupObjectsController>();
+        statsToValuesConverter = FindObjectOfType<StatsToValuesConverter>();
+
         uiUpdater = GetComponent<UIUpdater>();
         healthState = new HealthState(200);
         playerState = new PlayerState();
@@ -92,6 +96,12 @@ public class CharacterController : MonoBehaviour
         playerState.increaseDefence(statsAddingDTO.defenceIncrease);
         playerState.increaseHealth(statsAddingDTO.healthIncrease);
         playerState.increaseStrength(statsAddingDTO.strengthIncrease);
+        healthState.IncreaseMaxHealth(
+            statsToValuesConverter.ConvertHealthStatToHPIncrease(playerState.health)
+        );
+        animationsManager.setAttackSpeed(
+            statsToValuesConverter.ConvertAgilityToAttackSpeed(playerState.agility)
+        );
         statsAddingDTO.Reset(amountOfStatsToAddPerLevel);
         uiUpdater.ToggleVisibilityOfStatsModification(false, playerUI);
         uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
@@ -198,15 +208,6 @@ public class CharacterController : MonoBehaviour
     public void attackAnimationStart()
     {
         playerState.isAttacking = true;
-    }
-
-    private void notifyObservers(bool isAttacking)
-    {
-        EventDTO eventDTO = EventDTO.createEventPlayerAttack(isAttacking);
-        foreach (Observer observer in observers)
-        {
-            observer.Notify(eventDTO);
-        }
     }
 
     public void GroundDetected()
