@@ -10,6 +10,7 @@ public class CrouchState : MovementState
 
     public override void EnterState()
     {
+        characterController.cameraController.adjustCameraForCrouch();
         characterController.animationsManager.setAnimationToCrouch();
         characterController.capsuleCollider.height = characterController.initialHeight / 2;
         characterController.capsuleCollider.center = new Vector3(0, 0.47f, 0);
@@ -17,6 +18,7 @@ public class CrouchState : MovementState
 
     public override void ExitState()
     {
+        characterController.cameraController.adjustCameraForStanding();
         characterController.capsuleCollider.height = characterController.initialHeight;
         characterController.capsuleCollider.center = new Vector3(0, 0.9f, 0);
     }

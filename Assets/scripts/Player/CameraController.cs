@@ -60,7 +60,7 @@ public class CameraController : MonoBehaviour
     }
 
     [SerializeField]
-    private Vector3 _framing = new Vector3(0, 0, 0);
+    private Vector3 _framing;
 
     [SerializeField]
     private bool _invertX;
@@ -85,8 +85,21 @@ public class CameraController : MonoBehaviour
         );
     }
 
+    public void adjustCameraForCrouch()
+    {
+        _framing.x = -0.02f;
+        _framing.y = -0.69f;
+    }
+
+    public void adjustCameraForStanding()
+    {
+        _framing.x = 0;
+        _framing.y = 0;
+    }
+
     private void Start()
     {
+        _framing = new Vector3(0, 0, 0);
         _ignoreColliders.AddRange(GetComponentsInChildren<Collider>());
         planarDirection = _followTransform.forward;
 
