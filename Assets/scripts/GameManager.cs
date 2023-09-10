@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour, Observer
+public class GameManager : MonoBehaviour
 {
-    private bool isPlayerAttacking;
-
     private List<Enemy> enemies;
 
     private float minDistanceToAttack = 2;
@@ -18,12 +16,6 @@ public class GameManager : MonoBehaviour, Observer
     {
         enemies = FindObjectsOfType<Enemy>().ToList<Enemy>();
         characterController = FindObjectOfType<CharacterController>();
-        characterController.AddObserver(this);
-    }
-
-    public void SetPlayerIsAttacking(bool isAttacking)
-    {
-        isPlayerAttacking = isAttacking;
     }
 
     void Update()
@@ -42,29 +34,19 @@ public class GameManager : MonoBehaviour, Observer
                 enemy.navMeshAgent.transform.position,
                 characterController.transform.position
             );
-            if (isPlayerAttacking && distance < minDistanceToAttack)
+            if (characterController.IsAttacking() && distance < minDistanceToAttack)
             {
                 enemy.DecreaseHealth(characterController.playerState.attackPower);
-                isPlayerAttacking = false;
             }
             if (enemy.GetIsAttacking())
             {
                 characterController.DecreaseHealth(enemy.getAttackPower());
             }
         }
+        characterController.attackEventChecked();
         foreach (Enemy e in objectsToDelete)
         {
             enemies.Remove(e);
-        }
-    }
-
-    public void Notify(EventDTO eventDTO)
-    {
-        switch (eventDTO.eventType)
-        {
-            case EventType.PLAYER_ATTACK:
-                isPlayerAttacking = eventDTO.isAttacking;
-                break;
         }
     }
 }

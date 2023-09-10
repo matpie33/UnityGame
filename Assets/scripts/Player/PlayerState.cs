@@ -19,6 +19,8 @@ public class PlayerState
 
     public int health { get; private set; }
 
+    public bool isAttacking { get; set; }
+
     public PlayerState()
     {
         attackPower = 40;

@@ -179,15 +179,25 @@ public class CharacterController : MonoBehaviour
         uiUpdater.UpdateMedipackAmount(playerUI.medipackAmountText, playerState.numberOfMedipacks);
     }
 
+    public bool IsAttacking()
+    {
+        return playerState.isAttacking;
+    }
+
+    public void attackEventChecked()
+    {
+        playerState.isAttacking = false;
+    }
+
     public void attackAnimationFinish()
     {
-        notifyObservers(false);
+        playerState.isAttacking = false;
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 
     public void attackAnimationStart()
     {
-        notifyObservers(true);
+        playerState.isAttacking = true;
     }
 
     private void notifyObservers(bool isAttacking)
