@@ -4,7 +4,7 @@ using UnityEngine;
 public class JumpState : MovementState
 {
     public float jumpForce = 10;
-    public float gravity = 4;
+    public float gravity = 8;
 
     public JumpState(CharacterController characterController, StateMachine stateMachine)
         : base(characterController, stateMachine) { }
