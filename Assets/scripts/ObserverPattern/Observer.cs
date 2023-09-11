@@ -1,6 +1,7 @@
 ﻿using System;
+using UnityEngine;
 
-public interface Observer
+public abstract class Observer : MonoBehaviour
 {
-    public void OnEvent(EventDTO eventDTO);
+    public abstract void OnEvent(EventDTO eventDTO);
 }

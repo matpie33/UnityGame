@@ -4,5 +4,10 @@ using UnityEngine;
 
 public abstract class Publisher : MonoBehaviour
 {
-    public abstract void AddObserver(Observer observer);
+    protected List<Observer> observers = new List<Observer>();
+
+    public void AddObserver(Observer observer)
+    {
+        observers.Add(observer);
+    }
 }

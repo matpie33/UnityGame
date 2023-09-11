@@ -22,6 +22,8 @@ public class Enemy : MonoBehaviour
     private bool isAttacking;
     private Image healthBar;
 
+    public bool isInRange { get; set; }
+
     [SerializeField]
     private TextMeshProUGUI healthText;
 

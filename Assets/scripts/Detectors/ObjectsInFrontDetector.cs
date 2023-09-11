@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ObjectsInFrontDetector : MonoBehaviour
+public class ObjectsInFrontDetector : Publisher
 {
     public float minDistanceToPickup = 3;
 
@@ -57,7 +57,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         if (feetHit.collider != null)
         {
             float distance = feetHit.distance;
-            if (feetHit.collider.tag.Equals("Pickable") && distance < minDistanceToPickup)
+            if (feetHit.collider.tag.Equals(Tags.PICKABLE) && distance < minDistanceToPickup)
             {
                 pickupHint.SetActive(true);
                 pickupObjectsController.objectInFront = feetHit.collider.gameObject;

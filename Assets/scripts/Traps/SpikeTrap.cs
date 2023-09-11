@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class SpikeTrap : Publisher
 {
-    private Observer observer;
-
     private bool isRunning = true;
 
     private Animator animator;
@@ -45,16 +43,14 @@ public class SpikeTrap : Publisher
         }
     }
 
-    public override void AddObserver(Observer observer)
-    {
-        this.observer = observer;
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.tag.Equals("Player"))
+        if (collision.collider.tag.Equals(Tags.PLAYER))
         {
-            observer.OnEvent(new EventDTO(EventType.PLAYER_DIED));
+            foreach (Observer observer in observers)
+            {
+                observer.OnEvent(new EventDTO(EventType.PLAYER_DIED, null));
+            }
         }
     }
 }

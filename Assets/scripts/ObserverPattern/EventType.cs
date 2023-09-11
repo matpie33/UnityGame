@@ -3,6 +3,6 @@ using UnityEngine;
 
 public enum EventType
 {
-    PLAYER_ATTACK,
-    PLAYER_DIED
+    PLAYER_DIED,
+    ENEMY_IN_RANGE
 }

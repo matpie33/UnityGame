@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour, Observer
+public class GameManager : Observer
 {
     private List<Enemy> enemies;
 
@@ -19,19 +19,28 @@ public class GameManager : MonoBehaviour, Observer
 
     private List<Publisher> publishers;
 
-    public void OnEvent(EventDTO eventDTO)
+    public override void OnEvent(EventDTO eventDTO)
     {
-        Time.timeScale = 0;
-        gameOverText.SetActive(true);
+        switch (eventDTO.eventType)
+        {
+            case EventType.PLAYER_DIED:
+                Time.timeScale = 0;
+                gameOverText.SetActive(true);
+                break;
+        }
     }
 
     private void Start()
     {
         gameOverText.SetActive(false);
         publishers = FindObjectsOfType<Publisher>().ToList<Publisher>();
+        Observer[] observers = FindObjectsOfType<Observer>();
         foreach (Publisher publisher in publishers)
         {
-            publisher.AddObserver(this);
+            foreach (Observer observer in observers)
+            {
+                publisher.AddObserver(observer);
+            }
         }
         enemies = FindObjectsOfType<Enemy>().ToList<Enemy>();
         statsToValuesConverter = GetComponent<StatsToValuesConverter>();
@@ -54,7 +63,7 @@ public class GameManager : MonoBehaviour, Observer
                 enemy.navMeshAgent.transform.position,
                 characterController.transform.position
             );
-            if (characterController.IsAttacking() && distance < minDistanceToAttack)
+            if (characterController.IsAttacking() && enemy.isInRange)
             {
                 enemy.DecreaseHealth(
                     statsToValuesConverter.ConvertStrengthToHealthDecreaseValue(
