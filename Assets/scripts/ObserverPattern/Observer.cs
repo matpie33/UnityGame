@@ -2,5 +2,5 @@
 
 public interface Observer
 {
-    public void Notify(EventDTO eventDTO);
+    public void OnEvent(EventDTO eventDTO);
 }

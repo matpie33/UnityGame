@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, Observer
 {
     private List<Enemy> enemies;
 
@@ -14,8 +14,25 @@ public class GameManager : MonoBehaviour
 
     private StatsToValuesConverter statsToValuesConverter;
 
+    [SerializeField]
+    private GameObject gameOverText;
+
+    private List<Publisher> publishers;
+
+    public void OnEvent(EventDTO eventDTO)
+    {
+        Time.timeScale = 0;
+        gameOverText.SetActive(true);
+    }
+
     private void Start()
     {
+        gameOverText.SetActive(false);
+        publishers = FindObjectsOfType<Publisher>().ToList<Publisher>();
+        foreach (Publisher publisher in publishers)
+        {
+            publisher.AddObserver(this);
+        }
         enemies = FindObjectsOfType<Enemy>().ToList<Enemy>();
         statsToValuesConverter = GetComponent<StatsToValuesConverter>();
         characterController = FindObjectOfType<CharacterController>();
