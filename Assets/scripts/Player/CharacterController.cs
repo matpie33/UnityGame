@@ -20,7 +20,7 @@ public class CharacterController : MonoBehaviour
 
     public Vector3 currentVelocity { get; set; }
 
-    private HealthState healthState;
+    public HealthState healthState { get; private set; }
 
     [SerializeField]
     private Image healthBarForeground;

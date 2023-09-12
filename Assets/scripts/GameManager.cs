@@ -24,10 +24,15 @@ public class GameManager : Observer
         switch (eventDTO.eventType)
         {
             case EventType.PLAYER_DIED:
-                Time.timeScale = 0;
-                gameOverText.SetActive(true);
+                DoGameOver();
                 break;
         }
+    }
+
+    private void DoGameOver()
+    {
+        Time.timeScale = 0;
+        gameOverText.SetActive(true);
     }
 
     private void Start()
@@ -79,6 +84,10 @@ public class GameManager : Observer
                         enemy.getAttackPower()
                     )
                 );
+                if (!characterController.healthState.IsAlive())
+                {
+                    DoGameOver();
+                }
             }
         }
         characterController.attackEventChecked();

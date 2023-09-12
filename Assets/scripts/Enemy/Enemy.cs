@@ -110,6 +110,8 @@ public class Enemy : MonoBehaviour
             {
                 animator.SetBool(WolfAnimationVariables.IS_ATTACKING, true);
                 animator.SetBool(WolfAnimationVariables.IS_CHASING, false);
+
+                gameObject.transform.LookAt(playerPosition, Vector3.up);
             }
             else
             {
