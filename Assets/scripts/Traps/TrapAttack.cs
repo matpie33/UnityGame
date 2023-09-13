@@ -2,44 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpikeTrap : Publisher
+public class TrapAttack : Publisher
 {
     private bool isRunning = true;
 
     private Animator animator;
 
-    private bool isDown;
+    private bool isInAttack;
 
     [SerializeField]
-    private float timeBeingUp;
+    private float timeInAttack;
 
     [SerializeField]
-    private float timeBeingDown;
+    private float timeInIdle;
 
     private void Start()
     {
-        isDown = true;
+        isInAttack = true;
         animator = transform.parent.GetComponent<Animator>();
         StartCoroutine(DoAnimations());
     }
 
     private IEnumerator DoAnimations()
     {
-        float waitTime = timeBeingDown;
+        float waitTime = timeInAttack;
         while (isRunning)
         {
             yield return new WaitForSeconds(waitTime);
-            if (isDown)
+            if (isInAttack)
             {
-                animator.Play("L1.GoDown");
-                waitTime = timeBeingDown;
+                animator.Play("Base Layer.GoIdle");
+                waitTime = timeInIdle;
             }
             else
             {
-                animator.Play("L1.GoUp");
-                waitTime = timeBeingUp;
+                animator.Play("Base Layer.DoHarm");
+                waitTime = timeInAttack;
             }
-            isDown = !isDown;
+            isInAttack = !isInAttack;
         }
     }
 
