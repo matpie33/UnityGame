@@ -42,15 +42,4 @@ public class TrapAttack : Publisher
             isInAttack = !isInAttack;
         }
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.tag.Equals(Tags.PLAYER))
-        {
-            foreach (Observer observer in observers)
-            {
-                observer.OnEvent(new EventDTO(EventType.PLAYER_DIED, null));
-            }
-        }
-    }
 }
