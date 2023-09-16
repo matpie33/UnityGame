@@ -19,6 +19,10 @@ public class PlayerState
 
     public bool isAttacking { get; set; }
 
+    public Interactable objectToInteractWith { get; set; }
+
+    public bool isPickingObject { get; set; }
+
     public PlayerState()
     {
         strength = 1;

@@ -21,7 +21,8 @@ public class PlayerAnimationsManager : MonoBehaviour
         Pickup,
         climb_middle_ledge,
         step_up,
-        hanging_idle
+        hanging_idle,
+        pull_lever
     }
 
     private void Awake()
@@ -106,5 +107,10 @@ public class PlayerAnimationsManager : MonoBehaviour
     private String anim(AnimationName animationName)
     {
         return BASE_LAYER + "." + animationName;
+    }
+
+    internal void setAnimationToPullLever()
+    {
+        animator.CrossFade(anim(AnimationName.pull_lever), 0.1f);
     }
 }

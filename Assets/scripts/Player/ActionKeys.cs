@@ -5,7 +5,7 @@ public class ActionKeys : MonoBehaviour
 {
     //keys with no modifier
     public const KeyCode JUMP = KeyCode.Space;
-    public const KeyCode PICKUP_OBJECT = KeyCode.E;
+    public const KeyCode INTERACT = KeyCode.E;
     public const KeyCode USE_MEDIPACK = KeyCode.Alpha1;
     public const KeyCode PUNCH = KeyCode.P;
     public const KeyCode KICK = KeyCode.K;

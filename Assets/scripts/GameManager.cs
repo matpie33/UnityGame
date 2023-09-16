@@ -17,8 +17,6 @@ public class GameManager : Observer
     [SerializeField]
     private GameObject gameOverText;
 
-    private List<Publisher> publishers;
-
     public override void OnEvent(EventDTO eventDTO)
     {
         switch (eventDTO.eventType)
@@ -38,15 +36,6 @@ public class GameManager : Observer
     private void Start()
     {
         gameOverText.SetActive(false);
-        publishers = FindObjectsOfType<Publisher>().ToList<Publisher>();
-        Observer[] observers = FindObjectsOfType<Observer>();
-        foreach (Publisher publisher in publishers)
-        {
-            foreach (Observer observer in observers)
-            {
-                publisher.AddObserver(observer);
-            }
-        }
         enemies = FindObjectsOfType<Enemy>().ToList<Enemy>();
         statsToValuesConverter = GetComponent<StatsToValuesConverter>();
         characterController = FindObjectOfType<CharacterController>();

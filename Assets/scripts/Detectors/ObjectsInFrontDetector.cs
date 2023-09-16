@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ObjectsInFrontDetector : Publisher
+public class ObjectsInFrontDetector : MonoBehaviour
 {
-    public float minDistanceToPickup = 3;
+    public float minDistanceToInteract = 3;
 
     [SerializeField]
     private Transform feetLevel;
@@ -19,7 +19,7 @@ public class ObjectsInFrontDetector : Publisher
     [SerializeField]
     private GameObject pickupHint;
 
-    private PickupObjectsController pickupObjectsController;
+    private EventQueue eventQueue;
 
     public WallType detectedWallType { get; private set; }
 
@@ -27,8 +27,8 @@ public class ObjectsInFrontDetector : Publisher
 
     private void Start()
     {
+        eventQueue = FindObjectOfType<EventQueue>();
         detectedWallType = WallType.NO_WALL;
-        pickupObjectsController = GetComponent<PickupObjectsController>();
     }
 
     private void Update()
@@ -54,25 +54,44 @@ public class ObjectsInFrontDetector : Publisher
             detectedWallType = WallType.NO_WALL;
         }
 
-        if (feetHit.collider != null)
+        bool detectedCollision = DetectCollision(feetHit);
+        if (!detectedCollision)
         {
-            float distance = feetHit.distance;
-            if (feetHit.collider.tag.Equals(Tags.PICKABLE) && distance < minDistanceToPickup)
+            DetectCollision(midHit);
+        }
+    }
+
+    private bool DetectCollision(RaycastHit raycastHit)
+    {
+        bool detectedCollision = false;
+        if (raycastHit.collider != null)
+        {
+            float distance = raycastHit.distance;
+            if (
+                raycastHit.collider.tag.Equals(Tags.INTERACTABLE)
+                && distance < minDistanceToInteract
+            )
             {
+                detectedCollision = true;
                 pickupHint.SetActive(true);
-                pickupObjectsController.objectInFront = feetHit.collider.gameObject;
+                eventQueue.SubmitEvent(
+                    new EventDTO(
+                        EventType.OBJECT_NOW_IN_RANGE,
+                        raycastHit.collider.gameObject.GetComponent<Interactable>()
+                    )
+                );
             }
             else
             {
+                eventQueue.SubmitEvent((new EventDTO(EventType.OBJECT_OUT_OF_RANGE, null)));
                 pickupHint.SetActive(false);
-                pickupObjectsController.objectInFront = null;
             }
         }
         else
         {
             pickupHint.SetActive(false);
-            pickupObjectsController.objectInFront = null;
         }
+        return detectedCollision;
     }
 
     private RaycastHit DoRaycast(Transform transform)

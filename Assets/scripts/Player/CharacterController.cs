@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : Observer
 {
     public PlayerAnimationsManager animationsManager { get; private set; }
     public CapsuleCollider capsuleCollider { get; private set; }
@@ -33,10 +33,6 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private GameObject rightHandObject;
 
-    private PickupObjectsController pickupObjectsController;
-
-    private GameObject pickedObject;
-
     public PlayerState playerState { get; private set; }
 
     private UIUpdater uiUpdater;
@@ -53,6 +49,8 @@ public class CharacterController : MonoBehaviour
 
     private StatsToValuesConverter statsToValuesConverter;
 
+    private EventQueue eventQueue;
+
     private void Awake()
     {
         statsAddingDTO = new StatsAddingDTO();
@@ -63,6 +61,7 @@ public class CharacterController : MonoBehaviour
         levelData.experience = 0;
         levelData.experienceNeededForNextLevel = 1000;
 
+        eventQueue = FindObjectOfType<EventQueue>();
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
         playerUI = GetComponent<PlayerUI>();
         cameraController = GetComponent<CameraController>();
@@ -70,7 +69,6 @@ public class CharacterController : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
-        pickupObjectsController = GetComponent<PickupObjectsController>();
         statsToValuesConverter = FindObjectOfType<StatsToValuesConverter>();
 
         uiUpdater = GetComponent<UIUpdater>();
@@ -123,8 +121,7 @@ public class CharacterController : MonoBehaviour
 
     public void AttachObjectToHand()
     {
-        pickedObject = pickupObjectsController.objectInFront;
-        if (pickedObject.GetComponent<Medkit>() != null)
+        if (playerState.objectToInteractWith.GetType() == typeof(Medkit))
         {
             playerState.increaseMedipacksAmount();
             uiUpdater.UpdateMedipackAmount(
@@ -132,15 +129,13 @@ public class CharacterController : MonoBehaviour
                 playerState.numberOfMedipacks
             );
         }
-        pickedObject.GetComponent<BoxCollider>().enabled = false;
-        pickedObject.transform.SetParent(rightHandObject.transform);
-        pickedObject.transform.localPosition = new Vector3(0, 0, 0);
+        playerState.objectToInteractWith.Interact(rightHandObject);
     }
 
     public void DestroyPickedObject()
     {
-        Destroy(pickedObject);
-        pickedObject = null;
+        Destroy(playerState.objectToInteractWith.gameObject);
+        playerState.objectToInteractWith = null;
     }
 
     public void DecreaseHealth(int percent)
@@ -163,11 +158,34 @@ public class CharacterController : MonoBehaviour
         stateMachine.OnTriggerType(TriggerType.PICKUP_STARTED);
     }
 
+    public void PullLeverStarted()
+    {
+        playerState.objectToInteractWith.Interact(null);
+    }
+
     private void Update()
     {
         if (playerState.HasMedipacks() && ActionKeys.IsKeyPressed(ActionKeys.USE_MEDIPACK))
         {
             stateMachine.OnTriggerType(TriggerType.MEDIPACK_USED);
+        }
+        if (
+            playerState.objectToInteractWith != null && ActionKeys.IsKeyPressed(ActionKeys.INTERACT)
+        )
+        {
+            Interactable objectToInteractWith = playerState.objectToInteractWith;
+            if (objectToInteractWith.GetType() == typeof(Lever))
+            {
+                animationsManager.setAnimationToPullLever();
+                eventQueue.SubmitEvent(
+                    new EventDTO(EventType.LEVER_OPENING, objectToInteractWith.gameObject)
+                );
+            }
+            else if (objectToInteractWith.GetType() == typeof(Medkit))
+            {
+                animationsManager.setAnimationToPickup();
+                playerState.isPickingObject = true;
+            }
         }
         uiUpdater.UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
         uiUpdater.UpdateExperience(
@@ -237,5 +255,21 @@ public class CharacterController : MonoBehaviour
     internal void pickupAnimationFinished()
     {
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
+    }
+
+    public override void OnEvent(EventDTO eventDTO)
+    {
+        switch (eventDTO.eventType)
+        {
+            case EventType.OBJECT_NOW_IN_RANGE:
+                playerState.objectToInteractWith = (Interactable)eventDTO.eventData;
+                break;
+            case EventType.OBJECT_OUT_OF_RANGE:
+                if (!playerState.isPickingObject)
+                {
+                    playerState.objectToInteractWith = null;
+                }
+                break;
+        }
     }
 }

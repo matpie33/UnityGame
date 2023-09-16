@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraController : Observer
 {
     [Header("Framing")]
     [SerializeField]
@@ -178,5 +179,18 @@ public class CameraController : MonoBehaviour
 
         _camera.transform.position = _newPosition;
         _camera.transform.rotation = _newRotation;
+    }
+
+    public override void OnEvent(EventDTO eventDTO)
+    {
+        switch (eventDTO.eventType)
+        {
+            case EventType.LEVER_OPENING:
+                enabled = false;
+                break;
+            case EventType.GATE_OPENED:
+                enabled = true;
+                break;
+        }
     }
 }

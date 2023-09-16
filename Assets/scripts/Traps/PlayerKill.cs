@@ -3,21 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerKill : Publisher
+public class PlayerKill : MonoBehaviour
 {
+    private EventQueue eventQueue;
+
     private void Start()
     {
-        AddObserver(FindObjectOfType<GameManager>());
+        eventQueue = FindObjectOfType<EventQueue>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag.Equals(Tags.PLAYER))
         {
-            foreach (Observer observer in observers)
-            {
-                observer.OnEvent(new EventDTO(EventType.PLAYER_DIED, null));
-            }
+            eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_DIED, null));
         }
     }
 }

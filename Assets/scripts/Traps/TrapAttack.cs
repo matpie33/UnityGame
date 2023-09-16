@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrapAttack : Publisher
+public class TrapAttack : MonoBehaviour
 {
     private bool isRunning = true;
 
