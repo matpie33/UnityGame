@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class Medkit : Interactable
+public class Medkit : Pickable
 {
     private BoxCollider boxCollider;
 

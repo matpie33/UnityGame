@@ -16,9 +16,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private Transform headLevel;
 
-    [SerializeField]
-    private GameObject pickupHint;
-
     private EventQueue eventQueue;
 
     public WallType detectedWallType { get; private set; }
@@ -73,7 +70,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
             )
             {
                 detectedCollision = true;
-                pickupHint.SetActive(true);
                 eventQueue.SubmitEvent(
                     new EventDTO(
                         EventType.OBJECT_NOW_IN_RANGE,
@@ -84,12 +80,11 @@ public class ObjectsInFrontDetector : MonoBehaviour
             else
             {
                 eventQueue.SubmitEvent((new EventDTO(EventType.OBJECT_OUT_OF_RANGE, null)));
-                pickupHint.SetActive(false);
             }
         }
         else
         {
-            pickupHint.SetActive(false);
+            eventQueue.SubmitEvent((new EventDTO(EventType.OBJECT_OUT_OF_RANGE, null)));
         }
         return detectedCollision;
     }

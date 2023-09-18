@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lever : Interactable
+public class Lever : Pullable
 {
     private Animator animator;
 
