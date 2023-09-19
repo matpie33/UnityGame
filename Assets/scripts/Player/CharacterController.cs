@@ -51,6 +51,9 @@ public class CharacterController : Observer
 
     private EventQueue eventQueue;
 
+    [SerializeField]
+    private Transform handTargetPosition;
+
     private void Awake()
     {
         statsAddingDTO = new StatsAddingDTO();
@@ -185,6 +188,7 @@ public class CharacterController : Observer
             {
                 animationsManager.setAnimationToPickup();
                 playerState.isPickingObject = true;
+                handTargetPosition.transform.position = objectToInteractWith.transform.position;
             }
         }
         uiUpdater.UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
