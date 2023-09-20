@@ -23,8 +23,8 @@ public class CameraFocusOnObject : Observer
                 break;
             case EventType.LEVER_OPENED:
                 GameObject gate = (GameObject)eventDTO.eventData;
-                Vector3 lookAtPosition = gate.transform.position + Vector3.up * 3;
-                cam.transform.position = lookAtPosition + gate.transform.forward * 5;
+                Vector3 lookAtPosition = gate.transform.position + Vector3.up * 2f;
+                cam.transform.position = lookAtPosition + gate.transform.forward * 15;
                 cam.transform.LookAt(lookAtPosition);
                 Debug.Log("Focus");
                 break;
