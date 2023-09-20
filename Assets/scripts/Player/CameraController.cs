@@ -45,7 +45,7 @@ public class CameraController : Observer
     private float _checkRadius = 0.2f;
 
     [SerializeField]
-    private LayerMask _obstructionLayers = -1;
+    private LayerMask _obstructionLayers;
 
     private List<Collider> _ignoreColliders = new List<Collider>();
 
@@ -100,6 +100,8 @@ public class CameraController : Observer
 
     private void Start()
     {
+        _obstructionLayers = 1 << 2;
+        _obstructionLayers = ~_obstructionLayers;
         _framing = new Vector3(0, 0, 0);
         _ignoreColliders.AddRange(GetComponentsInChildren<Collider>());
         planarDirection = _followTransform.forward;

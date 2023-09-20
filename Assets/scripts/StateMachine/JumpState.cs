@@ -40,10 +40,6 @@ public class JumpState : MovementState
 
     public override void OnTrigger(TriggerType triggerType)
     {
-        if (triggerType.Equals(TriggerType.LEDGE_DETECTED))
-        {
-            stateMachine.ChangeState(stateMachine.ledgeGrabState);
-        }
         if (triggerType.Equals(TriggerType.GROUND_DETECTED))
         {
             characterController.animationsManager.setAnimationToMoving();

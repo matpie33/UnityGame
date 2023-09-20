@@ -251,11 +251,6 @@ public class CharacterController : Observer
         }
     }
 
-    public void ledgeDetected()
-    {
-        stateMachine.OnTriggerType(TriggerType.LEDGE_DETECTED);
-    }
-
     internal void pickupAnimationFinished()
     {
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
@@ -273,6 +268,9 @@ public class CharacterController : Observer
                 {
                     playerState.objectToInteractWith = null;
                 }
+                break;
+            case EventType.LEVER_OPENED:
+                animationsManager.setAnimationToMoving();
                 break;
         }
     }

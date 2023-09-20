@@ -13,19 +13,11 @@ public class FloorTrap : MonoBehaviour
     private Direction directionForSpike;
 
     private GameObject spikesPrefab;
-
-    private BoxCollider boxCollider;
-
     private bool hideOldSpike;
 
-    private void Start()
+    private void OnTriggerEnter(Collider collider)
     {
-        boxCollider = GetComponent<BoxCollider>();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.tag.Equals(Tags.PLAYER))
+        if (collider.tag.Equals(Tags.PLAYER))
         {
             hideOldSpike = false;
             if (spikesPrefab == null)
@@ -37,33 +29,35 @@ public class FloorTrap : MonoBehaviour
                 spikesPrefab.GetComponent<Animator>().Play("Base Layer.SpikesUp");
             }
             Vector3 offset;
+            Vector3 boxExtents = new Vector3(2, 2, 2);
+            float offsetY = spikesPrefab.GetComponent<BoxCollider>().size.y;
             switch (directionForSpike)
             {
                 case Direction.FORWARD:
-                    offset = transform.forward;
+                    offset = transform.forward * boxExtents.z;
                     break;
                 case Direction.BACKWARD:
-                    offset = -transform.forward;
+                    offset = -transform.forward * boxExtents.z;
+                    ;
                     break;
                 case Direction.LEFT:
-                    offset = -transform.right;
+                    offset = -transform.right * boxExtents.x;
                     break;
                 case Direction.RIGHT:
-                    offset = transform.right;
+                    offset = transform.right * boxExtents.x;
                     break;
                 default:
                     throw new Exception("No enum found");
             }
-            float halfSize = boxCollider.bounds.size.magnitude / 2;
             spikesPrefab.transform.position =
-                gameObject.transform.position - Vector3.up * halfSize * 1.5f + offset * halfSize;
+                gameObject.transform.position - offsetY * Vector3.up + offset;
             spikesPrefab.SetActive(true);
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider collider)
     {
-        if (collision.collider.tag.Equals(Tags.PLAYER))
+        if (collider.tag.Equals(Tags.PLAYER))
         {
             spikesPrefab.GetComponent<Animator>().Play("Base Layer.SpikesDown");
             hideOldSpike = true;

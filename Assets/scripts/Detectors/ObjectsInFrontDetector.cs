@@ -93,7 +93,16 @@ public class ObjectsInFrontDetector : MonoBehaviour
     {
         Vector3 position = transform.position;
         RaycastHit raycastHit;
-        Physics.Raycast(position, this.transform.forward, out raycastHit, minDistanceToClimbWall);
+        int layerMask = 1 << 2;
+        layerMask = ~layerMask;
+
+        Physics.Raycast(
+            position,
+            this.transform.forward,
+            out raycastHit,
+            minDistanceToClimbWall,
+            layerMask
+        );
 
         return raycastHit;
     }

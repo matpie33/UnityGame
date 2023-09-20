@@ -13,6 +13,9 @@ public class GroundLandingDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        characterController.GroundDetected();
+        if (!other.isTrigger)
+        {
+            characterController.GroundDetected();
+        }
     }
 }

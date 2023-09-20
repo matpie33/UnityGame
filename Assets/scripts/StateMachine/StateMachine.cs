@@ -58,7 +58,6 @@ public class StateMachine : MonoBehaviour
     {
         switch (triggerType)
         {
-            case TriggerType.LEDGE_DETECTED:
             case TriggerType.MEDIPACK_USED:
             case TriggerType.GROUND_DETECTED:
                 currentState.OnTrigger(triggerType);
