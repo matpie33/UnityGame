@@ -56,12 +56,11 @@ public class LedgeGrabState : State
         }
         else if (characterController.playerInputs.left.PressedDown())
         {
-            Debug.Log("left pressed");
-            characterController.animationsManager.setAnimationToLeftShimmy();
+            characterController.TryShimmy(LedgeDirection.LEFT);
         }
         else if (characterController.playerInputs.right.PressedDown())
         {
-            characterController.animationsManager.setAnimationToRightShimmy();
+            characterController.TryShimmy(LedgeDirection.RIGHT);
         }
     }
 }

@@ -53,6 +53,8 @@ public class CharacterController : Observer
     [SerializeField]
     private Transform handTargetPosition;
 
+    public LedgeContinuationDetector ledgeContinuationDetector { get; private set; }
+
     private void Awake()
     {
         statsAddingDTO = new StatsAddingDTO();
@@ -72,6 +74,7 @@ public class CharacterController : Observer
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         statsToValuesConverter = FindObjectOfType<StatsToValuesConverter>();
+        ledgeContinuationDetector = GetComponent<LedgeContinuationDetector>();
 
         uiUpdater = GetComponent<UIUpdater>();
         healthState = new HealthState(200);
@@ -81,6 +84,23 @@ public class CharacterController : Observer
         uiUpdater = FindObjectOfType<UIUpdater>();
         uiUpdater.InitializeStatsPanel(playerState, playerUI, statsAddingDTO);
         uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
+    }
+
+    public void TryShimmy(LedgeDirection direction)
+    {
+        bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(direction);
+        if (ledgeContinues)
+        {
+            switch (direction)
+            {
+                case LedgeDirection.LEFT:
+                    animationsManager.setAnimationToLeftShimmy();
+                    break;
+                case LedgeDirection.RIGHT:
+                    animationsManager.setAnimationToRightShimmy();
+                    break;
+            }
+        }
     }
 
     public void ResetStats()
