@@ -20,7 +20,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public WallType detectedWallType { get; private set; }
 
-    private const float minDistanceToClimbWall = 0.3f;
+    public Vector3 directionFromPlayerToWall { get; private set; }
+
+    private const float minDistanceToClimbWall = 1f;
 
     private void Start()
     {
@@ -41,6 +43,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         else if (feetHit.collider != null && midHit.collider != null && headHit.collider == null)
         {
             detectedWallType = WallType.ABOVE_HIPS;
+            directionFromPlayerToWall = midHit.normal;
         }
         else if (feetHit.collider != null && midHit.collider != null && headHit.collider != null)
         {

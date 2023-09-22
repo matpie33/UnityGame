@@ -11,6 +11,7 @@ public class StateMachine : MonoBehaviour
     public AttackState attackState { get; private set; }
     public FallingState fallingState { get; private set; }
     public PickupObjectsState pickupObjectsState { get; private set; }
+    public ShimmyState shimmyState { get; private set; }
 
     private CharacterController characterController;
 
@@ -29,6 +30,7 @@ public class StateMachine : MonoBehaviour
         attackState = new AttackState(characterController);
         fallingState = new FallingState(characterController, this);
         pickupObjectsState = new PickupObjectsState(characterController);
+        shimmyState = new ShimmyState(characterController, this);
 
         currentState = runState;
         currentState.EnterState();

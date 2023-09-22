@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class LedgeGrabState : State
@@ -16,6 +17,13 @@ public class LedgeGrabState : State
     {
         characterController.rigidbody.isKinematic = true;
         characterController.animationsManager.setAnimationToLedgeGrab();
+        Vector3 directionToWall = -characterController
+            .objectsInFrontDetector
+            .directionFromPlayerToWall;
+        characterController.transform.rotation = Quaternion.LookRotation(
+            directionToWall,
+            Vector3.up
+        );
     }
 
     public override void ExitState()
@@ -45,6 +53,15 @@ public class LedgeGrabState : State
         else if (ActionKeys.IsKeyPressed(ActionKeys.CLIMB_LEDGE))
         {
             characterController.animationsManager.setAnimationToLedgeClimbing();
+        }
+        else if (characterController.playerInputs.left.PressedDown())
+        {
+            Debug.Log("left pressed");
+            characterController.animationsManager.setAnimationToLeftShimmy();
+        }
+        else if (characterController.playerInputs.right.PressedDown())
+        {
+            characterController.animationsManager.setAnimationToRightShimmy();
         }
     }
 }

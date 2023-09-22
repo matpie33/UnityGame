@@ -22,7 +22,19 @@ public class PlayerAnimationsManager : MonoBehaviour
         climb_middle_ledge,
         step_up,
         hanging_idle,
-        pull_lever
+        pull_lever,
+        left_shimmy,
+        right_shimmy
+    }
+
+    public void setAnimationToLeftShimmy()
+    {
+        animator.CrossFade(anim(AnimationName.left_shimmy), 0.1f);
+    }
+
+    public void setAnimationToRightShimmy()
+    {
+        animator.CrossFade(anim(AnimationName.right_shimmy), 0.1f);
     }
 
     private void Awake()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -271,5 +272,22 @@ public class CharacterController : Observer
                 animationsManager.setAnimationToMoving();
                 break;
         }
+    }
+
+    public void shimmyLeft()
+    {
+        stateMachine.shimmyState.Direction(-1);
+        stateMachine.ChangeState(stateMachine.shimmyState);
+    }
+
+    public void shimmyRight()
+    {
+        stateMachine.shimmyState.Direction(1);
+        stateMachine.ChangeState(stateMachine.shimmyState);
+    }
+
+    internal void ShimmyDone()
+    {
+        stateMachine.ChangeState(stateMachine.ledgeGrabState);
     }
 }
