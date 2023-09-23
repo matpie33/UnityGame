@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CameraController : Observer
 {
@@ -116,7 +117,7 @@ public class CameraController : Observer
             _followTransform.position - (_targetRotation * Vector3.forward) * _targetDistance;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         float _zoom = -PlayerInputs.MouseScrollInput * _zoomSpeed; // -0.5 lub 0.5
         float mouseX = PlayerInputs.MouseXInput; //wartosc od okolo -40 do 40 - 40 bardzo szybki ruch, 10 srednio szybki,
@@ -141,28 +142,20 @@ public class CameraController : Observer
         );
 
         float _smallestDistance = _targetDistance;
-        RaycastHit[] _hits = Physics.SphereCastAll(
-            _focusPosition,
-            _checkRadius,
-            _targetRotation * -Vector3.forward,
-            _targetDistance,
+        RaycastHit hit;
+        bool didHit = Physics.Raycast(
+            _followTransform.position,
+            -_camera.transform.forward,
+            out hit,
+            Vector3.Distance(_camera.transform.position, _followTransform.position),
             _obstructionLayers
         ); //cast ray from player model, ray is a sphere, ray toward camera, sphere is moving "_targetDistance" towards destination
 
         // and has radius = checkRadius
 
-        if (_hits.Length != 0)
+        if (didHit)
         {
-            foreach (RaycastHit hit in _hits)
-            {
-                if (!_ignoreColliders.Contains(hit.collider))
-                {
-                    if (hit.distance < _smallestDistance)
-                    {
-                        _smallestDistance = hit.distance; // find closest distance from player to obstacle and use this distance
-                    }
-                }
-            }
+            _smallestDistance = hit.distance;
         }
 
         _targetRotation =
