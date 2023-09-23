@@ -8604,23 +8604,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dcfeaecd957ae048a0d4ebb20b611e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 963194227}
-  _followTransform: {fileID: 241142403}
-  _minVerticalAngle: -42
-  _maxVerticalAngle: 60
-  _zoomSpeed: 5
-  _rotationSharpness: 20
-  _minDistance: 0
-  _maxDistance: 10
-  _defaultDistance: 1.25
-  _checkRadius: 0.2
-  _obstructionLayers:
+  camera: {fileID: 963194227}
+  playerTransform: {fileID: 241142403}
+  minVerticalAngle: -90
+  maxVerticalAngle: 90
+  zoomSpeed: 10
+  rotationSharpness: 25
+  minDistance: 0
+  maxDistance: 10
+  defaultDistance: 2
+  obstructionLayers:
     serializedVersion: 2
-    m_Bits: 2147483647
-  _framing: {x: 0, y: 0, z: 0}
-  _invertX: 0
-  _invertY: 0
-  _defaultVerticalAngle: 40
+    m_Bits: 0
+  framing: {x: 0, y: 0, z: 0}
+  invertX: 0
+  invertY: 0
+  defaultVerticalAngle: 20
 --- !u!54 &1781776607
 Rigidbody:
   m_ObjectHideFlags: 0
