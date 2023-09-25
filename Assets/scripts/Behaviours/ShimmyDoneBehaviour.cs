@@ -15,7 +15,5 @@ public class ShimmyDoneBehaviour : StateMachineBehaviour
         {
             charController.TryShimmy(LedgeDirection.RIGHT);
         }
-
-        charController.ShimmyDone();
     }
 }

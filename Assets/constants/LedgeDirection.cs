@@ -3,6 +3,6 @@ using UnityEngine;
 
 public enum LedgeDirection
 {
-    LEFT,
-    RIGHT
+    LEFT = -1,
+    RIGHT = 1
 }

@@ -24,7 +24,21 @@ public class PlayerAnimationsManager : MonoBehaviour
         hanging_idle,
         pull_lever,
         left_shimmy,
-        right_shimmy
+        right_shimmy,
+        ledge_rotate_left,
+        ledge_rotate_right
+    }
+
+    public void setAnimationToLedgeRotateLeft()
+    {
+        animator.applyRootMotion = true;
+        animator.Play(anim(AnimationName.ledge_rotate_left));
+    }
+
+    public void setAnimationToLedgeRotateRight()
+    {
+        animator.applyRootMotion = true;
+        animator.Play(anim(AnimationName.ledge_rotate_right));
     }
 
     public void setAnimationToLeftShimmy()
@@ -76,8 +90,9 @@ public class PlayerAnimationsManager : MonoBehaviour
         animator.CrossFade(anim(AnimationName.climbing), 0.1f);
     }
 
-    public void setAnimationToLedgeGrab()
+    public void setAnimationToHangingIdle()
     {
+        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.hanging_idle), 0.1f);
     }
 

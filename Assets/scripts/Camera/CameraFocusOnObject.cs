@@ -26,7 +26,6 @@ public class CameraFocusOnObject : Observer
                 Vector3 lookAtPosition = gate.transform.position + Vector3.up * 2f;
                 cam.transform.position = lookAtPosition + gate.transform.forward * 15;
                 cam.transform.LookAt(lookAtPosition);
-                Debug.Log("Focus");
                 break;
         }
     }

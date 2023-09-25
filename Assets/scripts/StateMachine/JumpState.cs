@@ -23,6 +23,10 @@ public class JumpState : MovementState
     public override void FrameUpdate()
     {
         base.Move(characterController.currentVelocity);
+        if (characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
+        {
+            stateMachine.ChangeState(stateMachine.ledgeGrabState);
+        }
     }
 
     public override void PhysicsUpdate()
@@ -31,10 +35,6 @@ public class JumpState : MovementState
         if (characterController.rigidbody.velocity.y < -0.5)
         {
             stateMachine.ChangeState(stateMachine.fallingState);
-        }
-        if (characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
-        {
-            stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
     }
 

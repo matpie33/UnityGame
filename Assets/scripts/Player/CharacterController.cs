@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CharacterController : Observer
 {
+    public WallData wallData { get; private set; }
     public PlayerAnimationsManager animationsManager { get; private set; }
     public CapsuleCollider capsuleCollider { get; private set; }
     public CameraController cameraController { get; private set; }
@@ -13,7 +14,7 @@ public class CharacterController : Observer
 
     public float initialHeight { get; private set; }
 
-    public Rigidbody rigidbody { get; private set; }
+    public new Rigidbody rigidbody { get; private set; }
 
     private List<Observer> observers = new List<Observer>();
 
@@ -27,7 +28,7 @@ public class CharacterController : Observer
     [SerializeField]
     private TextMeshProUGUI healthText;
 
-    private StateMachine stateMachine;
+    public StateMachine stateMachine { get; private set; }
 
     [SerializeField]
     private GameObject rightHandObject;
@@ -57,6 +58,7 @@ public class CharacterController : Observer
 
     private void Awake()
     {
+        wallData = new WallData();
         statsAddingDTO = new StatsAddingDTO();
         amountOfStatsToAddPerLevel = 5;
         statsAddingDTO.statsLeft = amountOfStatsToAddPerLevel;
@@ -86,6 +88,12 @@ public class CharacterController : Observer
         uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
     }
 
+    public void GetWallData()
+    {
+        wallData.wallCollider = objectsInFrontDetector.wallCollider;
+        wallData.directionFromWallToPlayer = objectsInFrontDetector.directionFromWallToPlayer;
+    }
+
     public void TryShimmy(LedgeDirection direction)
     {
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(direction);
@@ -99,6 +107,25 @@ public class CharacterController : Observer
                 case LedgeDirection.RIGHT:
                     animationsManager.setAnimationToRightShimmy();
                     break;
+            }
+        }
+        else
+        {
+            bool canRotate = ledgeContinuationDetector.CheckIfCanRotateAroundLedge(direction);
+            if (canRotate)
+            {
+                switch (direction)
+                {
+                    case LedgeDirection.LEFT:
+                        animationsManager.setAnimationToLedgeRotateLeft();
+                        break;
+                    case LedgeDirection.RIGHT:
+                        animationsManager.setAnimationToLedgeRotateRight();
+                        break;
+                }
+
+                GetWallData();
+                return;
             }
         }
     }
@@ -296,13 +323,13 @@ public class CharacterController : Observer
 
     public void shimmyLeft()
     {
-        stateMachine.shimmyState.Direction(-1);
+        stateMachine.shimmyState.Direction(LedgeDirection.LEFT);
         stateMachine.ChangeState(stateMachine.shimmyState);
     }
 
     public void shimmyRight()
     {
-        stateMachine.shimmyState.Direction(1);
+        stateMachine.shimmyState.Direction(LedgeDirection.RIGHT);
         stateMachine.ChangeState(stateMachine.shimmyState);
     }
 
