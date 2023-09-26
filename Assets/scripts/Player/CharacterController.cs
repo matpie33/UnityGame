@@ -91,7 +91,8 @@ public class CharacterController : Observer
     public void GetWallData()
     {
         wallData.wallCollider = objectsInFrontDetector.wallCollider;
-        wallData.directionFromWallToPlayer = objectsInFrontDetector.directionFromWallToPlayer;
+        wallData.directionFromPlayerToWall = objectsInFrontDetector.directionFromPlayerToWall;
+        Debug.Log("initial" + wallData.directionFromPlayerToWall);
     }
 
     public void TryShimmy(LedgeDirection direction)
@@ -114,20 +115,29 @@ public class CharacterController : Observer
             bool canRotate = ledgeContinuationDetector.CheckIfCanRotateAroundLedge(direction);
             if (canRotate)
             {
-                switch (direction)
-                {
-                    case LedgeDirection.LEFT:
-                        animationsManager.setAnimationToLedgeRotateLeft();
-                        break;
-                    case LedgeDirection.RIGHT:
-                        animationsManager.setAnimationToLedgeRotateRight();
-                        break;
-                }
-
-                GetWallData();
-                return;
+                RotateAroundLedge(direction);
             }
         }
+    }
+
+    public void RotateAroundLedge(LedgeDirection direction)
+    {
+        switch (direction)
+        {
+            case LedgeDirection.LEFT:
+                animationsManager.setAnimationToLedgeRotateLeft();
+                break;
+            case LedgeDirection.RIGHT:
+                animationsManager.setAnimationToLedgeRotateRight();
+                break;
+        }
+        Vector3 newDirection = ledgeContinuationDetector.GetRotatedVector(
+            wallData.directionFromPlayerToWall,
+            direction
+        );
+        wallData.directionFromPlayerToWall = newDirection;
+        Debug.Log("rotate around ledge: " + wallData.directionFromPlayerToWall);
+        stateMachine.ChangeState(stateMachine.doingAnimationState);
     }
 
     public void ResetStats()
@@ -336,5 +346,10 @@ public class CharacterController : Observer
     internal void ShimmyDone()
     {
         stateMachine.ChangeState(stateMachine.ledgeGrabState);
+    }
+
+    internal void ShimmyPressedAgain(LedgeDirection direction)
+    {
+        stateMachine.shimmyState.ShimmyAgain(direction);
     }
 }

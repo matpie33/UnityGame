@@ -43,7 +43,7 @@ public class PlayerAnimationsManager : MonoBehaviour
 
     public void setAnimationToLeftShimmy()
     {
-        animator.CrossFade(anim(AnimationName.left_shimmy), 0.1f);
+        animator.Play(anim(AnimationName.left_shimmy));
     }
 
     public void setAnimationToRightShimmy()

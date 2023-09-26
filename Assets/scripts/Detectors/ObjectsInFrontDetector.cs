@@ -20,11 +20,12 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public WallType detectedWallType { get; private set; }
 
-    public Vector3 directionFromWallToPlayer { get; private set; }
+    public Vector3 directionFromPlayerToWall { get; private set; }
 
     public Vector3 ledgePosition { get; private set; }
 
-    private const float minDistanceToClimbWall = 1f;
+    [SerializeField]
+    private float minDistanceToClimbWall = 1f;
 
     public Collider wallCollider { get; private set; }
 
@@ -47,7 +48,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         else if (feetHit.collider != null && midHit.collider != null && headHit.collider == null)
         {
             detectedWallType = WallType.ABOVE_HIPS;
-            directionFromWallToPlayer = midHit.normal;
+            directionFromPlayerToWall = -midHit.normal;
             wallCollider = midHit.collider;
         }
         else if (feetHit.collider != null && midHit.collider != null && headHit.collider != null)

@@ -23,7 +23,7 @@ public class LedgeContinuationDetector : MonoBehaviour
 
     public bool CheckIfLedgeContinues(LedgeDirection ledgeDirection)
     {
-        Vector3 directionFromWallToPlayer = characterController.wallData.directionFromWallToPlayer;
+        Vector3 directionFromWallToPlayer = characterController.wallData.directionFromPlayerToWall;
         Collider wallCollider = characterController.wallData.wallCollider;
 
         GameObject colliderObject = wallCollider.gameObject;
@@ -50,7 +50,7 @@ public class LedgeContinuationDetector : MonoBehaviour
 
     internal bool CheckIfCanRotateAroundLedge(LedgeDirection ledgeDirection)
     {
-        Vector3 directionFromWallToPlayer = characterController.wallData.directionFromWallToPlayer;
+        Vector3 directionFromWallToPlayer = characterController.wallData.directionFromPlayerToWall;
         Collider wallCollider = characterController.wallData.wallCollider;
 
         GameObject colliderObject = wallCollider.gameObject;
@@ -80,5 +80,13 @@ public class LedgeContinuationDetector : MonoBehaviour
         Vector3 directionEndPoint = position + directionFromWallToPlayer + Vector3.up;
         Vector3 direction = position - directionEndPoint;
         return !Physics.Raycast(position, direction, 2f);
+    }
+
+    internal Vector3 GetRotatedVector(Vector3 directionFromWallToPlayer, LedgeDirection direction)
+    {
+        bool isLeftSide = direction.Equals(LedgeDirection.LEFT);
+
+        Quaternion rotation = Quaternion.Euler(new Vector3(0, isLeftSide ? 90 : -90, 0));
+        return rotation * directionFromWallToPlayer;
     }
 }

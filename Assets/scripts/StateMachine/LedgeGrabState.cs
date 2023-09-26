@@ -15,12 +15,9 @@ public class LedgeGrabState : State
 
     public override void EnterState()
     {
-        characterController.GetWallData();
         characterController.rigidbody.isKinematic = true;
         characterController.animationsManager.setAnimationToHangingIdle();
-        Vector3 directionToWall = -characterController
-            .objectsInFrontDetector
-            .directionFromWallToPlayer;
+        Vector3 directionToWall = characterController.wallData.directionFromPlayerToWall;
         characterController.transform.rotation = Quaternion.LookRotation(
             directionToWall,
             Vector3.up
