@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    private State currentState;
+    public State currentState { get; private set; }
     public RunState runState { get; private set; }
     public JumpState jumpState { get; private set; }
     public SprintState sprintState { get; private set; }
@@ -73,6 +73,12 @@ public class StateMachine : MonoBehaviour
                 break;
             case TriggerType.PICKUP_STARTED:
                 ChangeState(pickupObjectsState);
+                break;
+            case TriggerType.SHIMMY_DONE:
+                if (currentState.Equals(shimmyState))
+                {
+                    ChangeState(ledgeGrabState);
+                }
                 break;
         }
     }

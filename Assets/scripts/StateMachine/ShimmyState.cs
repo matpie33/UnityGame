@@ -7,6 +7,7 @@ public class ShimmyState : State
     private CharacterController characterController;
     private LedgeDirection ledgeDirection;
     private StateMachine stateMachine;
+    private bool shimmyMovingStart;
 
     public ShimmyState(CharacterController characterController, StateMachine stateMachine)
     {
@@ -17,12 +18,26 @@ public class ShimmyState : State
     public override void EnterState()
     {
         characterController.rigidbody.isKinematic = true;
+        shimmyMovingStart = false;
+        switch (ledgeDirection)
+        {
+            case LedgeDirection.LEFT:
+                characterController.animationsManager.setAnimationToLeftShimmy();
+                break;
+            case LedgeDirection.RIGHT:
+                characterController.animationsManager.setAnimationToRightShimmy();
+                break;
+        }
     }
 
     public override void FrameUpdate()
     {
         LedgeContinuationDetector ledgeContinuationDetector =
             characterController.ledgeContinuationDetector;
+        if (!shimmyMovingStart)
+        {
+            return;
+        }
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
         if (ledgeContinues)
         {
@@ -36,7 +51,7 @@ public class ShimmyState : State
             bool canRotate = ledgeContinuationDetector.CheckIfCanRotateAroundLedge(ledgeDirection);
             if (canRotate)
             {
-                characterController.RotateAroundLedge(ledgeDirection);
+                RotateAroundLedge(ledgeDirection);
             }
             else
             {
@@ -45,27 +60,40 @@ public class ShimmyState : State
         }
     }
 
+    private void RotateAroundLedge(LedgeDirection direction)
+    {
+        LedgeContinuationDetector ledgeContinuationDetector =
+            characterController.ledgeContinuationDetector;
+        switch (direction)
+        {
+            case LedgeDirection.LEFT:
+                characterController.animationsManager.setAnimationToLedgeRotateLeft();
+                break;
+            case LedgeDirection.RIGHT:
+                characterController.animationsManager.setAnimationToLedgeRotateRight();
+                break;
+        }
+        Vector3 newDirection = ledgeContinuationDetector.GetRotatedVector(
+            characterController.wallData.directionFromPlayerToWall,
+            direction
+        );
+        characterController.wallData.directionFromPlayerToWall = newDirection;
+        stateMachine.ChangeState(stateMachine.doingAnimationState);
+    }
+
     internal void Direction(LedgeDirection direction)
     {
         ledgeDirection = direction;
     }
 
-    internal void ShimmyAgain(LedgeDirection direction)
+    internal void ShimmyMovingStart()
     {
-        LedgeContinuationDetector ledgeContinuationDetector =
-            characterController.ledgeContinuationDetector;
-        bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
-        if (ledgeContinues)
-        {
-            switch (direction)
-            {
-                case LedgeDirection.LEFT:
-                    characterController.animationsManager.setAnimationToLeftShimmy();
-                    break;
-                case LedgeDirection.RIGHT:
-                    characterController.animationsManager.setAnimationToRightShimmy();
-                    break;
-            }
-        }
+        shimmyMovingStart = true;
+    }
+
+    internal void ShimmyContinue(LedgeDirection ledgeDirection)
+    {
+        this.ledgeDirection = ledgeDirection;
+        EnterState();
     }
 }

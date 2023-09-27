@@ -17,7 +17,8 @@ public class LedgeGrabState : State
     {
         characterController.rigidbody.isKinematic = true;
         characterController.animationsManager.setAnimationToHangingIdle();
-        Vector3 directionToWall = characterController.wallData.directionFromPlayerToWall;
+        WallData wallData = characterController.wallData;
+        Vector3 directionToWall = wallData.directionFromPlayerToWall;
         characterController.transform.rotation = Quaternion.LookRotation(
             directionToWall,
             Vector3.up

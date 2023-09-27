@@ -9,11 +9,15 @@ public class ShimmyDoneBehaviour : StateMachineBehaviour
         CharacterController charController = FindObjectOfType<CharacterController>();
         if (charController.playerInputs.left.Pressed())
         {
-            charController.ShimmyPressedAgain(LedgeDirection.LEFT);
+            charController.ShimmyContinue(LedgeDirection.LEFT);
         }
         else if (charController.playerInputs.right.Pressed())
         {
-            charController.ShimmyPressedAgain(LedgeDirection.RIGHT);
+            charController.ShimmyContinue(LedgeDirection.RIGHT);
+        }
+        else
+        {
+            charController.ShimmyDone();
         }
     }
 }
