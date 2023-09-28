@@ -31,12 +31,14 @@ public class PlayerAnimationsManager : MonoBehaviour
 
     public void setAnimationToLedgeRotateLeft()
     {
+        animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
         animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_left));
     }
 
     public void setAnimationToLedgeRotateRight()
     {
+        animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
         animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_right));
     }
@@ -92,6 +94,7 @@ public class PlayerAnimationsManager : MonoBehaviour
 
     public void setAnimationToHangingIdle()
     {
+        animator.updateMode = AnimatorUpdateMode.Normal;
         animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.hanging_idle), 0.1f);
     }

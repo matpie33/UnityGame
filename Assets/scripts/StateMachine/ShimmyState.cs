@@ -34,17 +34,17 @@ public class ShimmyState : State
     {
         LedgeContinuationDetector ledgeContinuationDetector =
             characterController.ledgeContinuationDetector;
-        if (!shimmyMovingStart)
-        {
-            return;
-        }
+
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
         if (ledgeContinues)
         {
-            characterController.transform.Translate(
-                (int)ledgeDirection * characterController.transform.right * Time.deltaTime * 2,
-                Space.World
-            );
+            if (shimmyMovingStart)
+            {
+                characterController.transform.Translate(
+                    (int)ledgeDirection * characterController.transform.right * Time.deltaTime * 2,
+                    Space.World
+                );
+            }
         }
         else
         {
@@ -93,7 +93,14 @@ public class ShimmyState : State
 
     internal void ShimmyContinue(LedgeDirection ledgeDirection)
     {
-        this.ledgeDirection = ledgeDirection;
-        EnterState();
+        LedgeContinuationDetector ledgeContinuationDetector =
+            characterController.ledgeContinuationDetector;
+
+        bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
+        if (ledgeContinues)
+        {
+            this.ledgeDirection = ledgeDirection;
+            EnterState();
+        }
     }
 }
