@@ -23,63 +23,37 @@ public class LedgeContinuationDetector : MonoBehaviour
 
     public bool CheckIfLedgeContinues(LedgeDirection ledgeDirection)
     {
-        Vector3 directionFromWallToPlayer = characterController.wallData.directionFromPlayerToWall;
-        Collider wallCollider = characterController.wallData.wallCollider;
-
-        GameObject colliderObject = wallCollider.gameObject;
-        Vector3 ledgePosition = colliderObject.transform.position;
-        Vector3 colliderExtents = wallCollider.bounds.extents;
-
         bool isLeftSide = ledgeDirection.Equals(LedgeDirection.LEFT);
-        Vector3 handPosition = (isLeftSide ? leftHand : rightHand).transform.position;
-        Vector3 directionFromHandToLedge = handPosition - ledgePosition;
-        directionFromHandToLedge.y = 0;
-        Quaternion rotateRight = Quaternion.Euler(new Vector3(0, 90, 0));
-        Vector3 directionAlongTheLedge = rotateRight * directionFromWallToPlayer;
-        Vector3 distanceAlongTheLedge = Vector3.Project(
-            directionFromHandToLedge,
-            directionAlongTheLedge
-        );
-        bool ledgeContinues =
-            distanceAlongTheLedge.magnitude
-            <= Vector3.Scale(colliderExtents, directionAlongTheLedge.normalized).magnitude;
-        debug.transform.position =
-            colliderObject.transform.position + distanceAlongTheLedge + Vector3.up * 2;
-        return ledgeContinues;
+
+        Vector3 origin =
+            (isLeftSide ? leftHand : rightHand).transform.position
+            + (isLeftSide ? -1 : 1) * 0.0f * characterController.transform.right
+            - Vector3.up * 0.1f
+            - characterController.transform.forward * 0.2f;
+        Vector3 direction = characterController.transform.forward;
+        bool didHit = Physics.Raycast(origin, direction, 1f);
+
+        return didHit;
     }
 
     internal bool CheckIfCanRotateAroundLedge(LedgeDirection ledgeDirection)
     {
-        Vector3 directionFromWallToPlayer = characterController.wallData.directionFromPlayerToWall;
-        Collider wallCollider = characterController.wallData.wallCollider;
-
-        GameObject colliderObject = wallCollider.gameObject;
-        Vector3 ledgePosition = colliderObject.transform.position;
-        Vector3 colliderExtents = wallCollider.bounds.extents;
-
         bool isLeftSide = ledgeDirection.Equals(LedgeDirection.LEFT);
-        Vector3 handPosition = (isLeftSide ? leftHand : rightHand).transform.position;
-        Vector3 directionFromHandToLedge = handPosition - ledgePosition;
-        directionFromHandToLedge.y = 0;
-        Quaternion rotateRight = Quaternion.Euler(new Vector3(0, 90, 0));
-        Vector3 directionAlongTheLedge = rotateRight * directionFromWallToPlayer;
-        Vector3 distanceAlongTheLedge = Vector3.Project(
-            directionFromHandToLedge,
-            directionAlongTheLedge
-        );
 
-        Vector3 distanceToPlayer = Vector3.Scale(colliderExtents, directionFromWallToPlayer);
-        Vector3 distanceToUp = Vector3.Scale(colliderExtents, Vector3.up);
+        Vector3 origin =
+            (isLeftSide ? leftHand : rightHand).transform.position
+            + (isLeftSide ? -1 : 1) * 0.0f * characterController.transform.right
+            - Vector3.up * 0.1f
+            - characterController.transform.forward * 0.2f;
 
-        Vector3 position =
-            colliderObject.transform.position
-            + distanceAlongTheLedge * 1.04f
-            + distanceToUp * 0.96f
-            + distanceToPlayer;
-        debug.transform.position = position;
-        Vector3 directionEndPoint = position + directionFromWallToPlayer + Vector3.up;
-        Vector3 direction = position - directionEndPoint;
-        return !Physics.Raycast(position, direction, 2f);
+        debug.transform.position = origin;
+        Vector3 directionEndPoint =
+            origin
+            + characterController.transform.forward * 2
+            - Vector3.up
+            + (isLeftSide ? -1 : 1) * characterController.transform.right;
+        Vector3 direction = directionEndPoint - origin;
+        return !Physics.Raycast(origin, direction, 2f);
     }
 
     internal Vector3 GetRotatedVector(Vector3 directionFromWallToPlayer, LedgeDirection direction)
