@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallAboveDetector : MonoBehaviour
+public class TriggerDetector : MonoBehaviour
 {
-    public bool isWallAbove { get; private set; }
+    public bool isColliding { get; private set; }
 
     private void OnTriggerEnter(Collider other)
     {
-        isWallAbove = true;
+        isColliding = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        isWallAbove = false;
+        isColliding = false;
     }
 }

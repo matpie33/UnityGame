@@ -51,7 +51,10 @@ public class LedgeGrabState : State
         }
         else if (ActionKeys.IsKeyPressed(ActionKeys.CLIMB_LEDGE))
         {
-            characterController.animationsManager.setAnimationToLedgeClimbing();
+            if (!characterController.canClimbUpWallChecker.isColliding)
+            {
+                characterController.animationsManager.setAnimationToLedgeClimbing();
+            }
         }
         else if (characterController.playerInputs.left.PressedDown())
         {

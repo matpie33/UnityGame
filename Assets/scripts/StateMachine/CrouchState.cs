@@ -26,7 +26,10 @@ public class CrouchState : MovementState
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-        if (ActionKeys.IsKeyPressed(ActionKeys.CROUCH))
+        if (
+            ActionKeys.IsKeyPressed(ActionKeys.CROUCH)
+            && !characterController.canStandFromCrouchChecker.isColliding
+        )
         {
             stateMachine.ChangeState(stateMachine.runState);
         }

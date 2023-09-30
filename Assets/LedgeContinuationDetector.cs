@@ -51,7 +51,7 @@ public class LedgeContinuationDetector : MonoBehaviour
             origin
             + characterController.transform.forward * 2
             - Vector3.up
-            + (isLeftSide ? -1 : 1) * characterController.transform.right;
+            + (isLeftSide ? -1 : 1) * characterController.transform.right * 0.8f;
         Vector3 direction = directionEndPoint - origin;
         return !Physics.Raycast(origin, direction, 2f);
     }

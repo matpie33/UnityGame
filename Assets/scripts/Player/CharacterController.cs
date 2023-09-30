@@ -54,6 +54,12 @@ public class CharacterController : Observer
     [SerializeField]
     private Transform handTargetPosition;
 
+    [field: SerializeField]
+    public TriggerDetector canClimbUpWallChecker { get; private set; }
+
+    [field: SerializeField]
+    public TriggerDetector canStandFromCrouchChecker { get; private set; }
+
     public LedgeContinuationDetector ledgeContinuationDetector { get; private set; }
 
     private void Awake()
