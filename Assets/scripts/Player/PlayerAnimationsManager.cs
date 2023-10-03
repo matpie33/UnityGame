@@ -26,7 +26,9 @@ public class PlayerAnimationsManager : MonoBehaviour
         left_shimmy,
         right_shimmy,
         ledge_rotate_left,
-        ledge_rotate_right
+        ledge_rotate_right,
+        walk_down_ledge,
+        move_backward
     }
 
     public void setAnimationToLedgeRotateLeft()
@@ -41,6 +43,12 @@ public class PlayerAnimationsManager : MonoBehaviour
         animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
         animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_right));
+    }
+
+    public void setAnimationToWalkDownLedge()
+    {
+        animator.applyRootMotion = true;
+        animator.CrossFade(anim(AnimationName.walk_down_ledge), 0.1f);
     }
 
     public void setAnimationToLeftShimmy()
@@ -142,5 +150,14 @@ public class PlayerAnimationsManager : MonoBehaviour
     internal void setAnimationToPullLever()
     {
         animator.CrossFade(anim(AnimationName.pull_lever), 0.1f);
+    }
+
+    internal void setMovingBackward(bool moveBackward)
+    {
+        if (moveBackward)
+        {
+            animator.CrossFade(anim(AnimationName.move_backward), 0.1f);
+        }
+        animator.SetBool("MovingBack", moveBackward);
     }
 }

@@ -13,6 +13,7 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode LEDGE_RELEASE = KeyCode.LeftShift;
     public const KeyCode CLIMB_LEDGE = KeyCode.Space;
     public const KeyCode SPRINT = KeyCode.LeftShift;
+    public const KeyCode WALK_DOWN_LEDGE = KeyCode.LeftControl;
 
     //keys with control key
     public const KeyCode OPEN_STATS_PANEL = KeyCode.A;

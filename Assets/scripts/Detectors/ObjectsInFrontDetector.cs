@@ -24,8 +24,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public Vector3 ledgePosition { get; private set; }
 
-    [SerializeField]
-    private float minDistanceToClimbWall = 1f;
+    private float minDistanceToClimbWall = 4f;
+
+    public float distanceToCollider { get; set; }
 
     public Collider wallCollider { get; private set; }
 
@@ -50,6 +51,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedWallType = WallType.ABOVE_HIPS;
             directionFromPlayerToWall = -midHit.normal;
             wallCollider = midHit.collider;
+            distanceToCollider = midHit.distance;
         }
         else if (feetHit.collider != null && midHit.collider != null && headHit.collider != null)
         {
@@ -112,6 +114,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
             minDistanceToClimbWall,
             layerMask
         );
+        Vector3 vector3 = this.transform.forward * minDistanceToClimbWall;
+        Vector3 end = position + vector3;
 
         return raycastHit;
     }

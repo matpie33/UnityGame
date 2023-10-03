@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LedgeGrabState : State
 {
+    private const float expectedDistanceToWall = 0.18f;
     private CharacterController characterController;
     private StateMachine stateMachine;
 
@@ -17,12 +18,27 @@ public class LedgeGrabState : State
     {
         characterController.rigidbody.isKinematic = true;
         characterController.animationsManager.setAnimationToHangingIdle();
+        characterController.GetWallData();
+
         WallData wallData = characterController.wallData;
         Vector3 directionToWall = wallData.directionFromPlayerToWall;
         characterController.transform.rotation = Quaternion.LookRotation(
             directionToWall,
             Vector3.up
         );
+        float distanceToCollider = wallData.distanceToCollider;
+        if (distanceToCollider < expectedDistanceToWall)
+        {
+            float valueToAdd = expectedDistanceToWall - distanceToCollider;
+            characterController.transform.position =
+                characterController.transform.position - directionToWall * valueToAdd;
+        }
+        else if (distanceToCollider > expectedDistanceToWall)
+        {
+            float valueToDecrease = distanceToCollider - expectedDistanceToWall;
+            characterController.transform.position =
+                characterController.transform.position + directionToWall * valueToDecrease;
+        }
     }
 
     public override void ExitState()

@@ -60,6 +60,9 @@ public class CharacterController : Observer
     [field: SerializeField]
     public TriggerDetector canStandFromCrouchChecker { get; private set; }
 
+    [field: SerializeField]
+    public TriggerDetector canWalkDownLedgeChecker { get; private set; }
+
     public LedgeContinuationDetector ledgeContinuationDetector { get; private set; }
 
     private void Awake()
@@ -98,6 +101,7 @@ public class CharacterController : Observer
     {
         wallData.wallCollider = objectsInFrontDetector.wallCollider;
         wallData.directionFromPlayerToWall = objectsInFrontDetector.directionFromPlayerToWall;
+        wallData.distanceToCollider = objectsInFrontDetector.distanceToCollider;
     }
 
     public void TryShimmy(LedgeDirection direction)
@@ -241,6 +245,11 @@ public class CharacterController : Observer
     public void attackEventChecked()
     {
         playerState.isAttacking = false;
+    }
+
+    public void changeStateToLedgeGrab()
+    {
+        stateMachine.ChangeState(stateMachine.ledgeGrabState);
     }
 
     public void attackAnimationFinish()

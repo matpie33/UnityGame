@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +8,6 @@ public class ShimmyState : State
     private CharacterController characterController;
     private LedgeDirection ledgeDirection;
     private StateMachine stateMachine;
-    private bool shimmyMovingStart;
 
     public ShimmyState(CharacterController characterController, StateMachine stateMachine)
     {
@@ -18,7 +18,6 @@ public class ShimmyState : State
     public override void EnterState()
     {
         characterController.rigidbody.isKinematic = true;
-        shimmyMovingStart = false;
         switch (ledgeDirection)
         {
             case LedgeDirection.LEFT:
@@ -38,18 +37,14 @@ public class ShimmyState : State
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
         if (ledgeContinues)
         {
-            if (shimmyMovingStart)
-            {
-                characterController.transform.Translate(
-                    (int)ledgeDirection * characterController.transform.right * Time.deltaTime * 2,
-                    Space.World
-                );
-            }
+            characterController.transform.Translate(
+                (int)ledgeDirection * characterController.transform.right * Time.deltaTime * 1.5f,
+                Space.World
+            );
         }
         else
         {
-            bool canRotate = ledgeContinuationDetector.CheckIfCanRotateAroundLedge(ledgeDirection);
-            if (canRotate)
+            if (ledgeContinuationDetector.CheckIfCanRotateAroundLedge(ledgeDirection))
             {
                 RotateAroundLedge(ledgeDirection);
             }
@@ -86,10 +81,7 @@ public class ShimmyState : State
         ledgeDirection = direction;
     }
 
-    internal void ShimmyMovingStart()
-    {
-        shimmyMovingStart = true;
-    }
+    internal void ShimmyMovingStart() { }
 
     internal void ShimmyContinue(LedgeDirection ledgeDirection)
     {
@@ -97,10 +89,23 @@ public class ShimmyState : State
             characterController.ledgeContinuationDetector;
 
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
+        this.ledgeDirection = ledgeDirection;
         if (ledgeContinues)
         {
-            this.ledgeDirection = ledgeDirection;
             EnterState();
+        }
+        else
+        {
+            if (ledgeContinuationDetector.CheckIfCanRotateAroundLedge(ledgeDirection))
+            {
+                RotateAroundLedge(ledgeDirection);
+            }
+            else
+            {
+                characterController.stateMachine.ChangeState(
+                    characterController.stateMachine.ledgeGrabState
+                );
+            }
         }
     }
 }

@@ -25,7 +25,6 @@ public class JumpState : MovementState
         base.Move(characterController.currentVelocity);
         if (characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
         {
-            characterController.GetWallData();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
     }

@@ -63,6 +63,10 @@ public abstract class MovementState : State
         _moveInputVector = _cameraPlanarRotation * _moveInputVector;
 
         targetSpeed = _moveInputVector == Vector3.zero ? 0 : getTargetSpeed();
+        if (playerInputs.MoveAxisForwardRaw == -1)
+        {
+            targetSpeed = 1f;
+        }
 
         newSpeed = Mathf.Lerp(newSpeed, targetSpeed, Time.deltaTime * moveSharpness);
         newVelocity = _moveInputVector * newSpeed;
@@ -71,12 +75,21 @@ public abstract class MovementState : State
             targetRotation = Quaternion.LookRotation(_moveInputVector);
             newRotation = Quaternion.Slerp(
                 characterController.transform.rotation,
-                targetRotation,
+                playerInputs.MoveAxisForwardRaw != -1
+                    ? targetRotation
+                    : targetRotation * Quaternion.Euler(0, 180f, 0),
                 Time.deltaTime * rotationSharpness
             );
             characterController.transform.rotation = newRotation;
         }
-        characterController.animationsManager.setRunningSpeedParameter(newSpeed);
+        if (playerInputs.MoveAxisForwardRaw != -1)
+        {
+            characterController.animationsManager.setRunningSpeedParameter(newSpeed);
+        }
+        else
+        {
+            characterController.animationsManager.setRunningSpeedParameter(-1);
+        }
         Move(newVelocity);
         characterController.currentVelocity = newVelocity;
     }

@@ -18,15 +18,26 @@ public class RunState : MovementState
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-        if (ActionKeys.IsKeyPressed(ActionKeys.PUNCH) || ActionKeys.IsKeyPressed(ActionKeys.KICK))
+        if (
+            !characterController.canWalkDownLedgeChecker.isColliding
+            && ActionKeys.IsKeyPressed(ActionKeys.WALK_DOWN_LEDGE)
+        )
+        {
+            characterController.rigidbody.isKinematic = true;
+            characterController.animationsManager.setAnimationToWalkDownLedge();
+            stateMachine.ChangeState(stateMachine.doingAnimationState);
+        }
+        else if (
+            ActionKeys.IsKeyPressed(ActionKeys.PUNCH) || ActionKeys.IsKeyPressed(ActionKeys.KICK)
+        )
         {
             stateMachine.ChangeState(stateMachine.attackState);
         }
-        if (ActionKeys.IsKeyPressed(ActionKeys.SPRINT))
+        else if (ActionKeys.IsKeyPressed(ActionKeys.SPRINT))
         {
             stateMachine.ChangeState(stateMachine.sprintState);
         }
-        if (ActionKeys.IsKeyPressed(ActionKeys.CROUCH))
+        else if (ActionKeys.IsKeyPressed(ActionKeys.CROUCH))
         {
             stateMachine.ChangeState(stateMachine.crouchState);
         }
