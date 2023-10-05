@@ -8,7 +8,6 @@ public class StateMachine : MonoBehaviour
     public SprintState sprintState { get; private set; }
     public CrouchState crouchState { get; private set; }
     public LedgeGrabState ledgeGrabState { get; private set; }
-    public AttackState attackState { get; private set; }
     public FallingState fallingState { get; private set; }
     public PickupObjectsState pickupObjectsState { get; private set; }
     public ShimmyState shimmyState { get; private set; }
@@ -28,7 +27,6 @@ public class StateMachine : MonoBehaviour
         sprintState = new SprintState(characterController, this);
         crouchState = new CrouchState(characterController, this);
         jumpState = new JumpState(characterController, this);
-        attackState = new AttackState(characterController);
         fallingState = new FallingState(characterController, this);
         pickupObjectsState = new PickupObjectsState(characterController);
         shimmyState = new ShimmyState(characterController, this);

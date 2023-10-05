@@ -24,7 +24,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public Vector3 ledgePosition { get; private set; }
 
-    private float minDistanceToClimbWall = 4f;
+    private float minDistanceToClimbWall = 1f;
 
     public float distanceToCollider { get; set; }
 
@@ -115,7 +115,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
             layerMask
         );
         Vector3 vector3 = this.transform.forward * minDistanceToClimbWall;
-        Vector3 end = position + vector3;
 
         return raycastHit;
     }

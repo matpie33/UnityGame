@@ -27,12 +27,6 @@ public class RunState : MovementState
             characterController.animationsManager.setAnimationToWalkDownLedge();
             stateMachine.ChangeState(stateMachine.doingAnimationState);
         }
-        else if (
-            ActionKeys.IsKeyPressed(ActionKeys.PUNCH) || ActionKeys.IsKeyPressed(ActionKeys.KICK)
-        )
-        {
-            stateMachine.ChangeState(stateMachine.attackState);
-        }
         else if (ActionKeys.IsKeyPressed(ActionKeys.SPRINT))
         {
             stateMachine.ChangeState(stateMachine.sprintState);
