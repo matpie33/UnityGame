@@ -105,8 +105,9 @@ public class ShimmyState : State
             characterController.ledgeContinuationDetector;
 
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
+        bool isSpaceForGrab = ledgeContinuationDetector.CheckIfThereIsSpaceForGrab(ledgeDirection);
         this.ledgeDirection = ledgeDirection;
-        if (ledgeContinues)
+        if (ledgeContinues && isSpaceForGrab)
         {
             EnterState();
         }

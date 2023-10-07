@@ -147,7 +147,7 @@ public class CameraController : Observer
             obstructionLayers
         );
 
-        if (didHit)
+        if (didHit && hit.collider.gameObject != gameObject)
         {
             smallestDistance = hit.distance;
         }
