@@ -8,6 +8,7 @@ public class ShimmyState : State
     private CharacterController characterController;
     private LedgeDirection ledgeDirection;
     private StateMachine stateMachine;
+    private bool movingStarted = false;
 
     public ShimmyState(CharacterController characterController, StateMachine stateMachine)
     {
@@ -17,6 +18,7 @@ public class ShimmyState : State
 
     public override void EnterState()
     {
+        movingStarted = false;
         characterController.rigidbody.isKinematic = true;
         switch (ledgeDirection)
         {
@@ -33,6 +35,17 @@ public class ShimmyState : State
     {
         LedgeContinuationDetector ledgeContinuationDetector =
             characterController.ledgeContinuationDetector;
+        bool isSpaceForGrab = ledgeContinuationDetector.CheckIfThereIsSpaceForGrab(ledgeDirection);
+
+        if (!isSpaceForGrab)
+        {
+            stateMachine.ChangeState(stateMachine.ledgeGrabState);
+            return;
+        }
+        if (!movingStarted)
+        {
+            return;
+        }
 
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
         if (ledgeContinues)
@@ -81,7 +94,10 @@ public class ShimmyState : State
         ledgeDirection = direction;
     }
 
-    internal void ShimmyMovingStart() { }
+    internal void ShimmyMovingStart()
+    {
+        movingStarted = true;
+    }
 
     internal void ShimmyContinue(LedgeDirection ledgeDirection)
     {
