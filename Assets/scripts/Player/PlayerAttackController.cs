@@ -45,10 +45,16 @@ public class PlayerAttackController : MonoBehaviour
                 if (comboCounter >= attacksList.Count)
                 {
                     comboCounter = 0;
+                    Invoke("ResetCombo", 1.5f);
                     comboCompleted = true;
                 }
             }
         }
+    }
+
+    private void ResetCombo()
+    {
+        comboCompleted = false;
     }
 
     void ExitAttack()
@@ -65,6 +71,5 @@ public class PlayerAttackController : MonoBehaviour
     void EndCombo()
     {
         comboCounter = 0;
-        comboCompleted = false;
     }
 }
