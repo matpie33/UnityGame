@@ -65,6 +65,8 @@ public class CharacterController : Observer
 
     public LedgeContinuationDetector ledgeContinuationDetector { get; private set; }
 
+    public GroundLandingDetector groundLandingDetector { get; private set; }
+
     private void Awake()
     {
         wallData = new WallData();
@@ -86,6 +88,7 @@ public class CharacterController : Observer
         capsuleCollider = GetComponent<CapsuleCollider>();
         statsToValuesConverter = FindObjectOfType<StatsToValuesConverter>();
         ledgeContinuationDetector = GetComponent<LedgeContinuationDetector>();
+        groundLandingDetector = GetComponentInChildren<GroundLandingDetector>();
 
         uiUpdater = GetComponent<UIUpdater>();
         healthState = new HealthState(200);

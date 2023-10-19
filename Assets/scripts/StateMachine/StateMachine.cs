@@ -49,7 +49,10 @@ public class StateMachine : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (characterController.rigidbody.velocity.y < -0.5)
+        if (
+            characterController.rigidbody.velocity.y < -0.5
+            && !characterController.groundLandingDetector.IsHittingGround()
+        )
         {
             ChangeState(fallingState);
         }
