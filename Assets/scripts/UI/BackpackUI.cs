@@ -43,9 +43,13 @@ public class BackpackUI : MonoBehaviour
 
     private bool moveRight;
     private bool moveLeft;
+    private CameraController cameraController;
+    private GameObject player;
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        cameraController = FindObjectOfType<CameraController>();
         eventQueue = FindObjectOfType<EventQueue>();
         cameraObject = FindObjectOfType<Camera>();
         blurringBackground.SetActive(false);
@@ -80,6 +84,8 @@ public class BackpackUI : MonoBehaviour
 
     internal void Hide()
     {
+        player.SetActive(true);
+        cameraController.enabled = true;
         Destroy(currentObject);
         Destroy(previousObject);
         Destroy(nextObject);
@@ -89,9 +95,14 @@ public class BackpackUI : MonoBehaviour
 
     public void Show()
     {
-        cameraObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        player.SetActive(false);
+        cameraController.enabled = false;
         blurringBackground.SetActive(true);
         backpackPanel.SetActive(true);
+        Vector3 cameraPosition = cameraObject.transform.position;
+        cameraPosition.y = 0.3f;
+        cameraObject.transform.position = cameraPosition;
+        cameraObject.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void DisplayObjects()
@@ -102,6 +113,8 @@ public class BackpackUI : MonoBehaviour
         currentObject.AddComponent<RotatingObject>();
         currentObject.transform.parent = currentObjectPlaceholder.transform;
         currentObject.transform.localPosition = Vector3.zero;
+        currentObject.transform.localRotation = Quaternion.Euler(0, 0, 0);
+
         string description = definition.description;
 
         descriptionTextField.text = description;
