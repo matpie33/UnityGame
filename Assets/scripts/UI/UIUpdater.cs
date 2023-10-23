@@ -126,7 +126,7 @@ public class UIUpdater : MonoBehaviour
 
     private void Update()
     {
-        if (ActionKeys.IsKeyPressedWithControl(ActionKeys.OPEN_STATS_PANEL))
+        if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_STATS_PANEL))
         {
             statsPanel.SetActive(!statsPanel.activeSelf);
             bool isActive = statsPanel.activeSelf;
@@ -138,6 +138,11 @@ public class UIUpdater : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
+        }
+        if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_BACKPACK))
+        {
+            statsPanel.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 

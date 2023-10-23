@@ -7,11 +7,17 @@ public class PickupHint : Observer
 {
     private TextMeshProUGUI textField;
 
+    private bool ignoreEvents = false;
+
     public override void OnEvent(EventDTO eventDTO)
     {
         switch (eventDTO.eventType)
         {
             case EventType.OBJECT_NOW_IN_RANGE:
+                if (ignoreEvents)
+                {
+                    return;
+                }
                 Interactable interactable = (Interactable)eventDTO.eventData;
                 if (typeof(Pickable).IsAssignableFrom(interactable.GetType()))
                 {
@@ -25,6 +31,12 @@ public class PickupHint : Observer
                 break;
 
             case EventType.OBJECT_OUT_OF_RANGE:
+
+                textField.enabled = false;
+                break;
+            case EventType.BACKPACK_OPEN_CLOSE_EVENT:
+                bool isOpened = (bool)eventDTO.eventData;
+                ignoreEvents = isOpened;
                 textField.enabled = false;
                 break;
         }

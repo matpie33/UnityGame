@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class ActionKeys : MonoBehaviour
 {
-    //keys with no modifier
     public const KeyCode JUMP = KeyCode.Space;
     public const KeyCode INTERACT = KeyCode.E;
     public const KeyCode USE_MEDIPACK = KeyCode.Alpha1;
@@ -14,9 +13,10 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode CLIMB_LEDGE = KeyCode.Space;
     public const KeyCode SPRINT = KeyCode.LeftShift;
     public const KeyCode WALK_DOWN_LEDGE = KeyCode.LeftControl;
-
-    //keys with control key
-    public const KeyCode OPEN_STATS_PANEL = KeyCode.A;
+    public const KeyCode OPEN_STATS_PANEL = KeyCode.Tab;
+    public const KeyCode OPEN_BACKPACK = KeyCode.Escape;
+    public const KeyCode LEFT_KEY = KeyCode.A;
+    public const KeyCode RIGHT_KEY = KeyCode.D;
 
     public static bool IsKeyPressed(KeyCode key)
     {

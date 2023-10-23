@@ -67,9 +67,12 @@ public class CharacterController : Observer
 
     public GroundLandingDetector groundLandingDetector { get; private set; }
 
+    public PlayerBackpack playerBackpack { get; private set; }
+
     private void Awake()
     {
         wallData = new WallData();
+        playerBackpack = new PlayerBackpack();
         statsAddingDTO = new StatsAddingDTO();
         amountOfStatsToAddPerLevel = 5;
         statsAddingDTO.statsLeft = amountOfStatsToAddPerLevel;
@@ -98,6 +101,11 @@ public class CharacterController : Observer
         uiUpdater = FindObjectOfType<UIUpdater>();
         uiUpdater.InitializeStatsPanel(playerState, playerUI, statsAddingDTO);
         uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
+    }
+
+    public void ObjectPicked(Pickable pickable)
+    {
+        playerBackpack.addObject(pickable);
     }
 
     public void GetWallData()
@@ -153,14 +161,6 @@ public class CharacterController : Observer
 
     public void AttachObjectToHand()
     {
-        if (playerState.objectToInteractWith.GetType() == typeof(Medkit))
-        {
-            playerState.increaseMedipacksAmount();
-            uiUpdater.UpdateMedipackAmount(
-                playerUI.medipackAmountText,
-                playerState.numberOfMedipacks
-            );
-        }
         playerState.objectToInteractWith.Interact(rightHandObject);
     }
 
@@ -213,9 +213,10 @@ public class CharacterController : Observer
                     new EventDTO(EventType.LEVER_OPENING, objectToInteractWith.gameObject)
                 );
             }
-            else if (objectToInteractWith.GetType() == typeof(Medkit))
+            else if (objectToInteractWith.GetType() == typeof(Pickable))
             {
                 animationsManager.setAnimationToPickup();
+                stateMachine.ChangeState(stateMachine.doingAnimationState);
                 playerState.isPickingObject = true;
                 handTargetPosition.transform.position = objectToInteractWith.transform.position;
             }
