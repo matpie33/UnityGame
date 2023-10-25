@@ -102,7 +102,11 @@ public class BackpackUI : MonoBehaviour
         Vector3 cameraPosition = cameraObject.transform.position;
         cameraPosition.y = 0.3f;
         cameraObject.transform.position = cameraPosition;
-        cameraObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        cameraObject.transform.rotation = Quaternion.Euler(
+            0,
+            cameraObject.transform.rotation.eulerAngles.y,
+            0
+        );
     }
 
     private void DisplayObjects()
@@ -194,8 +198,7 @@ public class BackpackUI : MonoBehaviour
                     previousObject = null;
                     AddPreviousObjectOptionally();
                 }
-                string description = objectsInBackpack[currentObjectIndex].definition.description;
-                descriptionTextField.text = description;
+
                 currentObject = nextOrPrevious;
                 currentObject.AddComponent<RotatingObject>();
                 moveLeft = false;
@@ -226,6 +229,8 @@ public class BackpackUI : MonoBehaviour
         if (IsNotFirstItem())
         {
             currentObjectIndex--;
+            string description = objectsInBackpack[currentObjectIndex].definition.description;
+            descriptionTextField.text = description;
             Destroy(nextObject);
             RotatingObject rotationScript = currentObject.GetComponent<RotatingObject>();
             Destroy(rotationScript);
@@ -238,6 +243,8 @@ public class BackpackUI : MonoBehaviour
         if (IsNotLastItem())
         {
             currentObjectIndex++;
+            string description = objectsInBackpack[currentObjectIndex].definition.description;
+            descriptionTextField.text = description;
             Destroy(previousObject);
             RotatingObject rotatingScript = currentObject.GetComponent<RotatingObject>();
             Destroy(rotatingScript);

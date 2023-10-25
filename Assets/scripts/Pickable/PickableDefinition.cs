@@ -6,9 +6,6 @@ using UnityEngine;
 public class PickableDefinition : ScriptableObject
 {
     [field: SerializeField]
-    public string objectName { get; private set; }
-
-    [field: SerializeField]
     public string description { get; private set; }
 
     [field: SerializeField]
@@ -16,6 +13,6 @@ public class PickableDefinition : ScriptableObject
 
     public override string ToString()
     {
-        return objectName + ": " + description;
+        return description;
     }
 }
