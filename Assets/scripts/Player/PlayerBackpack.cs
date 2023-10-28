@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerBackpack
@@ -14,5 +15,15 @@ public class PlayerBackpack
     public List<Pickable> GetObjects()
     {
         return pickedObjects;
+    }
+
+    public bool HasObject(PickableDefinition definition)
+    {
+        return pickedObjects.Where(obj => obj.definition.Equals(definition)).Any();
+    }
+
+    public void RemoveObject(PickableDefinition definition)
+    {
+        pickedObjects.RemoveAll(obj => obj.definition.Equals(definition));
     }
 }

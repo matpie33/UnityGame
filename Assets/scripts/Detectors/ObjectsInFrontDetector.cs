@@ -75,17 +75,11 @@ public class ObjectsInFrontDetector : MonoBehaviour
         if (raycastHit.collider != null)
         {
             float distance = raycastHit.distance;
-            if (
-                raycastHit.collider.tag.Equals(Tags.INTERACTABLE)
-                && distance < minDistanceToInteract
-            )
+            if (distance < minDistanceToInteract)
             {
                 detectedCollision = true;
                 eventQueue.SubmitEvent(
-                    new EventDTO(
-                        EventType.OBJECT_NOW_IN_RANGE,
-                        raycastHit.collider.gameObject.GetComponent<Interactable>()
-                    )
+                    new EventDTO(EventType.OBJECT_NOW_IN_RANGE, raycastHit.collider.gameObject)
                 );
             }
             else

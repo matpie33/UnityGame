@@ -18,12 +18,29 @@ public class PickupHint : Observer
                 {
                     return;
                 }
-                Interactable interactable = (Interactable)eventDTO.eventData;
-                if (typeof(Pickable).IsAssignableFrom(interactable.GetType()))
+                GameObject eventObject = (GameObject)eventDTO.eventData;
+                if (eventObject.GetComponent<LockedDoor>() != null)
+                {
+                    LockedDoor lockedDoor = eventObject.GetComponent<LockedDoor>();
+                    if (lockedDoor.isOpened)
+                    {
+                        textField.enabled = false;
+                        return;
+                    }
+                    if (lockedDoor.PlayerHasKey())
+                    {
+                        textField.text = $"Press {ActionKeys.INTERACT} to open. ";
+                    }
+                    else
+                    {
+                        textField.text = "Locked door";
+                    }
+                }
+                else if (eventObject.GetComponent<Interactable>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pickup. ";
                 }
-                else if (typeof(Pullable).IsAssignableFrom(interactable.GetType()))
+                else if (eventObject.GetComponent<Pullable>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pull. ";
                 }
@@ -31,7 +48,7 @@ public class PickupHint : Observer
                 break;
 
             case EventType.OBJECT_OUT_OF_RANGE:
-
+            case EventType.INTERACTION_DONE:
                 textField.enabled = false;
                 break;
             case EventType.BACKPACK_OPEN_CLOSE_EVENT:

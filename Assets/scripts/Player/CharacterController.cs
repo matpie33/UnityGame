@@ -69,6 +69,11 @@ public class CharacterController : Observer
 
     public PlayerBackpack playerBackpack { get; private set; }
 
+    [SerializeField]
+    private GameObject keyTargetPosition;
+
+    private GameObject key;
+
     private void Awake()
     {
         wallData = new WallData();
@@ -101,6 +106,22 @@ public class CharacterController : Observer
         uiUpdater = FindObjectOfType<UIUpdater>();
         uiUpdater.InitializeStatsPanel(playerState, playerUI, statsAddingDTO);
         uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
+    }
+
+    public void DoorOpeningSpawnKey()
+    {
+        LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
+        playerBackpack.RemoveObject(door.requiredKey);
+        key = Instantiate(door.requiredKey.model);
+        key.transform.parent = keyTargetPosition.transform;
+        key.transform.localPosition = Vector3.zero;
+    }
+
+    public void DoorOpeningDestroyKey()
+    {
+        Destroy(key);
+        key = null;
+        playerState.objectToInteractWith.Interact(null);
     }
 
     public void ObjectPicked(Pickable pickable)
@@ -168,6 +189,7 @@ public class CharacterController : Observer
     {
         Destroy(playerState.objectToInteractWith.gameObject);
         playerState.objectToInteractWith = null;
+        playerState.isPickingObject = false;
     }
 
     public void DecreaseHealth(int percent)
@@ -220,6 +242,14 @@ public class CharacterController : Observer
                 playerState.isPickingObject = true;
                 handTargetPosition.transform.position = objectToInteractWith.transform.position;
             }
+            else if (objectToInteractWith.GetType() == typeof(LockedDoor))
+            {
+                animationsManager.SetAnimationToOpenDoor();
+                stateMachine.ChangeState(stateMachine.doingAnimationState);
+                LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
+                door.isOpened = true;
+            }
+            eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
         }
         uiUpdater.UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
         uiUpdater.UpdateExperience(
@@ -296,7 +326,12 @@ public class CharacterController : Observer
         switch (eventDTO.eventType)
         {
             case EventType.OBJECT_NOW_IN_RANGE:
-                playerState.objectToInteractWith = (Interactable)eventDTO.eventData;
+                GameObject eventData = (GameObject)eventDTO.eventData;
+                if (eventData.GetComponent<Interactable>() != null)
+                {
+                    Interactable interactable = eventData.GetComponent<Interactable>();
+                    playerState.objectToInteractWith = interactable;
+                }
                 break;
             case EventType.OBJECT_OUT_OF_RANGE:
                 if (!playerState.isPickingObject)

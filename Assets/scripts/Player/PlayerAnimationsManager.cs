@@ -28,7 +28,13 @@ public class PlayerAnimationsManager : MonoBehaviour
         ledge_rotate_left,
         ledge_rotate_right,
         walk_down_ledge,
-        move_backward
+        move_backward,
+        open_door
+    }
+
+    public void SetAnimationToOpenDoor()
+    {
+        animator.CrossFade(anim(AnimationName.open_door), 0.1f);
     }
 
     public void setAnimationToLedgeRotateLeft()
