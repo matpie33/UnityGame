@@ -22,7 +22,7 @@ public class Lever : Pullable
         animator.Play("Base Layer.open");
     }
 
-    public void LeverOpened()
+    public void SubmitLeverOpenedEvent()
     {
         Invoke("SubmitEvent", 0.5f);
     }

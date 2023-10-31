@@ -19,6 +19,7 @@ public class PickupHint : Observer
                     return;
                 }
                 GameObject eventObject = (GameObject)eventDTO.eventData;
+                textField.enabled = true;
                 if (eventObject.GetComponent<LockedDoor>() != null)
                 {
                     LockedDoor lockedDoor = eventObject.GetComponent<LockedDoor>();
@@ -36,7 +37,7 @@ public class PickupHint : Observer
                         textField.text = "Locked door";
                     }
                 }
-                else if (eventObject.GetComponent<Interactable>() != null)
+                else if (eventObject.GetComponent<Pickable>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pickup. ";
                 }
@@ -44,7 +45,11 @@ public class PickupHint : Observer
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pull. ";
                 }
-                textField.enabled = true;
+                else
+                {
+                    textField.enabled = false;
+                }
+
                 break;
 
             case EventType.OBJECT_OUT_OF_RANGE:

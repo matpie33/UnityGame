@@ -51,9 +51,6 @@ public class CharacterController : Observer
 
     private EventQueue eventQueue;
 
-    [SerializeField]
-    private Transform handTargetPosition;
-
     [field: SerializeField]
     public TriggerDetector canClimbUpWallChecker { get; private set; }
 
@@ -73,6 +70,9 @@ public class CharacterController : Observer
     private GameObject keyTargetPosition;
 
     private GameObject key;
+
+    [SerializeField]
+    private GameObject rightHandTarget;
 
     private void Awake()
     {
@@ -108,20 +108,25 @@ public class CharacterController : Observer
         uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
     }
 
-    public void DoorOpeningSpawnKey()
+    public void SpawnKeyWhenOpeningDoor()
     {
         LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
         playerBackpack.RemoveObject(door.requiredKey);
         key = Instantiate(door.requiredKey.model);
         key.transform.parent = keyTargetPosition.transform;
         key.transform.localPosition = Vector3.zero;
+        key.transform.localRotation = Quaternion.Euler(9, -52, -81);
     }
 
-    public void DoorOpeningDestroyKey()
+    public void DestroyKeyWhenOpeningDoor()
     {
         Destroy(key);
         key = null;
-        playerState.objectToInteractWith.Interact(null);
+    }
+
+    public void InteractWithDoor()
+    {
+        playerState.objectToInteractWith.Interact(this);
     }
 
     public void ObjectPicked(Pickable pickable)
@@ -207,11 +212,6 @@ public class CharacterController : Observer
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 
-    public void PickingObjectsStarted()
-    {
-        stateMachine.OnTriggerType(TriggerType.PICKUP_STARTED);
-    }
-
     public void PullLeverStarted()
     {
         playerState.objectToInteractWith.Interact(null);
@@ -240,13 +240,19 @@ public class CharacterController : Observer
                 animationsManager.setAnimationToPickup();
                 stateMachine.ChangeState(stateMachine.doingAnimationState);
                 playerState.isPickingObject = true;
-                handTargetPosition.transform.position = objectToInteractWith.transform.position;
+                rightHandTarget.transform.position = objectToInteractWith.transform.position;
             }
             else if (objectToInteractWith.GetType() == typeof(LockedDoor))
             {
+                LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
+                if (!door.PlayerHasKey())
+                {
+                    return;
+                }
                 animationsManager.SetAnimationToOpenDoor();
                 stateMachine.ChangeState(stateMachine.doingAnimationState);
-                LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
+                rightHandTarget.transform.position = door.lockTransform.position;
+
                 door.isOpened = true;
             }
             eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
@@ -339,7 +345,7 @@ public class CharacterController : Observer
                     playerState.objectToInteractWith = null;
                 }
                 break;
-            case EventType.LEVER_OPENED:
+            case EventType.GATE_OPENED:
                 animationsManager.setAnimationToMoving();
                 break;
         }

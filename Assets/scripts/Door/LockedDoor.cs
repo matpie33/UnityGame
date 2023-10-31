@@ -8,6 +8,9 @@ public class LockedDoor : Interactable
     [field: SerializeField]
     public PickableDefinition requiredKey { get; private set; }
 
+    [field: SerializeField]
+    public Transform lockTransform { get; private set; }
+
     private CharacterController characterController;
 
     private Animator animator;

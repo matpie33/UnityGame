@@ -9,7 +9,6 @@ public class StateMachine : MonoBehaviour
     public CrouchState crouchState { get; private set; }
     public LedgeGrabState ledgeGrabState { get; private set; }
     public FallingState fallingState { get; private set; }
-    public PickupObjectsState pickupObjectsState { get; private set; }
     public ShimmyState shimmyState { get; private set; }
     public DoingAnimationState doingAnimationState { get; private set; }
 
@@ -28,7 +27,6 @@ public class StateMachine : MonoBehaviour
         crouchState = new CrouchState(characterController, this);
         jumpState = new JumpState(characterController, this);
         fallingState = new FallingState(characterController, this);
-        pickupObjectsState = new PickupObjectsState(characterController);
         shimmyState = new ShimmyState(characterController, this);
         doingAnimationState = new DoingAnimationState();
 
@@ -71,9 +69,6 @@ public class StateMachine : MonoBehaviour
             case TriggerType.ANIMATION_FINISHED:
             case TriggerType.CLIMBING_FINISHED:
                 ChangeState(runState);
-                break;
-            case TriggerType.PICKUP_STARTED:
-                ChangeState(pickupObjectsState);
                 break;
             case TriggerType.SHIMMY_DONE:
                 if (currentState.Equals(shimmyState))

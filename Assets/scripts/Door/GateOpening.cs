@@ -23,7 +23,7 @@ public class GateOpening : Observer
         }
     }
 
-    public void GateOpened()
+    public void SubmitGateOpenedEvent()
     {
         Invoke("SubmitEvent", 1);
     }
