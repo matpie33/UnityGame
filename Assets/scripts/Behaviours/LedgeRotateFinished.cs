@@ -7,6 +7,6 @@ public class LedgeRotateFinished : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         CharacterController characterController = FindObjectOfType<CharacterController>();
-        characterController.changeStateToLedgeGrab();
+        characterController.stateMachine.OnTriggerType(TriggerType.ENTER_LEDGE_GRAB_STATE);
     }
 }

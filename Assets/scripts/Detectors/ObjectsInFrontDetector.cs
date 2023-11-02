@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ObjectsInFrontDetector : MonoBehaviour
 {
-    public float minDistanceToInteract = 3;
+    public float minDistanceToInteract;
 
     [SerializeField]
     private Transform feetLevel;
@@ -62,36 +64,42 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedWallType = WallType.NO_WALL;
         }
 
-        bool detectedCollision = DetectCollision(feetHit);
-        if (!detectedCollision)
-        {
-            DetectCollision(midHit);
-        }
+        GetCloserCollision(feetHit, midHit);
     }
 
-    private bool DetectCollision(RaycastHit raycastHit)
+    private void GetCloserCollision(RaycastHit feetHit, RaycastHit midHit)
     {
-        bool detectedCollision = false;
-        if (raycastHit.collider != null)
+        float smallerDistance = Mathf.Infinity;
+        GameObject closerObject = null;
+        CheckCollision(feetHit, ref smallerDistance, ref closerObject);
+        CheckCollision(midHit, ref smallerDistance, ref closerObject);
+
+        if (closerObject != null)
         {
-            float distance = raycastHit.distance;
-            if (distance < minDistanceToInteract)
-            {
-                detectedCollision = true;
-                eventQueue.SubmitEvent(
-                    new EventDTO(EventType.OBJECT_NOW_IN_RANGE, raycastHit.collider.gameObject)
-                );
-            }
-            else
-            {
-                eventQueue.SubmitEvent((new EventDTO(EventType.OBJECT_OUT_OF_RANGE, null)));
-            }
+            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_NOW_IN_RANGE, closerObject));
         }
         else
         {
-            eventQueue.SubmitEvent((new EventDTO(EventType.OBJECT_OUT_OF_RANGE, null)));
+            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_OUT_OF_RANGE, null));
         }
-        return detectedCollision;
+    }
+
+    private void CheckCollision(
+        RaycastHit raycastHit,
+        ref float smallestDistance,
+        ref GameObject closestObject
+    )
+    {
+        Collider collider = raycastHit.collider;
+        if (collider != null)
+        {
+            float distance = raycastHit.distance;
+            if (distance < minDistanceToInteract && distance < smallestDistance)
+            {
+                smallestDistance = distance;
+                closestObject = collider.gameObject;
+            }
+        }
     }
 
     private RaycastHit DoRaycast(Transform transform)

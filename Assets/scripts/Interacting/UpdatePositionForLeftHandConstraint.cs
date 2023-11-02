@@ -5,7 +5,6 @@ using UnityEngine.Animations.Rigging;
 
 public class UpdatePositionForLeftHandConstraint : Observer
 {
-    //TODO recheck if it's needed
     private GameObject objectPositionHolder;
 
     public override void OnEvent(EventDTO eventDTO)

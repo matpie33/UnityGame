@@ -4,7 +4,6 @@ using UnityEngine;
 public abstract class MovementState : State
 {
     protected CharacterController characterController;
-    private PlayerInputs playerInputs;
     private CameraController cameraController;
     protected StateMachine stateMachine;
 
@@ -21,7 +20,6 @@ public abstract class MovementState : State
     {
         this.characterController = characterController;
         this.stateMachine = stateMachine;
-        playerInputs = characterController.playerInputs;
         cameraController = characterController.cameraController;
     }
 
@@ -53,9 +51,9 @@ public abstract class MovementState : State
         }
 
         Vector3 _moveInputVector = new Vector3(
-            playerInputs.MoveAxisRightRaw,
+            PlayerInputs.MoveAxisRightRaw,
             0,
-            playerInputs.MoveAxisForwardRaw
+            PlayerInputs.MoveAxisForwardRaw
         ).normalized;
         Vector3 _cameraPlanarDirection = cameraController.cameraPlanarDirection;
         Quaternion _cameraPlanarRotation = Quaternion.LookRotation(_cameraPlanarDirection);
@@ -63,7 +61,7 @@ public abstract class MovementState : State
         _moveInputVector = _cameraPlanarRotation * _moveInputVector;
 
         targetSpeed = _moveInputVector == Vector3.zero ? 0 : getTargetSpeed();
-        if (playerInputs.MoveAxisForwardRaw == -1)
+        if (PlayerInputs.MoveAxisForwardRaw == -1)
         {
             targetSpeed = 1f;
         }
@@ -75,14 +73,14 @@ public abstract class MovementState : State
             targetRotation = Quaternion.LookRotation(_moveInputVector);
             newRotation = Quaternion.Slerp(
                 characterController.transform.rotation,
-                playerInputs.MoveAxisForwardRaw != -1
+                PlayerInputs.MoveAxisForwardRaw != -1
                     ? targetRotation
                     : targetRotation * Quaternion.Euler(0, 180f, 0),
                 Time.deltaTime * rotationSharpness
             );
             characterController.transform.rotation = newRotation;
         }
-        if (playerInputs.MoveAxisForwardRaw != -1)
+        if (PlayerInputs.MoveAxisForwardRaw != -1)
         {
             characterController.animationsManager.setRunningSpeedParameter(newSpeed);
         }

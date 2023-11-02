@@ -6,8 +6,6 @@ public class GameManager : Observer
 {
     private List<Enemy> enemies;
 
-    private float minDistanceToAttack = 2;
-
     private CharacterController characterController;
 
     private ISet<Enemy> objectsToDelete = new HashSet<Enemy>();

@@ -72,11 +72,11 @@ public class LedgeGrabState : State
                 characterController.animationsManager.setAnimationToLedgeClimbing();
             }
         }
-        else if (characterController.playerInputs.left.PressedDown())
+        else if (PlayerInputs.left.PressedDown())
         {
             characterController.TryShimmy(LedgeDirection.LEFT);
         }
-        else if (characterController.playerInputs.right.PressedDown())
+        else if (PlayerInputs.right.PressedDown())
         {
             characterController.TryShimmy(LedgeDirection.RIGHT);
         }

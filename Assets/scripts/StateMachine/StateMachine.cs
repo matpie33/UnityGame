@@ -61,6 +61,10 @@ public class StateMachine : MonoBehaviour
     {
         switch (triggerType)
         {
+            case TriggerType.ENTER_LEDGE_GRAB_STATE:
+                ChangeState(ledgeGrabState);
+                break;
+
             case TriggerType.MEDIPACK_USED:
             case TriggerType.GROUND_DETECTED:
                 currentState.OnTrigger(triggerType);

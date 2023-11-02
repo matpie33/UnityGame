@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationsManager : MonoBehaviour
+public class PlayerAnimationsManager
 {
     private Animator animator;
 
@@ -30,6 +30,12 @@ public class PlayerAnimationsManager : MonoBehaviour
         walk_down_ledge,
         move_backward,
         open_door
+    }
+
+    public PlayerAnimationsManager(Animator animator)
+    {
+        this.animator = animator;
+        animator.applyRootMotion = false;
     }
 
     public void SetAnimationToOpenDoor()
@@ -65,12 +71,6 @@ public class PlayerAnimationsManager : MonoBehaviour
     public void setAnimationToRightShimmy()
     {
         animator.CrossFade(anim(AnimationName.right_shimmy), 0.1f);
-    }
-
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-        animator.applyRootMotion = false;
     }
 
     public void setAttackSpeed(float speed)

@@ -10,7 +10,6 @@ public class CharacterController : Observer
     public PlayerAnimationsManager animationsManager { get; private set; }
     public CapsuleCollider capsuleCollider { get; private set; }
     public CameraController cameraController { get; private set; }
-    public PlayerInputs playerInputs { get; private set; }
 
     public float initialHeight { get; private set; }
 
@@ -20,16 +19,7 @@ public class CharacterController : Observer
 
     public HealthState healthState { get; private set; }
 
-    [SerializeField]
-    private Image healthBarForeground;
-
-    [SerializeField]
-    private TextMeshProUGUI healthText;
-
     public StateMachine stateMachine { get; private set; }
-
-    [SerializeField]
-    private GameObject rightHandObject;
 
     public PlayerState playerState { get; private set; }
 
@@ -38,8 +28,6 @@ public class CharacterController : Observer
     private LevelData levelData;
 
     public ObjectsInFrontDetector objectsInFrontDetector { get; private set; }
-
-    private EventQueue eventQueue;
 
     [field: SerializeField]
     public TriggerDetector canClimbUpWallChecker { get; private set; }
@@ -56,9 +44,6 @@ public class CharacterController : Observer
 
     public PlayerBackpack playerBackpack { get; private set; }
 
-    [SerializeField]
-    private GameObject rightHandTarget;
-
     private void Awake()
     {
         wallData = new WallData();
@@ -68,13 +53,11 @@ public class CharacterController : Observer
         levelData.experience = 0;
         levelData.experienceNeededForNextLevel = 1000;
 
-        eventQueue = FindObjectOfType<EventQueue>();
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
 
         cameraController = GetComponent<CameraController>();
-        playerInputs = GetComponent<PlayerInputs>();
         rigidbody = GetComponent<Rigidbody>();
-        animationsManager = GetComponent<PlayerAnimationsManager>();
+        animationsManager = new PlayerAnimationsManager(GetComponent<Animator>());
         capsuleCollider = GetComponent<CapsuleCollider>();
         ledgeContinuationDetector = GetComponent<LedgeContinuationDetector>();
         groundLandingDetector = GetComponentInChildren<GroundLandingDetector>();
@@ -82,7 +65,7 @@ public class CharacterController : Observer
         healthState = new HealthState(200);
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
-        healthBarForeground.fillAmount = 1;
+
         uiUpdater = FindObjectOfType<UIUpdater>();
     }
 
@@ -126,44 +109,6 @@ public class CharacterController : Observer
 
     private void Update()
     {
-        if (playerState.HasMedipacks() && ActionKeys.IsKeyPressed(ActionKeys.USE_MEDIPACK))
-        {
-            stateMachine.OnTriggerType(TriggerType.MEDIPACK_USED);
-        }
-        if (
-            playerState.objectToInteractWith != null && ActionKeys.IsKeyPressed(ActionKeys.INTERACT)
-        )
-        {
-            Interactable objectToInteractWith = playerState.objectToInteractWith;
-            if (objectToInteractWith.GetType() == typeof(Lever))
-            {
-                animationsManager.setAnimationToPullLever();
-                eventQueue.SubmitEvent(
-                    new EventDTO(EventType.LEVER_OPENING, objectToInteractWith.gameObject)
-                );
-            }
-            else if (objectToInteractWith.GetType() == typeof(Pickable))
-            {
-                animationsManager.setAnimationToPickup();
-                stateMachine.ChangeState(stateMachine.doingAnimationState);
-                playerState.isPickingObject = true;
-                rightHandTarget.transform.position = objectToInteractWith.transform.position;
-            }
-            else if (objectToInteractWith.GetType() == typeof(LockedDoor))
-            {
-                LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
-                if (!door.PlayerHasKey())
-                {
-                    return;
-                }
-                animationsManager.SetAnimationToOpenDoor();
-                stateMachine.ChangeState(stateMachine.doingAnimationState);
-                rightHandTarget.transform.position = door.lockTransform.position;
-
-                door.isOpened = true;
-            }
-            eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
-        }
         uiUpdater.UpdatePlayerHealth(healthState);
         uiUpdater.UpdateExperience(levelData);
     }
@@ -187,11 +132,6 @@ public class CharacterController : Observer
     public void attackEventChecked()
     {
         playerState.isAttacking = false;
-    }
-
-    public void changeStateToLedgeGrab()
-    {
-        stateMachine.ChangeState(stateMachine.ledgeGrabState);
     }
 
     public void attackAnimationFinish()

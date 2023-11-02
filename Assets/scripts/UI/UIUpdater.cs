@@ -16,6 +16,7 @@ public class UIUpdater : MonoBehaviour
     private void Awake()
     {
         playerUI = GetComponent<PlayerUI>();
+        playerUI.healthBar.fillAmount = 1;
         statsAddingDTO = new StatsAddingDTO();
     }
 

@@ -5,8 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class Input
 {
-    public KeyCode primary;
-    public KeyCode alternate;
+    private KeyCode primary;
+    private KeyCode alternate;
+
+    public Input(KeyCode primary)
+    {
+        this.primary = primary;
+    }
 
     public bool Pressed()
     {
@@ -32,19 +37,19 @@ public class Input
     }
 }
 
-public class PlayerInputs : MonoBehaviour
+public class PlayerInputs
 {
     public const string MouseXString = "Mouse X";
     public const string MouseYString = "Mouse Y";
     public const string MouseScrollString = "Mouse ScrollWheel";
 
-    public Input forward;
-    public Input backward;
-    public Input left;
-    public Input right;
-    public Input sprint;
+    public static Input forward = new Input(KeyCode.W);
+    public static Input backward = new Input(KeyCode.S);
+    public static Input left = new Input(KeyCode.A);
+    public static Input right = new Input(KeyCode.D);
+    public static Input sprint = new Input(KeyCode.LeftShift);
 
-    public int MoveAxisForwardRaw
+    public static int MoveAxisForwardRaw
     {
         get
         {
@@ -67,7 +72,7 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
-    public int MoveAxisRightRaw
+    public static int MoveAxisRightRaw
     {
         get
         {
