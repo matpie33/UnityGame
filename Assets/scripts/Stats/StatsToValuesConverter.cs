@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class StatsToValuesConverter : MonoBehaviour
+public class StatsToValuesConverter
 {
     private const int HEALTH_MULTIPLIER = 20;
     private const int BASE_ATTACK_SPEED = 1;

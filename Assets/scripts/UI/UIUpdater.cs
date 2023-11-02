@@ -1,15 +1,34 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.PlayerLoop.PreUpdate;
 
 public class UIUpdater : MonoBehaviour
 {
     [SerializeField]
     private GameObject statsPanel;
 
-    public void UpdateMedipackAmount(TextMeshProUGUI textComponent, int newValue)
+    private PlayerUI playerUI;
+
+    public StatsAddingDTO statsAddingDTO { get; private set; }
+
+    private void Awake()
     {
+        playerUI = GetComponent<PlayerUI>();
+        statsAddingDTO = new StatsAddingDTO();
+    }
+
+    public void UpdateMedipackAmount(int newValue)
+    {
+        TextMeshProUGUI textComponent = playerUI.medipackAmountText;
         textComponent.text = "" + newValue;
+    }
+
+    public void ResetStats()
+    {
+        statsAddingDTO.Reset();
+        SetRemainingStatsToAdd(statsAddingDTO.statsLeft);
     }
 
     public void UpdateHealthBar(
@@ -26,18 +45,16 @@ public class UIUpdater : MonoBehaviour
         textComponent.text = healthState.value + "/" + healthState.maxHealth;
     }
 
-    public void SetRemainingStatsToAdd(int statsLeft, PlayerUI playerUI)
+    private void SetRemainingStatsToAdd(int statsLeft)
     {
         playerUI.statsLeftText.text = "" + statsLeft;
     }
 
-    public void UpdateExperience(
-        LevelData levelData,
-        TextMeshProUGUI experienceText,
-        Image experienceBar,
-        TextMeshProUGUI levelText
-    )
+    public void UpdateExperience(LevelData levelData)
     {
+        TextMeshProUGUI experienceText = playerUI.experienceText;
+        Image experienceBar = playerUI.experienceBar;
+        TextMeshProUGUI levelText = playerUI.levelText;
         experienceBar.fillAmount = Mathf.MoveTowards(
             experienceBar.fillAmount,
             (float)levelData.experience / (float)levelData.experienceNeededForNextLevel,
@@ -47,19 +64,15 @@ public class UIUpdater : MonoBehaviour
         levelText.text = "" + levelData.level;
     }
 
-    public void InitializeStatsPanel(
-        PlayerState playerState,
-        PlayerUI playerUI,
-        StatsAddingDTO statsAddingDTO
-    )
+    public void InitializeStatsPanel(PlayerState playerState)
     {
-        InitializeStatIncreasingButtons(playerUI, statsAddingDTO);
-        SetVisibilityOfStatsPanel(false, playerUI.statsPanel);
-        UpdateStatsUI(playerState, playerUI);
-        ToggleVisibilityOfStatsModification(false, playerUI);
+        InitializeStatIncreasingButtons();
+        SetVisibilityOfStatsPanel(false);
+        ClearStatsInUI(playerState);
+        ToggleVisibilityOfStatsModification(false);
     }
 
-    private void InitializeStatIncreasingButtons(PlayerUI playerUI, StatsAddingDTO statsAddingDTO)
+    private void InitializeStatIncreasingButtons()
     {
         Button addAgilityButton = playerUI.addAgilityButton;
         addAgilityButton.onClick.AddListener(() =>
@@ -67,7 +80,7 @@ public class UIUpdater : MonoBehaviour
             if (statsAddingDTO.statsLeft > 0)
             {
                 statsAddingDTO.IncreaseAgility();
-                IncreaseStat(addAgilityButton, statsAddingDTO, playerUI);
+                IncreaseStat(addAgilityButton, statsAddingDTO);
             }
         });
         Button addDefenceButton = playerUI.addDefenceButton;
@@ -76,7 +89,7 @@ public class UIUpdater : MonoBehaviour
             if (statsAddingDTO.statsLeft > 0)
             {
                 statsAddingDTO.IncreaseDefence();
-                IncreaseStat(addDefenceButton, statsAddingDTO, playerUI);
+                IncreaseStat(addDefenceButton, statsAddingDTO);
             }
         });
         Button healthButton = playerUI.addHealthButton;
@@ -85,7 +98,7 @@ public class UIUpdater : MonoBehaviour
             if (statsAddingDTO.statsLeft > 0)
             {
                 statsAddingDTO.IncreaseHealth();
-                IncreaseStat(healthButton, statsAddingDTO, playerUI);
+                IncreaseStat(healthButton, statsAddingDTO);
             }
         });
         Button addStrengthButton = playerUI.addStrengthButton;
@@ -94,12 +107,12 @@ public class UIUpdater : MonoBehaviour
             if (statsAddingDTO.statsLeft > 0)
             {
                 statsAddingDTO.IncreaseStrength();
-                IncreaseStat(addStrengthButton, statsAddingDTO, playerUI);
+                IncreaseStat(addStrengthButton, statsAddingDTO);
             }
         });
     }
 
-    private void IncreaseStat(Button button, StatsAddingDTO statsAddingDTO, PlayerUI playerUI)
+    private void IncreaseStat(Button button, StatsAddingDTO statsAddingDTO)
     {
         Transform parent = button.transform.parent;
         GameObject statValueText = parent.Find("Value").gameObject;
@@ -111,13 +124,15 @@ public class UIUpdater : MonoBehaviour
         playerUI.statsLeftText.text = "" + statsAddingDTO.statsLeft;
     }
 
-    public void SetVisibilityOfStatsPanel(bool visible, GameObject statsPanel)
+    private void SetVisibilityOfStatsPanel(bool visible)
     {
-        statsPanel.SetActive(visible);
+        playerUI.statsPanel.SetActive(visible);
     }
 
-    internal void UpdateStatsUI(PlayerState playerState, PlayerUI playerUI)
+    internal void ClearStatsInUI(PlayerState playerState)
     {
+        statsAddingDTO.Reset();
+        SetRemainingStatsToAdd(statsAddingDTO.statsLeft);
         playerUI.agilityStat.text = "" + playerState.agility;
         playerUI.healthStat.text = "" + playerState.health;
         playerUI.defenceStat.text = "" + playerState.defence;
@@ -146,12 +161,17 @@ public class UIUpdater : MonoBehaviour
         }
     }
 
-    public void ToggleVisibilityOfStatsModification(bool visible, PlayerUI playerUI)
+    public void ToggleVisibilityOfStatsModification(bool visible)
     {
         playerUI.addStrengthButton.gameObject.SetActive(visible);
         playerUI.addHealthButton.gameObject.SetActive(visible);
         playerUI.addDefenceButton.gameObject.SetActive(visible);
         playerUI.addAgilityButton.gameObject.SetActive(visible);
         playerUI.statsBottomPanel.SetActive(visible);
+    }
+
+    internal void UpdatePlayerHealth(HealthState healthState)
+    {
+        UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
     }
 }

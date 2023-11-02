@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 [Serializable]
 public class PlayerState
@@ -31,24 +32,12 @@ public class PlayerState
         health = 1;
     }
 
-    public void increaseStrength(int byValue)
+    public void increaseStats(StatsAddingDTO statsAddingDTO)
     {
-        strength += byValue;
-    }
-
-    public void increaseAgility(int byValue)
-    {
-        agility += byValue;
-    }
-
-    public void increaseDefence(int byValue)
-    {
-        defence += byValue;
-    }
-
-    public void increaseHealth(int byValue)
-    {
-        health += byValue;
+        strength += statsAddingDTO.strengthIncrease;
+        agility += statsAddingDTO.agilityIncrease;
+        defence += statsAddingDTO.defenceIncrease;
+        health += statsAddingDTO.healthIncrease;
     }
 
     public void increaseMedipacksAmount()

@@ -16,8 +16,6 @@ public class CharacterController : Observer
 
     public new Rigidbody rigidbody { get; private set; }
 
-    private List<Observer> observers = new List<Observer>();
-
     public Vector3 currentVelocity { get; set; }
 
     public HealthState healthState { get; private set; }
@@ -37,17 +35,9 @@ public class CharacterController : Observer
 
     private UIUpdater uiUpdater;
 
-    private PlayerUI playerUI;
-
     private LevelData levelData;
 
     public ObjectsInFrontDetector objectsInFrontDetector { get; private set; }
-
-    public int amountOfStatsToAddPerLevel { get; private set; }
-
-    private StatsAddingDTO statsAddingDTO;
-
-    private StatsToValuesConverter statsToValuesConverter;
 
     private EventQueue eventQueue;
 
@@ -67,20 +57,12 @@ public class CharacterController : Observer
     public PlayerBackpack playerBackpack { get; private set; }
 
     [SerializeField]
-    private GameObject keyTargetPosition;
-
-    private GameObject key;
-
-    [SerializeField]
     private GameObject rightHandTarget;
 
     private void Awake()
     {
         wallData = new WallData();
         playerBackpack = new PlayerBackpack();
-        statsAddingDTO = new StatsAddingDTO();
-        amountOfStatsToAddPerLevel = 5;
-        statsAddingDTO.statsLeft = amountOfStatsToAddPerLevel;
         levelData = new LevelData();
         levelData.level = 1;
         levelData.experience = 0;
@@ -88,50 +70,26 @@ public class CharacterController : Observer
 
         eventQueue = FindObjectOfType<EventQueue>();
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
-        playerUI = GetComponent<PlayerUI>();
+
         cameraController = GetComponent<CameraController>();
         playerInputs = GetComponent<PlayerInputs>();
         rigidbody = GetComponent<Rigidbody>();
         animationsManager = GetComponent<PlayerAnimationsManager>();
         capsuleCollider = GetComponent<CapsuleCollider>();
-        statsToValuesConverter = FindObjectOfType<StatsToValuesConverter>();
         ledgeContinuationDetector = GetComponent<LedgeContinuationDetector>();
         groundLandingDetector = GetComponentInChildren<GroundLandingDetector>();
 
-        uiUpdater = GetComponent<UIUpdater>();
         healthState = new HealthState(200);
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
         healthBarForeground.fillAmount = 1;
         uiUpdater = FindObjectOfType<UIUpdater>();
-        uiUpdater.InitializeStatsPanel(playerState, playerUI, statsAddingDTO);
-        uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
     }
 
-    public void SpawnKeyWhenOpeningDoor()
+    private void Start()
     {
-        LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
-        playerBackpack.RemoveObject(door.requiredKey);
-        key = Instantiate(door.requiredKey.model);
-        key.transform.parent = keyTargetPosition.transform;
-        key.transform.localPosition = Vector3.zero;
-        key.transform.localRotation = Quaternion.Euler(9, -52, -81);
-    }
-
-    public void DestroyKeyWhenOpeningDoor()
-    {
-        Destroy(key);
-        key = null;
-    }
-
-    public void InteractWithDoor()
-    {
-        playerState.objectToInteractWith.Interact(this);
-    }
-
-    public void ObjectPicked(Pickable pickable)
-    {
-        playerBackpack.addObject(pickable);
+        stateMachine = GetComponent<StateMachine>();
+        uiUpdater.InitializeStatsPanel(playerState);
     }
 
     public void GetWallData()
@@ -147,54 +105,13 @@ public class CharacterController : Observer
         stateMachine.ChangeState(stateMachine.shimmyState);
     }
 
-    public void ResetStats()
-    {
-        statsAddingDTO.Reset(amountOfStatsToAddPerLevel);
-        uiUpdater.UpdateStatsUI(playerState, playerUI);
-        uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
-    }
-
-    public void AcceptStats()
-    {
-        playerState.increaseAgility(statsAddingDTO.agilityIncrease);
-        playerState.increaseDefence(statsAddingDTO.defenceIncrease);
-        playerState.increaseHealth(statsAddingDTO.healthIncrease);
-        playerState.increaseStrength(statsAddingDTO.strengthIncrease);
-        healthState.IncreaseMaxHealth(
-            statsToValuesConverter.ConvertHealthStatToHPIncrease(playerState.health)
-        );
-        animationsManager.setAttackSpeed(
-            statsToValuesConverter.ConvertAgilityToAttackSpeed(playerState.agility)
-        );
-        statsAddingDTO.Reset(amountOfStatsToAddPerLevel);
-        uiUpdater.ToggleVisibilityOfStatsModification(false, playerUI);
-        uiUpdater.SetRemainingStatsToAdd(amountOfStatsToAddPerLevel, playerUI);
-    }
-
     public void AddExperience(int value)
     {
         bool isNextLevel = levelData.AddExperience(value);
         if (isNextLevel)
         {
-            uiUpdater.ToggleVisibilityOfStatsModification(true, playerUI);
+            uiUpdater.ToggleVisibilityOfStatsModification(true);
         }
-    }
-
-    private void Start()
-    {
-        stateMachine = GetComponent<StateMachine>();
-    }
-
-    public void AttachObjectToHand()
-    {
-        playerState.objectToInteractWith.Interact(rightHandObject);
-    }
-
-    public void DestroyPickedObject()
-    {
-        Destroy(playerState.objectToInteractWith.gameObject);
-        playerState.objectToInteractWith = null;
-        playerState.isPickingObject = false;
     }
 
     public void DecreaseHealth(int percent)
@@ -202,19 +119,9 @@ public class CharacterController : Observer
         healthState.DecreaseHealth(percent);
     }
 
-    public void AddObserver(Observer observer)
-    {
-        observers.Add(observer);
-    }
-
     public void ClimbingFinished()
     {
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
-    }
-
-    public void PullLeverStarted()
-    {
-        playerState.objectToInteractWith.Interact(null);
     }
 
     private void Update()
@@ -257,13 +164,8 @@ public class CharacterController : Observer
             }
             eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
         }
-        uiUpdater.UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
-        uiUpdater.UpdateExperience(
-            levelData,
-            playerUI.experienceText,
-            playerUI.experienceBar,
-            playerUI.levelText
-        );
+        uiUpdater.UpdatePlayerHealth(healthState);
+        uiUpdater.UpdateExperience(levelData);
     }
 
     public void UseMedipack()
@@ -274,7 +176,7 @@ public class CharacterController : Observer
         }
         healthState.IncreaseHealth(30);
         playerState.decreaseMedipacksAmount();
-        uiUpdater.UpdateMedipackAmount(playerUI.medipackAmountText, playerState.numberOfMedipacks);
+        uiUpdater.UpdateMedipackAmount(playerState.numberOfMedipacks);
     }
 
     public bool IsAttacking()
@@ -349,11 +251,6 @@ public class CharacterController : Observer
                 animationsManager.setAnimationToMoving();
                 break;
         }
-    }
-
-    public void ShimmyMovingStart()
-    {
-        stateMachine.shimmyState.ShimmyMovingStart();
     }
 
     internal void ShimmyDone()

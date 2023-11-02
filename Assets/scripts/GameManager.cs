@@ -37,7 +37,7 @@ public class GameManager : Observer
     {
         gameOverText.SetActive(false);
         enemies = FindObjectsOfType<Enemy>().ToList<Enemy>();
-        statsToValuesConverter = GetComponent<StatsToValuesConverter>();
+        statsToValuesConverter = new StatsToValuesConverter();
         characterController = FindObjectOfType<CharacterController>();
     }
 
@@ -53,10 +53,6 @@ public class GameManager : Observer
                 characterController.AddExperience(enemy.experienceValue);
                 continue;
             }
-            float distance = Vector3.Distance(
-                enemy.navMeshAgent.transform.position,
-                characterController.transform.position
-            );
             if (characterController.IsAttacking() && enemy.isInRange)
             {
                 enemy.DecreaseHealth(
