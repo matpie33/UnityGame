@@ -7,6 +7,13 @@ public class LevelData
     public int experience { get; set; }
     public int experienceNeededForNextLevel { get; set; }
 
+    public LevelData()
+    {
+        level = 1;
+        experience = 0;
+        experienceNeededForNextLevel = 1000;
+    }
+
     public bool AddExperience(int experience)
     {
         this.experience += experience;

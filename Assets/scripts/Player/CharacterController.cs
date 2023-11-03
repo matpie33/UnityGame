@@ -25,7 +25,7 @@ public class CharacterController : Observer
 
     private UIUpdater uiUpdater;
 
-    private LevelData levelData;
+    public LevelData levelData { get; private set; }
 
     public ObjectsInFrontDetector objectsInFrontDetector { get; private set; }
 
@@ -49,9 +49,6 @@ public class CharacterController : Observer
         wallData = new WallData();
         playerBackpack = new PlayerBackpack();
         levelData = new LevelData();
-        levelData.level = 1;
-        levelData.experience = 0;
-        levelData.experienceNeededForNextLevel = 1000;
 
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
 
@@ -93,7 +90,7 @@ public class CharacterController : Observer
         bool isNextLevel = levelData.AddExperience(value);
         if (isNextLevel)
         {
-            uiUpdater.ToggleVisibilityOfStatsModification(true);
+            uiUpdater.SetVisibilityOfStatsModification(true);
         }
     }
 
@@ -105,12 +102,6 @@ public class CharacterController : Observer
     public void ClimbingFinished()
     {
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
-    }
-
-    private void Update()
-    {
-        uiUpdater.UpdatePlayerHealth(healthState);
-        uiUpdater.UpdateExperience(levelData);
     }
 
     public void UseMedipack()
@@ -159,8 +150,8 @@ public class CharacterController : Observer
         }
         else
         {
-            capsuleCollider.height = initialHeight / 2;
-            capsuleCollider.center = new Vector3(0, 0.47f, 0);
+            capsuleCollider.height = 1.4f;
+            capsuleCollider.center = new Vector3(0, 0.6f, 0);
         }
     }
 

@@ -35,7 +35,7 @@ public class ButtonClickHandler : MonoBehaviour
                 characterController.playerState.agility
             )
         );
-        uiUpdater.ToggleVisibilityOfStatsModification(false);
+        uiUpdater.SetVisibilityOfStatsModification(false);
         uiUpdater.ResetStats();
     }
 }

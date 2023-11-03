@@ -11,6 +11,8 @@ public class UIUpdater : MonoBehaviour
 
     private PlayerUI playerUI;
 
+    private CharacterController characterController;
+
     public StatsAddingDTO statsAddingDTO { get; private set; }
 
     private void Awake()
@@ -18,6 +20,7 @@ public class UIUpdater : MonoBehaviour
         playerUI = GetComponent<PlayerUI>();
         playerUI.healthBar.fillAmount = 1;
         statsAddingDTO = new StatsAddingDTO();
+        characterController = FindObjectOfType<CharacterController>();
     }
 
     public void UpdateMedipackAmount(int newValue)
@@ -70,7 +73,7 @@ public class UIUpdater : MonoBehaviour
         InitializeStatIncreasingButtons();
         SetVisibilityOfStatsPanel(false);
         ClearStatsInUI(playerState);
-        ToggleVisibilityOfStatsModification(false);
+        SetVisibilityOfStatsModification(false);
     }
 
     private void InitializeStatIncreasingButtons()
@@ -160,9 +163,11 @@ public class UIUpdater : MonoBehaviour
             statsPanel.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
         }
+        UpdatePlayerHealth(characterController.healthState);
+        UpdateExperience(characterController.levelData);
     }
 
-    public void ToggleVisibilityOfStatsModification(bool visible)
+    public void SetVisibilityOfStatsModification(bool visible)
     {
         playerUI.addStrengthButton.gameObject.SetActive(visible);
         playerUI.addHealthButton.gameObject.SetActive(visible);

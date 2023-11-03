@@ -43,11 +43,10 @@ public class PlayerInputs
     public const string MouseYString = "Mouse Y";
     public const string MouseScrollString = "Mouse ScrollWheel";
 
-    public static Input forward = new Input(KeyCode.W);
-    public static Input backward = new Input(KeyCode.S);
-    public static Input left = new Input(KeyCode.A);
-    public static Input right = new Input(KeyCode.D);
-    public static Input sprint = new Input(KeyCode.LeftShift);
+    public static Input forward = new Input(ActionKeys.FORWARD_KEY);
+    public static Input backward = new Input(ActionKeys.BACKWARD_KEY);
+    public static Input left = new Input(ActionKeys.LEFT_KEY);
+    public static Input right = new Input(ActionKeys.RIGHT_KEY);
 
     public static int MoveAxisForwardRaw
     {

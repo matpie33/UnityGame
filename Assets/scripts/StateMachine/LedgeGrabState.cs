@@ -44,8 +44,6 @@ public class LedgeGrabState : State
     public override void ExitState()
     {
         characterController.animationsManager.disableRootMotion();
-        characterController.capsuleCollider.height = characterController.initialHeight;
-        characterController.capsuleCollider.center = new Vector3(0, 0.9f, 0);
         characterController.rigidbody.isKinematic = false;
     }
 

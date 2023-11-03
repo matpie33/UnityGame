@@ -15,6 +15,9 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode WALK_DOWN_LEDGE = KeyCode.LeftControl;
     public const KeyCode OPEN_STATS_PANEL = KeyCode.Tab;
     public const KeyCode OPEN_BACKPACK = KeyCode.Escape;
+
+    public const KeyCode FORWARD_KEY = KeyCode.W;
+    public const KeyCode BACKWARD_KEY = KeyCode.S;
     public const KeyCode LEFT_KEY = KeyCode.A;
     public const KeyCode RIGHT_KEY = KeyCode.D;
 
