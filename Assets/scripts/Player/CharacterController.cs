@@ -44,12 +44,15 @@ public class CharacterController : Observer
 
     public PlayerBackpack playerBackpack { get; private set; }
 
+    private EventQueue eventQueue;
+
     private void Awake()
     {
         wallData = new WallData();
         playerBackpack = new PlayerBackpack();
         levelData = new LevelData();
 
+        eventQueue = FindObjectOfType<EventQueue>();
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
 
         cameraController = GetComponent<CameraController>();
@@ -90,6 +93,7 @@ public class CharacterController : Observer
         bool isNextLevel = levelData.AddExperience(value);
         if (isNextLevel)
         {
+            eventQueue.SubmitEvent(new EventDTO(EventType.CHARACTER_LEVEL_UP, null));
             uiUpdater.SetVisibilityOfStatsModification(true);
         }
     }
