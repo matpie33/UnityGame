@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.PlayerLoop.PreUpdate;
@@ -17,6 +16,9 @@ public class UIUpdater : Observer
 
     [SerializeField]
     private GameObject addStatsIcon;
+
+    [SerializeField]
+    private GameObject questPanel;
 
     private void Awake()
     {
@@ -158,6 +160,13 @@ public class UIUpdater : Observer
             statsPanel.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
         }
+        if (ActionKeys.IsKeyPressed(ActionKeys.MOUSE_ENABLE))
+        {
+            CursorLockMode lockState = Cursor.lockState;
+            Cursor.lockState = lockState.Equals(CursorLockMode.Locked)
+                ? CursorLockMode.None
+                : CursorLockMode.Locked;
+        }
         UpdatePlayerHealth(characterController.healthState);
         UpdateExperience(characterController.levelData);
     }
@@ -203,5 +212,38 @@ public class UIUpdater : Observer
     internal void HideAddStatsIcon()
     {
         addStatsIcon.SetActive(false);
+    }
+
+    internal void AddQuestToUI(Quest quest, int questIndex)
+    {
+        Transform questPanelTransform = questPanel.gameObject.transform;
+        GameObject summaryGameObject = questPanelTransform.GetChild(questIndex * 2).gameObject;
+        summaryGameObject.SetActive(true);
+        TextMeshProUGUI summaryTextField = questPanelTransform
+            .GetChild(questIndex * 2)
+            .gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI descriptionTextField = questPanelTransform
+            .GetChild(questIndex * 2 + 1)
+            .gameObject.GetComponent<TextMeshProUGUI>();
+        summaryTextField.text = quest.summary;
+        descriptionTextField.text = quest.description;
+    }
+
+    internal void RemoveQuestFromUI(Quest quest)
+    {
+        Transform questPanelTransform = questPanel.gameObject.transform;
+        for (int i = 0; i < questPanelTransform.childCount; i = i + 2)
+        {
+            GameObject summaryGameObject = questPanelTransform.GetChild(i).gameObject;
+            string summaryTextValue = summaryGameObject
+                .GetComponentInChildren<TextMeshProUGUI>()
+                .text;
+            if (summaryTextValue.Equals(quest.summary))
+            {
+                summaryGameObject.SetActive(false);
+                questPanelTransform.GetChild(i + 1).gameObject.SetActive(false);
+                return;
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ActionKeys : MonoBehaviour
 {
+    public const KeyCode MOUSE_ENABLE = KeyCode.F1;
     public const KeyCode JUMP = KeyCode.Space;
     public const KeyCode INTERACT = KeyCode.E;
     public const KeyCode USE_MEDIPACK = KeyCode.Alpha1;
