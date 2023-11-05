@@ -37,5 +37,6 @@ public class ButtonClickHandler : MonoBehaviour
         );
         uiUpdater.SetVisibilityOfStatsModification(false);
         uiUpdater.ResetStats();
+        uiUpdater.HideAddStatsIcon();
     }
 }

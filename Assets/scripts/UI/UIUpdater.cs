@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.PlayerLoop.PreUpdate;
 
-public class UIUpdater : MonoBehaviour
+public class UIUpdater : Observer
 {
     [SerializeField]
     private GameObject statsPanel;
@@ -15,12 +15,16 @@ public class UIUpdater : MonoBehaviour
 
     public StatsAddingDTO statsAddingDTO { get; private set; }
 
+    [SerializeField]
+    private GameObject addStatsIcon;
+
     private void Awake()
     {
         playerUI = GetComponent<PlayerUI>();
         playerUI.healthBar.fillAmount = 1;
         statsAddingDTO = new StatsAddingDTO();
         characterController = FindObjectOfType<CharacterController>();
+        addStatsIcon.SetActive(false);
     }
 
     public void UpdateMedipackAmount(int newValue)
@@ -147,16 +151,7 @@ public class UIUpdater : MonoBehaviour
     {
         if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_STATS_PANEL))
         {
-            statsPanel.SetActive(!statsPanel.activeSelf);
-            bool isActive = statsPanel.activeSelf;
-            if (isActive)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            OpenStatsPanel();
         }
         if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_BACKPACK))
         {
@@ -165,6 +160,20 @@ public class UIUpdater : MonoBehaviour
         }
         UpdatePlayerHealth(characterController.healthState);
         UpdateExperience(characterController.levelData);
+    }
+
+    public void OpenStatsPanel()
+    {
+        statsPanel.SetActive(!statsPanel.activeSelf);
+        bool isActive = statsPanel.activeSelf;
+        if (isActive)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     public void SetVisibilityOfStatsModification(bool visible)
@@ -179,5 +188,20 @@ public class UIUpdater : MonoBehaviour
     internal void UpdatePlayerHealth(HealthState healthState)
     {
         UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
+    }
+
+    public override void OnEvent(EventDTO eventDTO)
+    {
+        switch (eventDTO.eventType)
+        {
+            case EventType.CHARACTER_LEVEL_UP:
+                addStatsIcon.SetActive(true);
+                break;
+        }
+    }
+
+    internal void HideAddStatsIcon()
+    {
+        addStatsIcon.SetActive(false);
     }
 }
