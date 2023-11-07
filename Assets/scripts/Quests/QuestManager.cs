@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class QuestManager : Observer
 {
-    private List<Quest> quests = new List<Quest>();
+    private Dictionary<Quest, int> quests = new Dictionary<Quest, int>();
     private UIUpdater uiUpdater;
 
     private const int maxQuests = 3;
@@ -16,22 +17,31 @@ public class QuestManager : Observer
 
     public void ReceiveQuest(Quest quest)
     {
-        if (quests.Count == maxQuests || quests.Contains(quest))
+        if (quests.Count == maxQuests || quests.ContainsKey(quest))
         {
             return;
         }
         uiUpdater.AddQuestToUI(quest, quests.Count);
-        quests.Add(quest);
+        quests.Add(quest, 0);
     }
 
     public void OnQuestComplete(Quest quest)
     {
-        if (!quests.Contains(quest))
+        if (!quests.ContainsKey(quest))
         {
             return;
         }
-        uiUpdater.RemoveQuestFromUI(quest);
-        quests.Remove(quest);
+        int questStep = quests[quest] + 1;
+        if (questStep == quest.questParts.Count)
+        {
+            uiUpdater.RemoveQuestFromUI(quest);
+            quests.Remove(quest);
+        }
+        else
+        {
+            uiUpdater.ChangeDescription(quest, questStep);
+            quests[quest] = questStep;
+        }
     }
 
     public override void OnEvent(EventDTO eventDTO)
@@ -43,7 +53,7 @@ public class QuestManager : Observer
                 quest = (Quest)eventDTO.eventData;
                 ReceiveQuest(quest);
                 break;
-            case EventType.QUEST_COMPLETED:
+            case EventType.QUEST_STEP_COMPLETED:
                 quest = (Quest)eventDTO.eventData;
                 OnQuestComplete(quest);
                 break;

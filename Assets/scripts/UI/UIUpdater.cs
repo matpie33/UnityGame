@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.PlayerLoop.PreUpdate;
@@ -222,11 +223,14 @@ public class UIUpdater : Observer
         TextMeshProUGUI summaryTextField = questPanelTransform
             .GetChild(questIndex * 2)
             .gameObject.GetComponentInChildren<TextMeshProUGUI>();
-        TextMeshProUGUI descriptionTextField = questPanelTransform
+        GameObject descriptionGameObject = questPanelTransform
             .GetChild(questIndex * 2 + 1)
-            .gameObject.GetComponent<TextMeshProUGUI>();
+            .gameObject;
+        descriptionGameObject.SetActive(true);
+        TextMeshProUGUI descriptionTextField =
+            descriptionGameObject.GetComponent<TextMeshProUGUI>();
         summaryTextField.text = quest.summary;
-        descriptionTextField.text = quest.description;
+        descriptionTextField.text = quest.questParts[0];
     }
 
     internal void RemoveQuestFromUI(Quest quest)
@@ -244,6 +248,18 @@ public class UIUpdater : Observer
                 questPanelTransform.GetChild(i + 1).gameObject.SetActive(false);
                 return;
             }
+        }
+    }
+
+    internal void ChangeDescription(Quest quest, int step)
+    {
+        Transform questPanelTransform = questPanel.gameObject.transform;
+        for (int i = 0; i < questPanelTransform.childCount; i = i + 2)
+        {
+            GameObject descriptionGameObject = questPanelTransform.GetChild(i + 1).gameObject;
+            TextMeshProUGUI descriptionTextField =
+                descriptionGameObject.GetComponent<TextMeshProUGUI>();
+            descriptionTextField.text = quest.questParts[step];
         }
     }
 }

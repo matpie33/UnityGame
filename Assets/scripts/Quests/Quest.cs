@@ -9,5 +9,5 @@ public class Quest : ScriptableObject
     public string summary { get; private set; }
 
     [field: SerializeField]
-    public string description { get; private set; }
+    public List<string> questParts { get; private set; }
 }
