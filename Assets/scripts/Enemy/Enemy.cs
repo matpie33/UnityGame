@@ -7,11 +7,6 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    private HealthState healthState;
-
-    [SerializeField]
-    private int maxHealth;
-
     [SerializeField]
     private int attackPower;
 
@@ -20,48 +15,24 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     private float minimumDistanceToAttack = 2;
     private bool isAttacking;
-    private Image healthBar;
-
     public bool isInRange { get; set; }
-
-    [SerializeField]
-    private TextMeshProUGUI healthText;
-
     public NavMeshAgent navMeshAgent { get; private set; }
-
-    private UIUpdater uiUpdater;
 
     public int experienceValue { get; private set; }
 
     private void Start()
     {
         experienceValue = 400;
-        uiUpdater = FindObjectOfType<UIUpdater>();
         attackPower = 10;
-        healthState = new HealthState(maxHealth);
+
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = FindObjectOfType<CharacterController>();
         animator = GetComponent<Animator>();
-        GetHealthbarForeground();
-        healthBar.fillAmount = 1;
     }
 
     public int getAttackPower()
     {
         return attackPower;
-    }
-
-    private void GetHealthbarForeground()
-    {
-        Image[] images = GetComponentsInChildren<Image>();
-        for (int i = 0; i < images.Length; i++)
-        {
-            if (images[i].name.Equals("Foreground"))
-            {
-                healthBar = images[i];
-                break;
-            }
-        }
     }
 
     public bool GetIsAttacking()
@@ -87,19 +58,8 @@ public class Enemy : MonoBehaviour
         isAttacking = false;
     }
 
-    public void DecreaseHealth(int byValue)
-    {
-        healthState.DecreaseHealth(byValue);
-    }
-
-    public bool IsAlive()
-    {
-        return healthState.IsAlive();
-    }
-
     private void Update()
     {
-        uiUpdater.UpdateHealthBar(healthState, healthText, healthBar);
         Vector3 playerPosition = characterController.transform.position;
         float distance = Vector3.Distance(navMeshAgent.transform.position, playerPosition);
         if (distance < minimumDistanceToChase)

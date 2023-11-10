@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.PlayerLoop.PreUpdate;
 
 public class UIUpdater : Observer
 {
@@ -21,6 +22,11 @@ public class UIUpdater : Observer
     [SerializeField]
     private GameObject questPanel;
 
+    [SerializeField]
+    private Canvas healthBarPrefab;
+
+    private List<ObjectWithHealth> objectsWithHealth = new List<ObjectWithHealth>();
+
     private void Awake()
     {
         playerUI = GetComponent<PlayerUI>();
@@ -28,6 +34,39 @@ public class UIUpdater : Observer
         statsAddingDTO = new StatsAddingDTO();
         characterController = FindObjectOfType<CharacterController>();
         addStatsIcon.SetActive(false);
+        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList<ObjectWithHealth>();
+    }
+
+    private void Start()
+    {
+        foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
+        {
+            Canvas healthBar = Instantiate(healthBarPrefab);
+            float halfHeight = objectWithHealth.GetComponent<Collider>().bounds.extents.y;
+            Transform healthBarTransform = healthBar.transform;
+            TextMeshProUGUI hpTextField = findHpTextInObject(healthBar.gameObject);
+            HealthState healthState = objectWithHealth.healthState;
+            hpTextField.text = healthState.value + "/" + healthState.maxHealth;
+            Vector3 position = healthBarTransform.position;
+            position.y = 2 * halfHeight;
+            healthBarTransform.position = position;
+            Image image = findHealthBarForegroundInObject(healthBar.gameObject);
+            image.fillAmount = 1;
+
+            healthBar.transform.SetParent(objectWithHealth.transform, false);
+        }
+    }
+
+    private Image findHealthBarForegroundInObject(GameObject gameObject)
+    {
+        foreach (Image image in gameObject.GetComponentsInChildren<Image>())
+        {
+            if (image.gameObject.name.Equals("Foreground"))
+            {
+                return image;
+            }
+        }
+        throw new Exception("Image with name foreground is not found");
     }
 
     public void UpdateMedipackAmount(int newValue)
@@ -207,7 +246,27 @@ public class UIUpdater : Observer
             case EventType.CHARACTER_LEVEL_UP:
                 addStatsIcon.SetActive(true);
                 break;
+            case EventType.OBJECT_HP_DECREASE:
+                ObjectWithHealth objectWithHealth = (ObjectWithHealth)eventDTO.eventData;
+                HealthState healthState = objectWithHealth.healthState;
+                TextMeshProUGUI hpTextField = findHpTextInObject(objectWithHealth.gameObject);
+                hpTextField.text = healthState.value + "/" + healthState.maxHealth;
+                Image image = findHealthBarForegroundInObject(objectWithHealth.gameObject);
+                image.fillAmount = (float)healthState.value / (float)healthState.maxHealth;
+                break;
         }
+    }
+
+    private TextMeshProUGUI findHpTextInObject(GameObject gameObject)
+    {
+        foreach (TextMeshProUGUI textField in gameObject.GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            if (textField.gameObject.name.Equals("HpText"))
+            {
+                return textField;
+            }
+        }
+        throw new Exception("Not found hp text");
     }
 
     internal void HideAddStatsIcon()

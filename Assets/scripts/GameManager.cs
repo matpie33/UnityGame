@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class GameManager : Observer
 {
-    private List<Enemy> enemies;
+    private List<ObjectWithHealth> objectsWithHealth;
 
     private CharacterController characterController;
 
-    private ISet<Enemy> objectsToDelete = new HashSet<Enemy>();
+    private ISet<ObjectWithHealth> objectsToDelete = new HashSet<ObjectWithHealth>();
 
     private StatsToValuesConverter statsToValuesConverter;
 
     [SerializeField]
     private GameObject gameOverText;
+
+    private EventQueue eventQueue;
 
     public override void OnEvent(EventDTO eventDTO)
     {
@@ -33,8 +35,9 @@ public class GameManager : Observer
 
     private void Start()
     {
+        eventQueue = FindObjectOfType<EventQueue>();
         gameOverText.SetActive(false);
-        enemies = FindObjectsOfType<Enemy>().ToList<Enemy>();
+        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList<ObjectWithHealth>();
         statsToValuesConverter = new StatsToValuesConverter();
         characterController = FindObjectOfType<CharacterController>();
     }
@@ -42,41 +45,58 @@ public class GameManager : Observer
     void Update()
     {
         objectsToDelete.Clear();
-        foreach (Enemy enemy in enemies)
+        foreach (ObjectWithHealth aliveObject in objectsWithHealth)
         {
-            if (!enemy.IsAlive())
+            Enemy enemy = null;
+            if (aliveObject.aliveObjectType.Equals(TypeOfObjectWithHealth.ENEMY))
             {
-                Destroy(enemy.gameObject);
-                objectsToDelete.Add(enemy);
-                characterController.AddExperience(enemy.experienceValue);
+                enemy = aliveObject.GetComponent<Enemy>();
+            }
+            if (!aliveObject.IsAlive())
+            {
+                Destroy(aliveObject.gameObject);
+                objectsToDelete.Add(aliveObject);
+                if (enemy != null)
+                {
+                    characterController.AddExperience(enemy.experienceValue);
+                }
                 continue;
             }
-            if (characterController.IsAttacking() && enemy.isInRange)
+            if (enemy != null)
             {
-                enemy.DecreaseHealth(
-                    statsToValuesConverter.ConvertStrengthToHealthDecreaseValue(
-                        characterController.playerState.strength
-                    )
-                );
-            }
-            if (enemy.GetIsAttacking())
-            {
-                characterController.DecreaseHealth(
-                    statsToValuesConverter.ConvertDefenceToPlayerHealthDecrease(
-                        characterController.playerState.defence,
-                        enemy.getAttackPower()
-                    )
-                );
-                if (!characterController.healthState.IsAlive())
-                {
-                    DoGameOver();
-                }
+                HandleEnemy(aliveObject, enemy);
             }
         }
         characterController.attackEventChecked();
-        foreach (Enemy e in objectsToDelete)
+        foreach (ObjectWithHealth e in objectsToDelete)
         {
-            enemies.Remove(e);
+            objectsWithHealth.Remove(e);
+        }
+    }
+
+    private void HandleEnemy(ObjectWithHealth aliveObject, Enemy enemy)
+    {
+        if (characterController.IsAttacking() && enemy.isInRange)
+        {
+            aliveObject.DecreaseHealth(
+                statsToValuesConverter.ConvertStrengthToHealthDecreaseValue(
+                    characterController.playerState.strength
+                )
+            );
+            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_HP_DECREASE, aliveObject));
+        }
+        if (enemy.GetIsAttacking())
+        {
+            characterController.DecreaseHealth(
+                statsToValuesConverter.ConvertDefenceToPlayerHealthDecrease(
+                    characterController.playerState.defence,
+                    enemy.getAttackPower()
+                )
+            );
+            if (!characterController.healthState.IsAlive())
+            {
+                DoGameOver();
+            }
         }
     }
 }
