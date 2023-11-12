@@ -15,7 +15,7 @@ public class ObjectWithHealth : MonoBehaviour
     [SerializeField]
     private int maxHealth;
 
-    private void Start()
+    private void Awake()
     {
         healthState = new HealthState(maxHealth);
     }

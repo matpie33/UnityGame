@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,27 +35,28 @@ public class UIUpdater : Observer
         statsAddingDTO = new StatsAddingDTO();
         characterController = FindObjectOfType<CharacterController>();
         addStatsIcon.SetActive(false);
-        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList<ObjectWithHealth>();
-    }
-
-    private void Start()
-    {
+        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList();
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
-            Canvas healthBar = Instantiate(healthBarPrefab);
-            float halfHeight = objectWithHealth.GetComponent<Collider>().bounds.extents.y;
-            Transform healthBarTransform = healthBar.transform;
-            TextMeshProUGUI hpTextField = findHpTextInObject(healthBar.gameObject);
-            HealthState healthState = objectWithHealth.healthState;
-            hpTextField.text = healthState.value + "/" + healthState.maxHealth;
-            Vector3 position = healthBarTransform.position;
-            position.y = 2 * halfHeight;
-            healthBarTransform.position = position;
-            Image image = findHealthBarForegroundInObject(healthBar.gameObject);
-            image.fillAmount = 1;
-
-            healthBar.transform.SetParent(objectWithHealth.transform, false);
+            CreateHealthBarForObject(objectWithHealth);
         }
+    }
+
+    private void CreateHealthBarForObject(ObjectWithHealth objectWithHealth)
+    {
+        Canvas healthBar = Instantiate(healthBarPrefab);
+        float halfHeight = objectWithHealth.GetComponent<Collider>().bounds.extents.y;
+        Transform healthBarTransform = healthBar.transform;
+        TextMeshProUGUI hpTextField = findHpTextInObject(healthBar.gameObject);
+        HealthState healthState = objectWithHealth.healthState;
+        hpTextField.text = healthState.value + "/" + healthState.maxHealth;
+        Vector3 position = healthBarTransform.position;
+        position.y = 2 * halfHeight;
+        healthBarTransform.position = position;
+        Image image = findHealthBarForegroundInObject(healthBar.gameObject);
+        image.fillAmount = 1;
+
+        healthBar.transform.SetParent(objectWithHealth.transform, false);
     }
 
     private Image findHealthBarForegroundInObject(GameObject gameObject)
@@ -315,10 +317,17 @@ public class UIUpdater : Observer
         Transform questPanelTransform = questPanel.gameObject.transform;
         for (int i = 0; i < questPanelTransform.childCount; i = i + 2)
         {
-            GameObject descriptionGameObject = questPanelTransform.GetChild(i + 1).gameObject;
-            TextMeshProUGUI descriptionTextField =
-                descriptionGameObject.GetComponent<TextMeshProUGUI>();
-            descriptionTextField.text = quest.questParts[step];
+            GameObject questSummary = questPanelTransform.GetChild(i).gameObject;
+            TextMeshProUGUI questSummaryText =
+                questSummary.GetComponentInChildren<TextMeshProUGUI>();
+            if (questSummaryText.text.Equals(quest.summary))
+            {
+                GameObject descriptionGameObject = questPanelTransform.GetChild(i + 1).gameObject;
+                TextMeshProUGUI descriptionTextField =
+                    descriptionGameObject.GetComponent<TextMeshProUGUI>();
+                descriptionTextField.text = quest.questParts[step];
+                break;
+            }
         }
     }
 }

@@ -33,11 +33,16 @@ public class GameManager : Observer
         gameOverText.SetActive(true);
     }
 
+    private void Awake()
+    {
+        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList();
+    }
+
     private void Start()
     {
         eventQueue = FindObjectOfType<EventQueue>();
         gameOverText.SetActive(false);
-        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList<ObjectWithHealth>();
+
         statsToValuesConverter = new StatsToValuesConverter();
         characterController = FindObjectOfType<CharacterController>();
     }

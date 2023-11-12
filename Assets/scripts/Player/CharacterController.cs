@@ -46,6 +46,9 @@ public class CharacterController : Observer
 
     private EventQueue eventQueue;
 
+    [SerializeField]
+    private Quest quest;
+
     private void Awake()
     {
         wallData = new WallData();
@@ -73,6 +76,15 @@ public class CharacterController : Observer
     {
         stateMachine = GetComponent<StateMachine>();
         uiUpdater.InitializeStatsPanel(playerState);
+    }
+
+    private void Update()
+    {
+        if (ActionKeys.IsKeyPressed(KeyCode.J))
+        {
+            eventQueue.SubmitEvent(new EventDTO(EventType.NPC_MOVE, null));
+            eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_STEP_COMPLETED, quest));
+        }
     }
 
     public void GetWallData()

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Npc : MonoBehaviour
+public class Npc : Observer
 {
     [SerializeField]
     private List<Transform> pathList;
+
+    private int pathProgress = 1;
 
     private NavMeshAgent navMeshAgent;
 
@@ -16,6 +18,9 @@ public class Npc : MonoBehaviour
 
     [SerializeField]
     private float lerpValue;
+
+    [SerializeField]
+    private GameObject wolvesParentObject;
 
     private void Start()
     {
@@ -29,20 +34,28 @@ public class Npc : MonoBehaviour
         {
             RotateThenMove();
         }
-
-        if (ActionKeys.IsKeyPressed(KeyCode.J) && pathList.Count > 0)
+        if (
+            movementStart
+            && pathProgress == 1
+            && navMeshAgent.remainingDistance < 1f
+            && !wolvesParentObject.activeSelf
+        )
         {
-            movementStart = true;
-            Transform pathPart = pathList[0];
-            pathList.Remove(pathPart);
-            navMeshAgent.SetDestination(pathPart.position);
+            wolvesParentObject.SetActive(true);
         }
-        else if (!navMeshAgent.pathPending && !navMeshAgent.hasPath)
+
+        if (StoppedMoving())
         {
             movementStart = false;
             navMeshAgent.isStopped = true;
             animator.SetBool("Walk", false);
+            pathProgress++;
         }
+    }
+
+    private bool StoppedMoving()
+    {
+        return movementStart && !navMeshAgent.pathPending && !navMeshAgent.hasPath;
     }
 
     private void RotateThenMove()
@@ -64,5 +77,23 @@ public class Npc : MonoBehaviour
                 lerpValue
             );
         }
+    }
+
+    public override void OnEvent(EventDTO eventDTO)
+    {
+        switch (eventDTO.eventType)
+        {
+            case EventType.NPC_MOVE:
+                MoveToNextPoint();
+                break;
+        }
+    }
+
+    private void MoveToNextPoint()
+    {
+        movementStart = true;
+        Transform destination1 = pathList[0];
+        pathList.Remove(destination1);
+        navMeshAgent.SetDestination(destination1.position);
     }
 }
