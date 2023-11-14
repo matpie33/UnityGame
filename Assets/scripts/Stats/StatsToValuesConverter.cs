@@ -8,7 +8,6 @@ public class StatsToValuesConverter
     private const int HEALTH_MULTIPLIER = 20;
     private const int BASE_ATTACK_SPEED = 1;
     private const float ATTACK_SPEED_MODIFIER = 0.03f;
-    private const int BASE_ENEMY_HEALTH_DECREASE = 25;
     private const int HEALTH_DECREASE_MULTIPLIER = 5;
 
     public int ConvertHealthStatToHPIncrease(int healthStat)
@@ -21,13 +20,8 @@ public class StatsToValuesConverter
         return BASE_ATTACK_SPEED + agility * ATTACK_SPEED_MODIFIER;
     }
 
-    public int ConvertStrengthToHealthDecreaseValue(int strength)
+    public int ConvertDefenceToHealthDecrease(int defence, int strength)
     {
-        return BASE_ENEMY_HEALTH_DECREASE + strength * HEALTH_DECREASE_MULTIPLIER;
-    }
-
-    public int ConvertDefenceToPlayerHealthDecrease(int defence, int enemyPower)
-    {
-        return (int)Mathf.Max(0, enemyPower - defence * 5);
+        return (int)Mathf.Max(0, (strength - defence) * HEALTH_DECREASE_MULTIPLIER);
     }
 }

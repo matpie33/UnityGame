@@ -10,10 +10,16 @@ public class ObjectWithHealth : MonoBehaviour
     public HealthState healthState { get; private set; }
 
     [field: SerializeField]
-    public TypeOfObjectWithHealth aliveObjectType { get; private set; }
+    public TypeOfObjectWithHealth type { get; private set; }
 
     [SerializeField]
     private int maxHealth;
+
+    [field: SerializeField]
+    public bool skipHealthBar { get; private set; }
+
+    [field: SerializeField]
+    public Stats stats { get; private set; }
 
     private void Awake()
     {

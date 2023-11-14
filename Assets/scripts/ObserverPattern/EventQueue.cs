@@ -14,6 +14,7 @@ public class EventQueue : MonoBehaviour
 
     public void SubmitEvent(EventDTO eventDTO)
     {
+        observers.RemoveAll(o => o == null);
         foreach (Observer observer in observers)
         {
             observer.OnEvent(eventDTO);

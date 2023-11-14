@@ -19,20 +19,20 @@ public class ButtonClickHandler : MonoBehaviour
 
     public void ResetStats()
     {
-        uiUpdater.ClearStatsInUI(characterController.playerState);
+        uiUpdater.ClearStatsInUI(characterController.GetStats());
     }
 
     public void AcceptStats()
     {
         characterController.playerState.increaseStats(uiUpdater.statsAddingDTO);
-        characterController.healthState.IncreaseMaxHealth(
+        characterController.IncreaseMaxHealth(
             statsToValuesConverter.ConvertHealthStatToHPIncrease(
-                characterController.playerState.health
+                characterController.GetStats().health
             )
         );
         characterController.animationsManager.setAttackSpeed(
             statsToValuesConverter.ConvertAgilityToAttackSpeed(
-                characterController.playerState.agility
+                characterController.GetStats().agility
             )
         );
         uiUpdater.SetVisibilityOfStatsModification(false);

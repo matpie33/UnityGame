@@ -159,8 +159,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e4b5ffbaef7a4459037dca87f35802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <aliveObjectType>k__BackingField: 0
+  <defence>k__BackingField: 0
+  <type>k__BackingField: 0
   maxHealth: 50
+  <skipHealthBar>k__BackingField: 0
+  <stats>k__BackingField:
+    <strength>k__BackingField: 1
+    <agility>k__BackingField: 1
+    <defence>k__BackingField: 1
+    <health>k__BackingField: 1
 --- !u!1 &3871957234118165635
 GameObject:
   m_ObjectHideFlags: 0

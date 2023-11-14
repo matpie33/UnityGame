@@ -38,7 +38,10 @@ public class UIUpdater : Observer
         objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList();
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
-            CreateHealthBarForObject(objectWithHealth);
+            if (!objectWithHealth.skipHealthBar)
+            {
+                CreateHealthBarForObject(objectWithHealth);
+            }
         }
     }
 
@@ -116,11 +119,11 @@ public class UIUpdater : Observer
         levelText.text = "" + levelData.level;
     }
 
-    public void InitializeStatsPanel(PlayerState playerState)
+    public void InitializeStatsPanel(Stats stats)
     {
         InitializeStatIncreasingButtons();
         SetVisibilityOfStatsPanel(false);
-        ClearStatsInUI(playerState);
+        ClearStatsInUI(stats);
         SetVisibilityOfStatsModification(false);
     }
 
@@ -181,14 +184,14 @@ public class UIUpdater : Observer
         playerUI.statsPanel.SetActive(visible);
     }
 
-    internal void ClearStatsInUI(PlayerState playerState)
+    internal void ClearStatsInUI(Stats stats)
     {
         statsAddingDTO.Reset();
         SetRemainingStatsToAdd(statsAddingDTO.statsLeft);
-        playerUI.agilityStat.text = "" + playerState.agility;
-        playerUI.healthStat.text = "" + playerState.health;
-        playerUI.defenceStat.text = "" + playerState.defence;
-        playerUI.strengthStat.text = "" + playerState.strength;
+        playerUI.agilityStat.text = "" + stats.agility;
+        playerUI.healthStat.text = "" + stats.health;
+        playerUI.defenceStat.text = "" + stats.defence;
+        playerUI.strengthStat.text = "" + stats.strength;
     }
 
     private void Update()
@@ -209,7 +212,6 @@ public class UIUpdater : Observer
                 ? CursorLockMode.None
                 : CursorLockMode.Locked;
         }
-        UpdatePlayerHealth(characterController.healthState);
         UpdateExperience(characterController.levelData);
     }
 
@@ -250,11 +252,18 @@ public class UIUpdater : Observer
                 break;
             case EventType.OBJECT_HP_DECREASE:
                 ObjectWithHealth objectWithHealth = (ObjectWithHealth)eventDTO.eventData;
-                HealthState healthState = objectWithHealth.healthState;
-                TextMeshProUGUI hpTextField = findHpTextInObject(objectWithHealth.gameObject);
-                hpTextField.text = healthState.value + "/" + healthState.maxHealth;
-                Image image = findHealthBarForegroundInObject(objectWithHealth.gameObject);
-                image.fillAmount = (float)healthState.value / (float)healthState.maxHealth;
+                if (objectWithHealth.gameObject.tag.Equals(Tags.PLAYER))
+                {
+                    UpdatePlayerHealth(objectWithHealth.healthState);
+                }
+                else
+                {
+                    HealthState healthState = objectWithHealth.healthState;
+                    TextMeshProUGUI hpTextField = findHpTextInObject(objectWithHealth.gameObject);
+                    hpTextField.text = healthState.value + "/" + healthState.maxHealth;
+                    Image image = findHealthBarForegroundInObject(objectWithHealth.gameObject);
+                    image.fillAmount = (float)healthState.value / (float)healthState.maxHealth;
+                }
                 break;
         }
     }

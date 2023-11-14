@@ -17,8 +17,6 @@ public class CharacterController : Observer
 
     public Vector3 currentVelocity { get; set; }
 
-    public HealthState healthState { get; private set; }
-
     public StateMachine stateMachine { get; private set; }
 
     public PlayerState playerState { get; private set; }
@@ -49,6 +47,8 @@ public class CharacterController : Observer
     [SerializeField]
     private Quest quest;
 
+    private ObjectWithHealth objectWithHealth;
+
     private void Awake()
     {
         wallData = new WallData();
@@ -65,17 +65,23 @@ public class CharacterController : Observer
         ledgeContinuationDetector = GetComponent<LedgeContinuationDetector>();
         groundLandingDetector = GetComponentInChildren<GroundLandingDetector>();
 
-        healthState = new HealthState(200);
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
 
         uiUpdater = FindObjectOfType<UIUpdater>();
+        objectWithHealth = GetComponent<ObjectWithHealth>();
     }
 
     private void Start()
     {
         stateMachine = GetComponent<StateMachine>();
-        uiUpdater.InitializeStatsPanel(playerState);
+        uiUpdater.InitializeStatsPanel(GetStats());
+        uiUpdater.UpdatePlayerHealth(objectWithHealth.healthState);
+    }
+
+    public Stats GetStats()
+    {
+        return objectWithHealth.stats;
     }
 
     private void Update()
@@ -110,11 +116,6 @@ public class CharacterController : Observer
         }
     }
 
-    public void DecreaseHealth(int percent)
-    {
-        healthState.DecreaseHealth(percent);
-    }
-
     public void ClimbingFinished()
     {
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
@@ -122,6 +123,7 @@ public class CharacterController : Observer
 
     public void UseMedipack()
     {
+        HealthState healthState = GetComponent<ObjectWithHealth>().healthState;
         if (healthState.value == healthState.maxHealth)
         {
             return;
@@ -208,5 +210,10 @@ public class CharacterController : Observer
     internal void ShimmyContinue(LedgeDirection ledgeDirection)
     {
         stateMachine.shimmyState.ShimmyContinue(ledgeDirection);
+    }
+
+    internal void IncreaseMaxHealth(int healthIncrease)
+    {
+        GetComponent<ObjectWithHealth>().healthState.IncreaseMaxHealth(healthIncrease);
     }
 }

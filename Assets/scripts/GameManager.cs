@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : Observer
 {
-    private List<ObjectWithHealth> objectsWithHealth;
+    public List<ObjectWithHealth> objectsWithHealth { get; private set; }
 
     private CharacterController characterController;
 
@@ -50,26 +50,31 @@ public class GameManager : Observer
     void Update()
     {
         objectsToDelete.Clear();
-        foreach (ObjectWithHealth aliveObject in objectsWithHealth)
+        foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
-            Enemy enemy = null;
-            if (aliveObject.aliveObjectType.Equals(TypeOfObjectWithHealth.ENEMY))
+            TypeOfObjectWithHealth objectType = objectWithHealth.type;
+            if (!objectWithHealth.IsAlive())
             {
-                enemy = aliveObject.GetComponent<Enemy>();
-            }
-            if (!aliveObject.IsAlive())
-            {
-                Destroy(aliveObject.gameObject);
-                objectsToDelete.Add(aliveObject);
-                if (enemy != null)
+                if (objectType.Equals(TypeOfObjectWithHealth.PLAYER))
                 {
-                    characterController.AddExperience(enemy.experienceValue);
+                    DoGameOver();
+                }
+                else
+                {
+                    Destroy(objectWithHealth.gameObject);
+                }
+                objectsToDelete.Add(objectWithHealth);
+                if (objectWithHealth.type.Equals(TypeOfObjectWithHealth.ENEMY))
+                {
+                    characterController.AddExperience(
+                        objectWithHealth.GetComponent<Enemy>().experienceValue
+                    );
                 }
                 continue;
             }
-            if (enemy != null)
+            if (objectType.Equals(TypeOfObjectWithHealth.ENEMY))
             {
-                HandleEnemy(aliveObject, enemy);
+                HandleEnemy(objectWithHealth);
             }
         }
         characterController.attackEventChecked();
@@ -79,29 +84,30 @@ public class GameManager : Observer
         }
     }
 
-    private void HandleEnemy(ObjectWithHealth aliveObject, Enemy enemy)
+    private void HandleEnemy(ObjectWithHealth enemyObject)
     {
+        Enemy enemy = enemyObject.GetComponent<Enemy>();
         if (characterController.IsAttacking() && enemy.isInRange)
         {
-            aliveObject.DecreaseHealth(
-                statsToValuesConverter.ConvertStrengthToHealthDecreaseValue(
-                    characterController.playerState.strength
+            enemyObject.DecreaseHealth(
+                statsToValuesConverter.ConvertDefenceToHealthDecrease(
+                    enemyObject.stats.defence,
+                    characterController.GetStats().strength
                 )
             );
-            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_HP_DECREASE, aliveObject));
+            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_HP_DECREASE, enemyObject));
         }
         if (enemy.GetIsAttacking())
         {
-            characterController.DecreaseHealth(
-                statsToValuesConverter.ConvertDefenceToPlayerHealthDecrease(
-                    characterController.playerState.defence,
-                    enemy.getAttackPower()
+            ObjectWithHealth attackTarget = enemy.attackedPerson;
+            int defence = attackTarget.stats.defence;
+            attackTarget.DecreaseHealth(
+                statsToValuesConverter.ConvertDefenceToHealthDecrease(
+                    defence,
+                    enemyObject.stats.strength
                 )
             );
-            if (!characterController.healthState.IsAlive())
-            {
-                DoGameOver();
-            }
+            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_HP_DECREASE, attackTarget));
         }
     }
 }

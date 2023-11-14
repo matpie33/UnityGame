@@ -10,35 +10,13 @@ public class PlayerState
 {
     public int numberOfMedipacks { get; private set; }
 
-    public int strength { get; private set; }
-
-    public int agility { get; private set; }
-
-    public int defence { get; private set; }
-
-    public int health { get; private set; }
-
     public bool isAttacking { get; set; }
 
     public Interactable objectToInteractWith { get; set; }
 
     public bool isPickingObject { get; set; }
 
-    public PlayerState()
-    {
-        strength = 1;
-        agility = 1;
-        defence = 1;
-        health = 1;
-    }
-
-    public void increaseStats(StatsAddingDTO statsAddingDTO)
-    {
-        strength += statsAddingDTO.strengthIncrease;
-        agility += statsAddingDTO.agilityIncrease;
-        defence += statsAddingDTO.defenceIncrease;
-        health += statsAddingDTO.healthIncrease;
-    }
+    public void increaseStats(StatsAddingDTO statsAddingDTO) { }
 
     public void increaseMedipacksAmount()
     {
