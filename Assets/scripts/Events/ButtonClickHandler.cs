@@ -24,11 +24,14 @@ public class ButtonClickHandler : MonoBehaviour
 
     public void AcceptStats()
     {
-        characterController.playerState.increaseStats(uiUpdater.statsAddingDTO);
+        characterController.GetStats().Increase(uiUpdater.statsAddingDTO);
         characterController.IncreaseMaxHealth(
             statsToValuesConverter.ConvertHealthStatToHPIncrease(
                 characterController.GetStats().health
             )
+        );
+        uiUpdater.UpdatePlayerHealth(
+            characterController.GetComponent<ObjectWithHealth>().healthState
         );
         characterController.animationsManager.setAttackSpeed(
             statsToValuesConverter.ConvertAgilityToAttackSpeed(

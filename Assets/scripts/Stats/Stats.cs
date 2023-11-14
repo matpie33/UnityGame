@@ -16,4 +16,12 @@ public class Stats
 
     [field: SerializeField]
     public int health { get; set; }
+
+    internal void Increase(StatsAddingDTO statsAddingDTO)
+    {
+        strength += statsAddingDTO.strengthIncrease;
+        agility += statsAddingDTO.agilityIncrease;
+        defence += statsAddingDTO.defenceIncrease;
+        health += statsAddingDTO.healthIncrease;
+    }
 }

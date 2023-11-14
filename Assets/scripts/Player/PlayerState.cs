@@ -16,8 +16,6 @@ public class PlayerState
 
     public bool isPickingObject { get; set; }
 
-    public void increaseStats(StatsAddingDTO statsAddingDTO) { }
-
     public void increaseMedipacksAmount()
     {
         numberOfMedipacks++;
