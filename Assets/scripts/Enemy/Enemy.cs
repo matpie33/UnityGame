@@ -102,7 +102,16 @@ public class Enemy : Observer
                 animator.SetBool(WolfAnimationVariables.IS_ATTACKING, true);
                 animator.SetBool(WolfAnimationVariables.IS_CHASING, false);
 
-                gameObject.transform.LookAt(targetPosition, Vector3.up);
+                Quaternion current = gameObject.transform.rotation;
+
+                gameObject.transform.rotation = Quaternion.Lerp(
+                    current,
+                    Quaternion.LookRotation(
+                        targetPosition - gameObject.transform.position,
+                        Vector3.up
+                    ),
+                    0.1f
+                );
             }
             else
             {

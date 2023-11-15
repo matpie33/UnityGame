@@ -58,6 +58,16 @@ public class PlayerActionsController : MonoBehaviour
 
                 door.isOpened = true;
             }
+            else if (
+                objectToInteractWith.GetType() == typeof(NpcInteractions)
+                && objectToInteractWith.enabled
+            ) //TODO how to do it better
+            {
+                objectToInteractWith.Interact(gameObject);
+                characterController.stateMachine.ChangeState(
+                    characterController.stateMachine.doingAnimationState
+                );
+            }
             eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
         }
     }

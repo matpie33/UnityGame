@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class PickupHint : Observer
+public class InteractionHint : Observer
 {
     private TextMeshProUGUI textField;
 
@@ -20,6 +20,7 @@ public class PickupHint : Observer
                 }
                 GameObject eventObject = (GameObject)eventDTO.eventData;
                 textField.enabled = true;
+
                 if (eventObject.GetComponent<LockedDoor>() != null)
                 {
                     LockedDoor lockedDoor = eventObject.GetComponent<LockedDoor>();
@@ -44,6 +45,13 @@ public class PickupHint : Observer
                 else if (eventObject.GetComponent<Pullable>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pull. ";
+                }
+                else if (
+                    eventObject.GetComponent<NpcInteractions>() != null
+                    && eventObject.GetComponent<NpcInteractions>().enabled
+                ) //TODO how to do it better
+                {
+                    textField.text = $"Press {ActionKeys.INTERACT} to talk. ";
                 }
                 else
                 {

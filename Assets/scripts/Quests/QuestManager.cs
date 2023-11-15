@@ -10,6 +10,17 @@ public class QuestManager : Observer
 
     private const int maxQuests = 3;
 
+    private EventQueue eventQueue;
+
+    [SerializeField]
+    private Npc npcJim;
+
+    private void Start()
+    {
+        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue.SubmitEvent(new EventDTO(EventType.NPC_QUEST_AVAILABLE, npcJim));
+    }
+
     private void Update()
     {
         uiUpdater = FindObjectOfType<UIUpdater>();
@@ -25,7 +36,7 @@ public class QuestManager : Observer
         quests.Add(quest, 0);
     }
 
-    public void OnQuestComplete(Quest quest)
+    public void OnQuestStepComplete(Quest quest)
     {
         if (!quests.ContainsKey(quest))
         {
@@ -55,7 +66,7 @@ public class QuestManager : Observer
                 break;
             case EventType.QUEST_STEP_COMPLETED:
                 quest = (Quest)eventDTO.eventData;
-                OnQuestComplete(quest);
+                OnQuestStepComplete(quest);
                 break;
         }
     }

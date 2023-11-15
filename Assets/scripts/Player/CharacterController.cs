@@ -84,15 +84,6 @@ public class CharacterController : Observer
         return objectWithHealth.stats;
     }
 
-    private void Update()
-    {
-        if (ActionKeys.IsKeyPressed(KeyCode.J))
-        {
-            eventQueue.SubmitEvent(new EventDTO(EventType.NPC_MOVE, null));
-            eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_STEP_COMPLETED, quest));
-        }
-    }
-
     public void GetWallData()
     {
         wallData.wallCollider = objectsInFrontDetector.wallCollider;
@@ -198,6 +189,9 @@ public class CharacterController : Observer
                 break;
             case EventType.GATE_OPENED:
                 animationsManager.setAnimationToMoving();
+                break;
+            case EventType.QUEST_CONFIRMATION_DONE:
+                stateMachine.ChangeState(stateMachine.runState);
                 break;
         }
     }
