@@ -12,6 +12,12 @@ public class NpcInteractions : Interactable
     [SerializeField]
     private AudioSource underAttackMessage;
 
+    [SerializeField]
+    private AudioSource weReSafe;
+
+    [SerializeField]
+    private GameObject wolves;
+
     private EventQueue eventQueue;
 
     private void Start()
@@ -28,6 +34,13 @@ public class NpcInteractions : Interactable
                 break;
             case EventType.NPC_ATTACKED:
                 underAttackMessage.Play();
+                break;
+            case EventType.OBJECT_DESTROYED:
+                GameObject gameObject = (GameObject)eventDTO.eventData;
+                if (gameObject == wolves)
+                {
+                    weReSafe.Play();
+                }
                 break;
         }
     }

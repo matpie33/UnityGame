@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Npc : Observer
 {
@@ -48,7 +49,12 @@ public class Npc : Observer
         {
             RotateThenMove();
         }
-        if (
+
+        if (wolvesGroupObject == null)
+        {
+            animator.CrossFade("Base Layer.Idle", 0.1f);
+        }
+        else if (
             movementStart
             && pathProgress == 1
             && navMeshAgent.remainingDistance < 1f
@@ -57,6 +63,7 @@ public class Npc : Observer
         {
             wolvesGroupObject.SetActive(true);
             eventQueue.SubmitEvent(new EventDTO(EventType.NPC_ATTACKED, null));
+            animator.CrossFade("Base Layer.Terrified", 0.1f);
         }
 
         if (StoppedMoving())
@@ -97,7 +104,7 @@ public class Npc : Observer
         eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_CONFIRMATION_DONE, null));
         lookAtTarget = null;
 
-        Invoke("ScheduleMove", 1.5f);
+        Invoke("ScheduleMove", 0.5f);
     }
 
     private void ScheduleMove()
