@@ -24,7 +24,7 @@ public class Lever : Pullable
 
     public void SubmitLeverOpenedEvent()
     {
-        Invoke("SubmitEvent", 0.5f);
+        Invoke(nameof(SubmitEvent), 0.5f);
     }
 
     private void SubmitEvent()

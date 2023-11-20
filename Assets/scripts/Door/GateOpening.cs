@@ -25,7 +25,7 @@ public class GateOpening : Observer
 
     public void SubmitGateOpenedEvent()
     {
-        Invoke("SubmitEvent", 1);
+        Invoke(nameof(SubmitEvent), 1);
     }
 
     private void SubmitEvent()

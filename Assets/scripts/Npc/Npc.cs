@@ -83,7 +83,6 @@ public class Npc : Observer
                 ),
                 0.1f
             );
-            ;
         }
     }
 
@@ -104,7 +103,7 @@ public class Npc : Observer
         eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_CONFIRMATION_DONE, null));
         lookAtTarget = null;
 
-        Invoke("ScheduleMove", 0.5f);
+        Invoke(nameof(ScheduleMove), 0.5f);
     }
 
     private void ScheduleMove()

@@ -23,7 +23,7 @@ public class HighlightIcon : MonoBehaviour
     private void Start()
     {
         image = GetComponent<Image>();
-        InvokeRepeating("ChangeColor", interval, interval);
+        InvokeRepeating(nameof(ChangeColor), interval, interval);
     }
 
     private void Update()

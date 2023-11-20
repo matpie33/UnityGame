@@ -49,7 +49,7 @@ public class NpcInteractions : Interactable
     {
         helloMessage.Play();
         float clipLength = helloMessage.clip.length;
-        Invoke("SendEvent", clipLength);
+        Invoke(nameof(SendEvent), clipLength);
         Npc npc = GetComponent<Npc>();
         npc.SetLookAtTarget((GameObject)data);
         enabled = false;

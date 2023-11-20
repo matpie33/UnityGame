@@ -61,7 +61,7 @@ public class FloorTrap : MonoBehaviour
         {
             spikesPrefab.GetComponent<Animator>().Play("Base Layer.SpikesDown");
             hideOldSpike = true;
-            Invoke("DeactivatePrefab", 2);
+            Invoke(nameof(DeactivatePrefab), 2);
         }
     }
 

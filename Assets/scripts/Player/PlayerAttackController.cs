@@ -34,7 +34,7 @@ public class PlayerAttackController : MonoBehaviour
             AnimatorStateInfo animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (comboCounter == 0 || (animatorStateInfo.normalizedTime > 0.8f))
             {
-                CancelInvoke("EndCombo");
+                CancelInvoke(nameof(EndCombo));
                 animator.runtimeAnimatorController = attacksList[comboCounter].animatorOverride;
                 animator.Play("Attack", 0, 0);
                 characterController.stateMachine.ChangeState(
@@ -45,7 +45,7 @@ public class PlayerAttackController : MonoBehaviour
                 if (comboCounter >= attacksList.Count)
                 {
                     comboCounter = 0;
-                    Invoke("ResetCombo", 1.5f);
+                    Invoke(nameof(ResetCombo), 1.5f);
                     comboCompleted = true;
                 }
             }
@@ -64,7 +64,7 @@ public class PlayerAttackController : MonoBehaviour
             && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")
         )
         {
-            Invoke("EndCombo", 1f);
+            Invoke(nameof(EndCombo), 1f);
         }
     }
 
