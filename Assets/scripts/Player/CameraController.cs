@@ -175,9 +175,11 @@ public class CameraController : Observer
         switch (eventDTO.eventType)
         {
             case EventType.LEVER_OPENING:
+            case EventType.QUEST_CONFIRMATION_NEEDED:
                 enabled = false;
                 break;
             case EventType.GATE_OPENED:
+            case EventType.QUEST_CONFIRMATION_DONE:
                 enabled = true;
                 break;
         }

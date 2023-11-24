@@ -16,24 +16,47 @@ public class NpcSounds : MonoBehaviour
     [SerializeField]
     private AudioSource weReSafeMessage;
 
+    private AudioSource currentlyPlayedClip;
+
+    public void StopCurrentClip()
+    {
+        if (currentlyPlayedClip != null)
+        {
+            currentlyPlayedClip.Stop();
+        }
+    }
+
+    private void PlayClip(AudioSource audioSource)
+    {
+        currentlyPlayedClip = audioSource;
+        currentlyPlayedClip.Play();
+        Invoke(nameof(ClearCurrentClip), audioSource.clip.length);
+    }
+
+    private void ClearCurrentClip()
+    {
+        Debug.Log("Clear clip: " + currentlyPlayedClip);
+        currentlyPlayedClip = null;
+    }
+
     public float PlayHelloMessage()
     {
-        helloMessage.Play();
+        PlayClip(helloMessage);
         return helloMessage.clip.length;
     }
 
     internal void PlayLetsMove()
     {
-        letsMoveMessage.Play();
+        PlayClip(letsMoveMessage);
     }
 
     internal void PlayUnderAttack()
     {
-        underAttackMessage.Play();
+        PlayClip(underAttackMessage);
     }
 
     internal void PlayWeReSafe()
     {
-        weReSafeMessage.Play();
+        PlayClip(weReSafeMessage);
     }
 }

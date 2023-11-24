@@ -35,6 +35,11 @@ public class Npc : Interactable
     [SerializeField]
     private Quest escortJimQuest;
 
+    private string functionToExecAfterNpcSound;
+
+    [SerializeField]
+    private float desiredAngle;
+
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -84,12 +89,25 @@ public class Npc : Interactable
                 0.1f
             );
         }
+        if (ActionKeys.IsKeyPressed(ActionKeys.SKIP_NPC_AUDIO))
+        {
+            if (functionToExecAfterNpcSound != null)
+            {
+                CancelInvoke(functionToExecAfterNpcSound);
+                Invoke(functionToExecAfterNpcSound, 0);
+                functionToExecAfterNpcSound = null;
+            }
+            npcSounds.StopCurrentClip();
+        }
     }
 
     public override void Interact(Object data)
     {
+        navMeshAgent.isStopped = true;
+        animator.SetBool("Walk", false);
         float clipLength = npcSounds.PlayHelloMessage();
-        Invoke(nameof(SendEvent), clipLength);
+        functionToExecAfterNpcSound = nameof(SendEvent);
+        Invoke(functionToExecAfterNpcSound, clipLength);
         SetLookAtTarget((GameObject)data);
         Debug.Log("look at target: " + lookAtTarget);
     }
@@ -98,6 +116,7 @@ public class Npc : Interactable
     {
         eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_CONFIRMATION_NEEDED, null));
         Cursor.lockState = CursorLockMode.None;
+        functionToExecAfterNpcSound = null;
     }
 
     public void SetLookAtTarget(GameObject target)
@@ -131,6 +150,7 @@ public class Npc : Interactable
     {
         eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_CONFIRMATION_DONE, null));
         lookAtTarget = null;
+        canBeInteracted = true;
     }
 
     private void RotateThenMove()
@@ -139,7 +159,8 @@ public class Npc : Interactable
             navMeshAgent.destination - transform.position
         );
         float angle = Quaternion.Angle(transform.rotation, destinationRotation);
-        if (angle < 70)
+        Debug.Log("diff: " + angle);
+        if (angle < desiredAngle)
         {
             navMeshAgent.isStopped = false;
             animator.SetBool("Walk", true);
