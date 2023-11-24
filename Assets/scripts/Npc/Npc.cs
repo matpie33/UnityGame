@@ -1,11 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
-public class Npc : Observer
+public class Npc : Interactable
 {
     [SerializeField]
     private List<Transform> pathList;
@@ -33,6 +30,8 @@ public class Npc : Observer
 
     private EventQueue eventQueue;
 
+    private NpcSounds npcSounds;
+
     [SerializeField]
     private Quest escortJimQuest;
 
@@ -41,6 +40,7 @@ public class Npc : Observer
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         eventQueue = FindObjectOfType<EventQueue>();
+        npcSounds = GetComponent<NpcSounds>();
     }
 
     private void Update()
@@ -62,7 +62,7 @@ public class Npc : Observer
         )
         {
             wolvesGroupObject.SetActive(true);
-            eventQueue.SubmitEvent(new EventDTO(EventType.NPC_ATTACKED, null));
+            npcSounds.PlayUnderAttack();
             animator.CrossFade("Base Layer.Terrified", 0.1f);
         }
 
@@ -84,6 +84,20 @@ public class Npc : Observer
                 0.1f
             );
         }
+    }
+
+    public override void Interact(Object data)
+    {
+        float clipLength = npcSounds.PlayHelloMessage();
+        Invoke(nameof(SendEvent), clipLength);
+        SetLookAtTarget((GameObject)data);
+        Debug.Log("look at target: " + lookAtTarget);
+    }
+
+    private void SendEvent()
+    {
+        eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_CONFIRMATION_NEEDED, null));
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void SetLookAtTarget(GameObject target)
@@ -108,14 +122,14 @@ public class Npc : Observer
 
     private void ScheduleMove()
     {
-        eventQueue.SubmitEvent(new EventDTO(EventType.NPC_MOVE, null));
+        MoveToNextPoint();
+        npcSounds.PlayLetsMove();
         eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_STEP_COMPLETED, escortJimQuest));
     }
 
     public void QuestRejected()
     {
         eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_CONFIRMATION_DONE, null));
-        GetComponent<NpcInteractions>().enabled = true;
         lookAtTarget = null;
     }
 
@@ -144,14 +158,18 @@ public class Npc : Observer
     {
         switch (eventDTO.eventType)
         {
-            case EventType.NPC_MOVE:
-                MoveToNextPoint();
-                break;
             case EventType.NPC_QUEST_AVAILABLE:
                 Npc npc = (Npc)eventDTO.eventData;
                 if (npc == this)
                 {
-                    questMarkGameObject = Instantiate(questMarkPrefab, gameObject.transform);
+                    questMarkGameObject = Instantiate(questMarkPrefab, this.gameObject.transform);
+                }
+                break;
+            case EventType.OBJECT_DESTROYED:
+                GameObject gameObject = (GameObject)eventDTO.eventData;
+                if (gameObject == wolvesGroupObject)
+                {
+                    npcSounds.PlayWeReSafe();
                 }
                 break;
         }
@@ -169,8 +187,5 @@ public class Npc : Observer
         navMeshAgent.SetDestination(destination1.position);
     }
 
-    internal void QuestInProgress()
-    {
-        GetComponent<NpcInteractions>().enabled = false;
-    }
+    internal void QuestInProgress() { }
 }

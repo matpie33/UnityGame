@@ -1928,9 +1928,6 @@ PrefabInstance:
       addedObject: {fileID: 43200687}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1086e7bd3d6926949af6cd6ee26aaa2b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 43200686}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1086e7bd3d6926949af6cd6ee26aaa2b, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 43200685}
   m_SourcePrefab: {fileID: 100100000, guid: 1086e7bd3d6926949af6cd6ee26aaa2b, type: 3}
 --- !u!1 &43200684 stripped
@@ -1958,23 +1955,6 @@ MonoBehaviour:
     <agility>k__BackingField: 1
     <defence>k__BackingField: 1
     <health>k__BackingField: 1
---- !u!114 &43200686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 43200684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 422df037ce2d7c346a0e5ae26b3c4b58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathList: []
-  lerpValue: 0.03
-  wolvesGroupObject: {fileID: 451951696}
-  questMarkPrefab: {fileID: 0}
-  escortJimQuest: {fileID: 0}
 --- !u!195 &43200687
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -10143,7 +10123,7 @@ PrefabInstance:
       addedObject: {fileID: 376685103}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1086e7bd3d6926949af6cd6ee26aaa2b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 376685106}
+      addedObject: {fileID: 376685109}
   m_SourcePrefab: {fileID: 100100000, guid: 1086e7bd3d6926949af6cd6ee26aaa2b, type: 3}
 --- !u!1001 &235632702
 PrefabInstance:
@@ -15831,7 +15811,7 @@ MonoBehaviour:
     <agility>k__BackingField: 1
     <defence>k__BackingField: 1
     <health>k__BackingField: 1
---- !u!114 &376685106
+--- !u!114 &376685109
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15840,14 +15820,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 376685092}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d888fe9267be9543a5773a7786b3b60, type: 3}
+  m_Script: {fileID: 11500000, guid: ed3ee5b8a57df0e4f8e1d759d0c4c892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   helloMessage: {fileID: 1147136029}
   letsMoveMessage: {fileID: 889889498}
   underAttackMessage: {fileID: 204781659}
-  weReSafe: {fileID: 2085396553}
-  wolves: {fileID: 451951696}
+  weReSafeMessage: {fileID: 2085396553}
 --- !u!1001 &376823585
 PrefabInstance:
   m_ObjectHideFlags: 0

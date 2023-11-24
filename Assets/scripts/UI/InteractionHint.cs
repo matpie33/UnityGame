@@ -19,6 +19,11 @@ public class InteractionHint : Observer
                     return;
                 }
                 GameObject eventObject = (GameObject)eventDTO.eventData;
+                Interactable interactable = eventObject.GetComponent<Interactable>();
+                if (interactable != null && !interactable.canBeInteracted)
+                {
+                    return;
+                }
                 textField.enabled = true;
 
                 if (eventObject.GetComponent<LockedDoor>() != null)
@@ -46,10 +51,7 @@ public class InteractionHint : Observer
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pull. ";
                 }
-                else if (
-                    eventObject.GetComponent<NpcInteractions>() != null
-                    && eventObject.GetComponent<NpcInteractions>().enabled
-                ) //TODO how to do it better
+                else if (eventObject.GetComponent<Npc>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to talk. ";
                 }

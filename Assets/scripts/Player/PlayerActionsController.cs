@@ -30,6 +30,11 @@ public class PlayerActionsController : MonoBehaviour
         )
         {
             Interactable objectToInteractWith = playerState.objectToInteractWith;
+            if (!objectToInteractWith.canBeInteracted)
+            {
+                return;
+            }
+
             if (objectToInteractWith.GetType() == typeof(Lever))
             {
                 animationsManager.setAnimationToPullLever();
@@ -50,6 +55,7 @@ public class PlayerActionsController : MonoBehaviour
                 LockedDoor door = (LockedDoor)playerState.objectToInteractWith;
                 if (!door.PlayerHasKey())
                 {
+                    door.canBeInteracted = true;
                     return;
                 }
                 animationsManager.SetAnimationToOpenDoor();
@@ -58,10 +64,7 @@ public class PlayerActionsController : MonoBehaviour
 
                 door.isOpened = true;
             }
-            else if (
-                objectToInteractWith.GetType() == typeof(NpcInteractions)
-                && objectToInteractWith.enabled
-            ) //TODO how to do it better
+            else if (objectToInteractWith.GetType() == typeof(Npc))
             {
                 objectToInteractWith.Interact(gameObject);
                 characterController.stateMachine.ChangeState(
@@ -69,6 +72,7 @@ public class PlayerActionsController : MonoBehaviour
                 );
             }
             eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
+            objectToInteractWith.canBeInteracted = false;
         }
     }
 }
