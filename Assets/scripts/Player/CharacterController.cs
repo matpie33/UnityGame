@@ -193,6 +193,9 @@ public class CharacterController : Observer
             case EventType.QUEST_CONFIRMATION_DONE:
                 stateMachine.ChangeState(stateMachine.runState);
                 break;
+            case EventType.PLAYER_TALKING_TO_NPC:
+                animationsManager.setRunningSpeedParameter(0);
+                break;
         }
     }
 

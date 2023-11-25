@@ -35,7 +35,6 @@ public class NpcSounds : MonoBehaviour
 
     private void ClearCurrentClip()
     {
-        Debug.Log("Clear clip: " + currentlyPlayedClip);
         currentlyPlayedClip = null;
     }
 

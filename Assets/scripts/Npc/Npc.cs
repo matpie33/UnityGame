@@ -55,11 +55,7 @@ public class Npc : Interactable
             RotateThenMove();
         }
 
-        if (wolvesGroupObject == null)
-        {
-            animator.CrossFade("Base Layer.Idle", 0.1f);
-        }
-        else if (
+        if (
             movementStart
             && pathProgress == 1
             && navMeshAgent.remainingDistance < 1f
@@ -108,6 +104,7 @@ public class Npc : Interactable
         float clipLength = npcSounds.PlayHelloMessage();
         functionToExecAfterNpcSound = nameof(SendEvent);
         Invoke(functionToExecAfterNpcSound, clipLength);
+        eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_TALKING_TO_NPC, null));
         SetLookAtTarget((GameObject)data);
         Debug.Log("look at target: " + lookAtTarget);
     }
@@ -159,7 +156,6 @@ public class Npc : Interactable
             navMeshAgent.destination - transform.position
         );
         float angle = Quaternion.Angle(transform.rotation, destinationRotation);
-        Debug.Log("diff: " + angle);
         if (angle < desiredAngle)
         {
             navMeshAgent.isStopped = false;
@@ -190,10 +186,20 @@ public class Npc : Interactable
                 GameObject gameObject = (GameObject)eventDTO.eventData;
                 if (gameObject == wolvesGroupObject)
                 {
+                    Invoke(nameof(StartMoving), 1f);
+                    animator.CrossFade("Base Layer.Idle", 0.1f);
                     npcSounds.PlayWeReSafe();
                 }
                 break;
         }
+    }
+
+    private void StartMoving()
+    {
+        navMeshAgent.isStopped = false;
+        animator.CrossFade("Base Layer.Walk", 0.1f);
+        animator.SetBool("Walk", true);
+        MoveToNextPoint();
     }
 
     private void MoveToNextPoint()
