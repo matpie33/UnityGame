@@ -1,11 +1,14 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Npc : Interactable
 {
+    private List<Transform> pathList = new List<Transform>();
+
     [SerializeField]
-    private List<Transform> pathList;
+    private GameObject pathParent;
 
     private int pathProgress = 1;
 
@@ -33,6 +36,12 @@ public class Npc : Interactable
     private NpcSounds npcSounds;
 
     [SerializeField]
+    private GameObject areaLookTarget1;
+
+    [SerializeField]
+    private GameObject areaLookTarget2;
+
+    [SerializeField]
     private Quest escortJimQuest;
 
     private string functionToExecAfterNpcSound;
@@ -40,12 +49,28 @@ public class Npc : Interactable
     [SerializeField]
     private float desiredAngle;
 
+    private bool isDoingRetry;
+
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         eventQueue = FindObjectOfType<EventQueue>();
         npcSounds = GetComponent<NpcSounds>();
+        ResetPathList();
+    }
+
+    private void ResetPathList()
+    {
+        Transform pathTransform = pathParent.transform;
+        pathList.Clear();
+        for (int i = 0; i < pathTransform.childCount; i++)
+        {
+            Transform child = pathTransform.GetChild(i);
+            pathList.Add(child);
+        }
+        transform.position = pathList[0].position;
+        pathList.RemoveAt(0);
     }
 
     private void Update()
@@ -73,17 +98,12 @@ public class Npc : Interactable
             navMeshAgent.isStopped = true;
             animator.SetBool("Walk", false);
             pathProgress++;
+            PathReached();
         }
 
         if (lookAtTarget != null)
         {
-            gameObject.transform.rotation = Quaternion.Lerp(
-                gameObject.transform.rotation,
-                Quaternion.LookRotation(
-                    lookAtTarget.transform.position - gameObject.transform.position
-                ),
-                0.1f
-            );
+            LookAtTarget();
         }
         if (ActionKeys.IsKeyPressed(ActionKeys.SKIP_NPC_AUDIO))
         {
@@ -97,16 +117,53 @@ public class Npc : Interactable
         }
     }
 
+    private void LookAtTarget()
+    {
+        gameObject.transform.rotation = Quaternion.Lerp(
+            gameObject.transform.rotation,
+            Quaternion.LookRotation(
+                lookAtTarget.transform.position - gameObject.transform.position
+            ),
+            0.1f
+        );
+    }
+
+    private void PathReached()
+    {
+        if (pathProgress == 3)
+        {
+            StartCoroutine(LookAround());
+        }
+    }
+
+    private IEnumerator LookAround()
+    {
+        npcSounds.PlayAdmireViews();
+        yield return new WaitForSeconds(1f);
+        lookAtTarget = areaLookTarget1;
+        yield return new WaitForSeconds(3f);
+        lookAtTarget = areaLookTarget2;
+        yield return new WaitForSeconds(4f);
+        lookAtTarget = null;
+        StartMoving();
+    }
+
     public override void Interact(Object data)
     {
-        navMeshAgent.isStopped = true;
-        animator.SetBool("Walk", false);
-        float clipLength = npcSounds.PlayHelloMessage();
-        functionToExecAfterNpcSound = nameof(SendEvent);
-        Invoke(functionToExecAfterNpcSound, clipLength);
-        eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_TALKING_TO_NPC, null));
-        SetLookAtTarget((GameObject)data);
-        Debug.Log("look at target: " + lookAtTarget);
+        if (!isDoingRetry)
+        {
+            navMeshAgent.isStopped = true;
+            animator.SetBool("Walk", false);
+            float clipLength = npcSounds.PlayHelloMessage();
+            functionToExecAfterNpcSound = nameof(SendEvent);
+            Invoke(functionToExecAfterNpcSound, clipLength);
+            eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_TALKING_TO_NPC, null));
+            SetLookAtTarget((GameObject)data);
+        }
+        else
+        {
+            MoveToNextPoint();
+        }
     }
 
     private void SendEvent()
@@ -191,6 +248,33 @@ public class Npc : Interactable
                     npcSounds.PlayWeReSafe();
                 }
                 break;
+            case EventType.NPC_DIED:
+                GameObject npcObject = (GameObject)eventDTO.eventData;
+                if (npcObject == this.gameObject)
+                {
+                    wolvesGroupObject.SetActive(false);
+                    ResetPathList();
+                    ObjectWithHealth npcObjectWithHealth = GetComponent<ObjectWithHealth>();
+                    animator.Play("Base Layer.Idle");
+                    ResetHealthForNpcAndEnemies(npcObjectWithHealth);
+                    canBeInteracted = true;
+                    pathProgress = 1;
+                    isDoingRetry = true;
+                }
+                break;
+        }
+    }
+
+    private void ResetHealthForNpcAndEnemies(ObjectWithHealth objectWithHealth)
+    {
+        eventQueue.SubmitEvent(new EventDTO(EventType.RESET_HEALTH, objectWithHealth));
+        for (int i = 0; i < wolvesGroupObject.transform.childCount; i++)
+        {
+            Transform child = wolvesGroupObject.transform.GetChild(i);
+            child.gameObject.SetActive(true);
+            child.GetComponent<Enemy>().Reset();
+            ObjectWithHealth enemyObject = child.GetComponent<ObjectWithHealth>();
+            eventQueue.SubmitEvent(new EventDTO(EventType.RESET_HEALTH, enemyObject));
         }
     }
 

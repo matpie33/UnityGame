@@ -195,6 +195,7 @@ public class CharacterController : Observer
                 break;
             case EventType.PLAYER_TALKING_TO_NPC:
                 animationsManager.setRunningSpeedParameter(0);
+                stateMachine.ChangeState(stateMachine.doingAnimationState);
                 break;
         }
     }

@@ -4,16 +4,26 @@ using UnityEngine;
 
 public class ActivateOnEvent : Observer
 {
+    [SerializeField]
+    private EventType activateEvent;
+
+    [SerializeField]
+    private EventType deactivateEvent;
+
+    private void Start()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
     public override void OnEvent(EventDTO eventDTO)
     {
-        switch (eventDTO.eventType)
+        if (eventDTO.eventType.Equals(activateEvent))
         {
-            case EventType.QUEST_CONFIRMATION_NEEDED:
-                transform.GetChild(0).gameObject.SetActive(true);
-                break;
-            case EventType.QUEST_CONFIRMATION_DONE:
-                transform.GetChild(0).gameObject.SetActive(false);
-                break;
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
+        else if (eventDTO.eventType.Equals(deactivateEvent))
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
         }
     }
 }

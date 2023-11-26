@@ -67,9 +67,6 @@ public class PlayerActionsController : MonoBehaviour
             else if (objectToInteractWith.GetType() == typeof(Npc))
             {
                 objectToInteractWith.Interact(gameObject);
-                characterController.stateMachine.ChangeState(
-                    characterController.stateMachine.doingAnimationState
-                );
             }
             eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
             objectToInteractWith.canBeInteracted = false;

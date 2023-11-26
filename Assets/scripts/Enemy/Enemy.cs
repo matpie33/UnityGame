@@ -23,6 +23,9 @@ public class Enemy : Observer
 
     private CharacterController characterController;
 
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
+
     private void Start()
     {
         experienceValue = 400;
@@ -30,6 +33,8 @@ public class Enemy : Observer
         animator = GetComponent<Animator>();
         objectsWithHealth = FindObjectOfType<GameManager>().objectsWithHealth;
         characterController = FindObjectOfType<CharacterController>();
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
     }
 
     public bool GetIsAttacking()
@@ -140,5 +145,12 @@ public class Enemy : Observer
                 }
                 break;
         }
+    }
+
+    public void Reset()
+    {
+        transform.position = initialPosition;
+        transform.rotation = initialRotation;
+        attackedPerson = null;
     }
 }

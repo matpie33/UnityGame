@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.PlayerLoop.PreUpdate;
 
-public class ObjectWithHealth : MonoBehaviour
+public class ObjectWithHealth : Observer
 {
     public HealthState healthState { get; private set; }
 
@@ -34,5 +35,21 @@ public class ObjectWithHealth : MonoBehaviour
     public bool IsAlive()
     {
         return healthState.IsAlive();
+    }
+
+    internal void ResetHealth()
+    {
+        healthState = new HealthState(maxHealth);
+    }
+
+    public override void OnEvent(EventDTO eventDTO)
+    {
+        switch (eventDTO.eventType)
+        {
+            case EventType.RESET_HEALTH:
+                ObjectWithHealth objectWithHealth = (ObjectWithHealth)eventDTO.eventData;
+                objectWithHealth.ResetHealth();
+                break;
+        }
     }
 }

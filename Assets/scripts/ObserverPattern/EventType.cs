@@ -3,6 +3,8 @@ using UnityEngine;
 
 public enum EventType
 {
+    [InspectorName(null)]
+    NULL,
     PLAYER_DIED,
     ENEMY_IN_RANGE,
     OBJECT_NOW_IN_RANGE,
@@ -20,5 +22,7 @@ public enum EventType
     QUEST_CONFIRMATION_NEEDED,
     QUEST_CONFIRMATION_DONE,
     OBJECT_DESTROYED,
-    PLAYER_TALKING_TO_NPC
+    PLAYER_TALKING_TO_NPC,
+    NPC_DIED,
+    RESET_HEALTH
 }

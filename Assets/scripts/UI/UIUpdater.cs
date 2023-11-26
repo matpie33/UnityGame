@@ -258,14 +258,23 @@ public class UIUpdater : Observer
                 }
                 else
                 {
-                    HealthState healthState = objectWithHealth.healthState;
-                    TextMeshProUGUI hpTextField = findHpTextInObject(objectWithHealth.gameObject);
-                    hpTextField.text = healthState.value + "/" + healthState.maxHealth;
-                    Image image = findHealthBarForegroundInObject(objectWithHealth.gameObject);
-                    image.fillAmount = (float)healthState.value / (float)healthState.maxHealth;
+                    SetHealthForObject(objectWithHealth);
                 }
                 break;
+            case EventType.RESET_HEALTH:
+                ObjectWithHealth objectToReset = (ObjectWithHealth)eventDTO.eventData;
+                SetHealthForObject(objectToReset);
+                break;
         }
+    }
+
+    private void SetHealthForObject(ObjectWithHealth objectWithHealth)
+    {
+        HealthState healthState = objectWithHealth.healthState;
+        TextMeshProUGUI hpTextField = findHpTextInObject(objectWithHealth.gameObject);
+        hpTextField.text = healthState.value + "/" + healthState.maxHealth;
+        Image image = findHealthBarForegroundInObject(objectWithHealth.gameObject);
+        image.fillAmount = (float)healthState.value / (float)healthState.maxHealth;
     }
 
     private TextMeshProUGUI findHpTextInObject(GameObject gameObject)

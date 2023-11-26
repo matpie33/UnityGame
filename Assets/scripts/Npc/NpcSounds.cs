@@ -16,6 +16,9 @@ public class NpcSounds : MonoBehaviour
     [SerializeField]
     private AudioSource weReSafeMessage;
 
+    [SerializeField]
+    private AudioSource admireViews;
+
     private AudioSource currentlyPlayedClip;
 
     public void StopCurrentClip()
@@ -36,6 +39,11 @@ public class NpcSounds : MonoBehaviour
     private void ClearCurrentClip()
     {
         currentlyPlayedClip = null;
+    }
+
+    public void PlayAdmireViews()
+    {
+        PlayClip(admireViews);
     }
 
     public float PlayHelloMessage()

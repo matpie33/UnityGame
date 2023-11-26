@@ -59,15 +59,28 @@ public class GameManager : Observer
                 {
                     DoGameOver();
                 }
-                else
+                else if (objectType.Equals(TypeOfObjectWithHealth.ENEMY))
                 {
-                    Destroy(objectWithHealth.gameObject);
+                    if (objectWithHealth.gameObject.activeSelf)
+                    {
+                        characterController.AddExperience(
+                            objectWithHealth.GetComponent<Enemy>().experienceValue
+                        );
+                    }
+                    if (objectWithHealth.GetComponentInParent<QuestObject>())
+                    {
+                        objectWithHealth.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        Destroy(objectWithHealth.gameObject);
+                        objectsToDelete.Add(objectWithHealth);
+                    }
                 }
-                objectsToDelete.Add(objectWithHealth);
-                if (objectWithHealth.type.Equals(TypeOfObjectWithHealth.ENEMY))
+                else if (objectType.Equals(TypeOfObjectWithHealth.NPC))
                 {
-                    characterController.AddExperience(
-                        objectWithHealth.GetComponent<Enemy>().experienceValue
+                    eventQueue.SubmitEvent(
+                        new EventDTO(EventType.NPC_DIED, objectWithHealth.gameObject)
                     );
                 }
                 continue;
