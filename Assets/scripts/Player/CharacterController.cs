@@ -190,7 +190,8 @@ public class CharacterController : Observer
             case EventType.GATE_OPENED:
                 animationsManager.setAnimationToMoving();
                 break;
-            case EventType.QUEST_CONFIRMATION_DONE:
+            case EventType.QUEST_ACCEPTED:
+            case EventType.QUEST_REJECTED:
                 stateMachine.ChangeState(stateMachine.runState);
                 break;
             case EventType.PLAYER_TALKING_TO_NPC:

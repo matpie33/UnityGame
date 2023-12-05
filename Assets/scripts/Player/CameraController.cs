@@ -179,7 +179,8 @@ public class CameraController : Observer
                 enabled = false;
                 break;
             case EventType.GATE_OPENED:
-            case EventType.QUEST_CONFIRMATION_DONE:
+            case EventType.QUEST_REJECTED:
+            case EventType.QUEST_ACCEPTED:
                 enabled = true;
                 break;
         }

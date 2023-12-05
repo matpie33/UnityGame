@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class EventQueue : MonoBehaviour
 {
-    private List<Observer> observers;
+    private List<Observer> observers = new List<Observer>();
 
-    private void Start()
+    private void Awake()
     {
-        observers = FindObjectsOfType<Observer>().ToList<Observer>();
+        observers = FindObjectsOfType<Observer>().ToList();
     }
 
     public void SubmitEvent(EventDTO eventDTO)

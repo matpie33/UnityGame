@@ -64,7 +64,7 @@ public class PlayerActionsController : MonoBehaviour
 
                 door.isOpened = true;
             }
-            else if (objectToInteractWith.GetType() == typeof(Npc))
+            else if (objectToInteractWith.GetType() == typeof(GenericNpc))
             {
                 objectToInteractWith.Interact(gameObject);
             }

@@ -18,7 +18,7 @@ public class AcquireQuest : MonoBehaviour
     {
         if (collision.collider.CompareTag(Tags.PLAYER))
         {
-            eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_RECEIVED, quest));
+            eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_ACCEPTED, quest));
             Destroy(gameObject);
         }
     }

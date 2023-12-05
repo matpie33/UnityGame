@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -25,6 +26,9 @@ public class Enemy : Observer
 
     private Vector3 initialPosition;
     private Quaternion initialRotation;
+
+    [field: SerializeField]
+    public EnemyType enemyType { get; private set; }
 
     private void Start()
     {

@@ -13,12 +13,18 @@ public class QuestManager : Observer
     private EventQueue eventQueue;
 
     [SerializeField]
-    private Npc npcJim;
+    private GenericNpc npcJim;
+
+    [SerializeField]
+    private GenericNpc npcWolves;
+
+    private GenericNpc pendingNpcQuestConfirmation;
 
     private void Start()
     {
         eventQueue = FindObjectOfType<EventQueue>();
         eventQueue.SubmitEvent(new EventDTO(EventType.NPC_QUEST_AVAILABLE, npcJim));
+        eventQueue.SubmitEvent(new EventDTO(EventType.NPC_QUEST_AVAILABLE, npcWolves));
     }
 
     private void Update()
@@ -60,14 +66,30 @@ public class QuestManager : Observer
         Quest quest;
         switch (eventDTO.eventType)
         {
-            case EventType.QUEST_RECEIVED:
-                quest = (Quest)eventDTO.eventData;
+            case EventType.QUEST_ACCEPTED:
+                GenericNpc npc = (GenericNpc)eventDTO.eventData;
+                quest = npc.quest;
                 ReceiveQuest(quest);
                 break;
             case EventType.QUEST_STEP_COMPLETED:
                 quest = (Quest)eventDTO.eventData;
                 OnQuestStepComplete(quest);
                 break;
+            case EventType.QUEST_CONFIRMATION_NEEDED:
+                pendingNpcQuestConfirmation = (GenericNpc)eventDTO.eventData;
+                break;
         }
+    }
+
+    public void QuestAccepted()
+    {
+        eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_ACCEPTED, pendingNpcQuestConfirmation));
+        pendingNpcQuestConfirmation = null;
+    }
+
+    public void QuestRejected()
+    {
+        eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_REJECTED, pendingNpcQuestConfirmation));
+        pendingNpcQuestConfirmation = null;
     }
 }

@@ -51,7 +51,7 @@ public class InteractionHint : Observer
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pull. ";
                 }
-                else if (eventObject.GetComponent<Npc>() != null)
+                else if (eventObject.GetComponent<GenericNpc>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to talk. ";
                 }

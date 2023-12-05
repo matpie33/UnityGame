@@ -76,6 +76,9 @@ public class GameManager : Observer
                         Destroy(objectWithHealth.gameObject);
                         objectsToDelete.Add(objectWithHealth);
                     }
+                    eventQueue.SubmitEvent(
+                        new EventDTO(EventType.ENEMY_KILLED, objectWithHealth.gameObject)
+                    );
                 }
                 else if (objectType.Equals(TypeOfObjectWithHealth.NPC))
                 {

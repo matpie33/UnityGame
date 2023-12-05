@@ -13,10 +13,24 @@ public class DestroyWhenEmpty : MonoBehaviour
 
     void Update()
     {
-        if (transform.childCount == 0)
+        int activeChildCount = 0;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child.gameObject.activeSelf)
+            {
+                activeChildCount++;
+            }
+        }
+        bool hasChildren = transform.childCount != 0;
+        if (activeChildCount == 0 || !hasChildren)
         {
             eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_DESTROYED, gameObject));
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            if (!hasChildren)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

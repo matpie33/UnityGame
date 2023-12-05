@@ -8,7 +8,7 @@ public class ActivateOnEvent : Observer
     private EventType activateEvent;
 
     [SerializeField]
-    private EventType deactivateEvent;
+    private List<EventType> deactivateEvents;
 
     private void Start()
     {
@@ -21,7 +21,7 @@ public class ActivateOnEvent : Observer
         {
             transform.GetChild(0).gameObject.SetActive(true);
         }
-        else if (eventDTO.eventType.Equals(deactivateEvent))
+        else if (deactivateEvents.Contains(eventDTO.eventType))
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }

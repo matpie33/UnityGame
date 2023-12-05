@@ -330,6 +330,25 @@ public class UIUpdater : Observer
         }
     }
 
+    public void UpdateDescription(Quest quest, string newValue)
+    {
+        Transform questPanelTransform = questPanel.gameObject.transform;
+        for (int i = 0; i < questPanelTransform.childCount; i = i + 2)
+        {
+            GameObject questSummary = questPanelTransform.GetChild(i).gameObject;
+            TextMeshProUGUI questSummaryText =
+                questSummary.GetComponentInChildren<TextMeshProUGUI>();
+            if (questSummaryText.text.Equals(quest.summary))
+            {
+                GameObject descriptionGameObject = questPanelTransform.GetChild(i + 1).gameObject;
+                TextMeshProUGUI descriptionTextField =
+                    descriptionGameObject.GetComponent<TextMeshProUGUI>();
+                descriptionTextField.text = newValue;
+                break;
+            }
+        }
+    }
+
     internal void ChangeDescription(Quest quest, int step)
     {
         Transform questPanelTransform = questPanel.gameObject.transform;
