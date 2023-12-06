@@ -21,6 +21,13 @@ public class NpcKillWolves : Observer
 
     private Quest quest;
 
+    private GenericNpc genericNpc;
+
+    [SerializeField]
+    private Material yellowColorMaterial;
+
+    private EventQueue eventQueue;
+
     private void Start()
     {
         npcSounds = GetComponent<NpcSounds>();
@@ -28,6 +35,8 @@ public class NpcKillWolves : Observer
         uiUpdater = FindObjectOfType<UIUpdater>();
         quest = GetComponent<GenericNpc>().quest;
         UpdateRemainingKills();
+        genericNpc = GetComponent<GenericNpc>();
+        eventQueue = FindObjectOfType<EventQueue>();
     }
 
     public override void OnEvent(EventDTO eventDTO)
@@ -41,6 +50,7 @@ public class NpcKillWolves : Observer
                 {
                     npcSounds.PlayNextMessage();
                     killCounter = killsNeeded;
+                    Invoke(nameof(UpdateRemainingKills), 0.05f);
                 }
                 break;
             case EventType.ENEMY_KILLED:
@@ -50,6 +60,13 @@ public class NpcKillWolves : Observer
                 {
                     killCounter--;
                     UpdateRemainingKills();
+                    if (killCounter == 0)
+                    {
+                        genericNpc.SpawnQuestMark(yellowColorMaterial);
+                        genericNpc.questFinished = true;
+                        genericNpc.canBeInteracted = true;
+                        uiUpdater.UpdateDescription(quest, "All wolves killed. Return to npc.");
+                    }
                 }
                 break;
         }

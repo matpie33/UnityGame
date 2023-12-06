@@ -14,6 +14,8 @@ public class GenericNpc : Interactable
     public GameObject lookAtTarget { get; set; }
     public bool isDoingRetry { get; private set; }
 
+    public bool questFinished { get; set; }
+
     private PrefabFactory prefabFactory;
 
     private GameObject questMarkGameObject;
@@ -39,16 +41,7 @@ public class GenericNpc : Interactable
                 GenericNpc npc = (GenericNpc)eventDTO.eventData;
                 if (npc == this)
                 {
-                    Transform thisTransform = this.gameObject.transform;
-                    Vector3 position =
-                        thisTransform.position
-                        + GetComponent<Collider>().bounds.size.y * Vector3.up;
-                    Quaternion rotation = thisTransform.rotation;
-                    questMarkGameObject = prefabFactory.GetPrefab(
-                        TypeOfPrefab.QUEST_MARKER,
-                        position,
-                        rotation
-                    );
+                    SpawnQuestMark();
                 }
                 break;
             case EventType.QUEST_ACCEPTED:
@@ -80,9 +73,39 @@ public class GenericNpc : Interactable
         }
     }
 
+    private void SpawnQuestMark()
+    {
+        Transform thisTransform = this.gameObject.transform;
+        Vector3 position =
+            thisTransform.position + GetComponent<Collider>().bounds.size.y * Vector3.up;
+        Quaternion rotation = thisTransform.rotation;
+        questMarkGameObject = prefabFactory.GetPrefab(
+            TypeOfPrefab.QUEST_MARKER,
+            position,
+            rotation
+        );
+    }
+
+    public void SpawnQuestMark(Material material)
+    {
+        SpawnQuestMark();
+        for (int i = 0; i < questMarkGameObject.transform.childCount; i++)
+        {
+            Transform child = questMarkGameObject.transform.GetChild(i);
+            child.GetComponent<Renderer>().material = material;
+        }
+    }
+
     public override void Interact(Object data)
     {
-        if (!isDoingRetry)
+        if (questFinished)
+        {
+            npcSounds.PlayNextMessage();
+            questMarkGameObject.SetActive(false);
+            SetLookAtTarget((GameObject)data);
+            eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_STEP_COMPLETED, quest));
+        }
+        else if (!isDoingRetry)
         {
             navMeshAgent.isStopped = true;
             animator.SetBool("Walk", false);
@@ -92,7 +115,7 @@ public class GenericNpc : Interactable
             eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_TALKING_TO_NPC, null));
             SetLookAtTarget((GameObject)data);
         }
-        else
+        else if (isDoingRetry)
         {
             eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_RETRY, gameObject));
         }
