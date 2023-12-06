@@ -52,6 +52,10 @@ public class GameManager : Observer
         objectsToDelete.Clear();
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
+            if (!objectWithHealth.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
             TypeOfObjectWithHealth objectType = objectWithHealth.type;
             if (!objectWithHealth.IsAlive())
             {
