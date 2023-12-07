@@ -106,6 +106,18 @@ public class NpcEscort : Observer
                     {
                         StartCoroutine(LookAround());
                     }
+                    if (npcMovingOnPath.ReachedDestination())
+                    {
+                        float clipLength = npcSounds.PlayNextMessage();
+                        genericNpc.SetLookAtTarget(
+                            FindObjectOfType<CharacterController>().gameObject
+                        );
+                        Invoke(nameof(ClearLookAtTarget), clipLength);
+
+                        eventQueue.SubmitEvent(
+                            new EventDTO(EventType.QUEST_STEP_COMPLETED, genericNpc.quest)
+                        );
+                    }
                 }
                 break;
 
@@ -119,6 +131,11 @@ public class NpcEscort : Observer
                 }
                 break;
         }
+    }
+
+    private void ClearLookAtTarget()
+    {
+        genericNpc.SetLookAtTarget(null);
     }
 
     private void WolvesDead()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ObjectsInFrontDetector : MonoBehaviour
 {
@@ -76,7 +77,14 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
         if (closerObject != null)
         {
-            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_NOW_IN_RANGE, closerObject));
+            if (closerObject.GetComponent<NavMeshAgent>() == null)
+            {
+                eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_NOW_IN_RANGE, closerObject));
+            }
+            else
+            {
+                detectedWallType = WallType.NO_WALL;
+            }
         }
         else
         {

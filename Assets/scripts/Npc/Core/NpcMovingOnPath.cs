@@ -36,6 +36,11 @@ public class NpcMovingOnPath : Observer
         ResetPathList();
     }
 
+    public bool ReachedDestination()
+    {
+        return pathList.Count == 0;
+    }
+
     public void StartMoving()
     {
         navMeshAgent.isStopped = false;
