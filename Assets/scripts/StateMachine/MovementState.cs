@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class MovementState : State
 {
@@ -23,19 +24,25 @@ public abstract class MovementState : State
         cameraController = characterController.cameraController;
     }
 
+    private bool IsDetectedObjectAWall()
+    {
+        return characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
+            == null;
+    }
+
     public override void FrameUpdate()
     {
         if (this.GetType() != typeof(CrouchState) && ActionKeys.IsKeyPressed(ActionKeys.JUMP))
         {
             WallType detectedWallType = characterController.objectsInFrontDetector.detectedWallType;
-            if (detectedWallType.Equals(WallType.BELOW_HIPS))
+            if (detectedWallType.Equals(WallType.BELOW_HIPS) && IsDetectedObjectAWall())
             {
                 characterController.animationsManager.setAnimationToStepUp();
                 characterController.rigidbody.isKinematic = true;
                 stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
                 return;
             }
-            if (detectedWallType.Equals(WallType.ABOVE_HIPS))
+            if (detectedWallType.Equals(WallType.ABOVE_HIPS) && IsDetectedObjectAWall())
             {
                 Vector3 position = characterController.transform.position;
                 characterController.rigidbody.isKinematic = true;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
+    private const float COOLDOWN_AFTER_COMBO_COMPLETED = 1f;
+
     [SerializeField]
     private List<AttackAnimation> attacksList;
     private int comboCounter;
@@ -32,10 +34,11 @@ public class PlayerAttackController : MonoBehaviour
         if (UnityEngine.Input.GetKeyDown(attacksList[comboCounter].key))
         {
             AnimatorStateInfo animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (comboCounter == 0 || (animatorStateInfo.normalizedTime > 0.8f))
+            if (comboCounter == 0 || (animatorStateInfo.normalizedTime > 0.6f))
             {
                 CancelInvoke(nameof(EndCombo));
                 animator.runtimeAnimatorController = attacksList[comboCounter].animatorOverride;
+                animator.speed = 0.9f;
                 animator.Play("Attack", 0, 0);
                 characterController.stateMachine.ChangeState(
                     characterController.stateMachine.doingAnimationState
@@ -45,7 +48,7 @@ public class PlayerAttackController : MonoBehaviour
                 if (comboCounter >= attacksList.Count)
                 {
                     comboCounter = 0;
-                    Invoke(nameof(ResetCombo), 1.5f);
+                    Invoke(nameof(ResetCombo), COOLDOWN_AFTER_COMBO_COMPLETED);
                     comboCompleted = true;
                 }
             }

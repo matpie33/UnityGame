@@ -96,13 +96,19 @@ public class GenericNpc : Interactable
         }
     }
 
+    private void ClearLookAtTarget()
+    {
+        lookAtTarget = null;
+    }
+
     public override void Interact(Object data)
     {
         if (questFinished)
         {
-            npcSounds.PlayNextMessage();
+            float duration = npcSounds.PlayNextMessage();
             questMarkGameObject.SetActive(false);
             SetLookAtTarget((GameObject)data);
+            Invoke(nameof(ClearLookAtTarget), duration);
             eventQueue.SubmitEvent(new EventDTO(EventType.QUEST_STEP_COMPLETED, quest));
         }
         else if (!isDoingRetry)

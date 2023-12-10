@@ -16,6 +16,7 @@ public class Enemy : Observer
     public bool isInRange { get; set; }
     public NavMeshAgent navMeshAgent { get; private set; }
 
+    [field: SerializeField]
     public int experienceValue { get; private set; }
 
     private List<ObjectWithHealth> objectsWithHealth;
@@ -32,7 +33,6 @@ public class Enemy : Observer
 
     private void Start()
     {
-        experienceValue = 400;
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         objectsWithHealth = FindObjectOfType<GameManager>().objectsWithHealth;

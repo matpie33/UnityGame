@@ -33,6 +33,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public Collider wallCollider { get; private set; }
 
+    public GameObject detectedObject { get; private set; }
+
     private void Start()
     {
         eventQueue = FindObjectOfType<EventQueue>();
@@ -77,14 +79,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
         if (closerObject != null)
         {
-            if (closerObject.GetComponent<NavMeshAgent>() == null)
-            {
-                eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_NOW_IN_RANGE, closerObject));
-            }
-            else
-            {
-                detectedWallType = WallType.NO_WALL;
-            }
+            detectedObject = closerObject;
+            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_NOW_IN_RANGE, closerObject));
         }
         else
         {

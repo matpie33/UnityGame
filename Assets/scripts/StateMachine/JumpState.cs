@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class JumpState : MovementState
 {
@@ -23,10 +24,19 @@ public class JumpState : MovementState
     public override void FrameUpdate()
     {
         base.Move(characterController.currentVelocity);
-        if (characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
+        if (
+            characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS)
+            && IsDetectedObjectAWall()
+        )
         {
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
+    }
+
+    private bool IsDetectedObjectAWall()
+    {
+        return characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
+            == null;
     }
 
     public override void PhysicsUpdate()

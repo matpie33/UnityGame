@@ -31,7 +31,7 @@ public class NpcKillWolves : Observer
     private void Start()
     {
         npcSounds = GetComponent<NpcSounds>();
-        killCounter = killsNeeded;
+        killCounter = 0;
         uiUpdater = FindObjectOfType<UIUpdater>();
         quest = GetComponent<GenericNpc>().quest;
         UpdateRemainingKills();
@@ -54,6 +54,10 @@ public class NpcKillWolves : Observer
                 }
                 break;
             case EventType.ENEMY_KILLED:
+                if (killCounter == 0)
+                {
+                    return;
+                }
                 GameObject data = (GameObject)eventDTO.eventData;
                 EnemyType enemyType = data.GetComponent<Enemy>().enemyType;
                 if (enemyType.Equals(this.enemyToKill))
@@ -70,6 +74,11 @@ public class NpcKillWolves : Observer
                 }
                 break;
         }
+    }
+
+    private void ClearLookAtTarget()
+    {
+        genericNpc.SetLookAtTarget(null);
     }
 
     private void UpdateRemainingKills()
