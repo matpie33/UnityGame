@@ -16,6 +16,7 @@ public class LedgeGrabState : State
 
     public override void EnterState()
     {
+        characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
         characterController.animationsManager.setAnimationToHangingIdle();
         characterController.GetWallData();
@@ -23,7 +24,7 @@ public class LedgeGrabState : State
         WallData wallData = characterController.wallData;
         Vector3 directionToWall = wallData.directionFromPlayerToWall;
         characterController.transform.rotation = Quaternion.LookRotation(
-            directionToWall,
+            wallData.directionFromPlayerToWall,
             Vector3.up
         );
         float distanceToCollider = wallData.distanceToCollider;
@@ -62,6 +63,7 @@ public class LedgeGrabState : State
         {
             characterController.rigidbody.isKinematic = false;
             stateMachine.ChangeState(stateMachine.fallingState);
+            stateMachine.fallingState.hasReleasedLedge = true;
         }
         else if (ActionKeys.IsKeyPressed(ActionKeys.CLIMB_LEDGE))
         {

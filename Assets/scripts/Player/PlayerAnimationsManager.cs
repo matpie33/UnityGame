@@ -11,9 +11,10 @@ public class PlayerAnimationsManager
 
     private enum AnimationName
     {
-        falling,
+        falling_from_stand,
+        falling_from_run,
         climbing,
-        jumping,
+        jump_from_stand,
         moving,
         crouching,
         punching,
@@ -29,7 +30,8 @@ public class PlayerAnimationsManager
         ledge_rotate_right,
         walk_down_ledge,
         move_backward,
-        open_door
+        open_door,
+        running_jump
     }
 
     public PlayerAnimationsManager(Animator animator)
@@ -85,7 +87,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToStepUp()
     {
-        animator.applyRootMotion = true;
+        animator.applyRootMotion = false;
         animator.Play(AnimationName.step_up.ToString());
     }
 
@@ -95,9 +97,19 @@ public class PlayerAnimationsManager
         animator.Play(AnimationName.climb_middle_ledge.ToString());
     }
 
-    public void setAnimationToFalling()
+    public void setAnimationToFallingFromStanding()
     {
-        animator.CrossFade(anim(AnimationName.falling), 0.1f);
+        animator.CrossFade(anim(AnimationName.falling_from_stand), 0.1f);
+    }
+
+    public void setAnimationToFallingFromRunning()
+    {
+        animator.CrossFade(anim(AnimationName.falling_from_run), 0.1f);
+    }
+
+    public void setAnimationToRunningJump()
+    {
+        animator.CrossFade(anim(AnimationName.running_jump), 0.1f);
     }
 
     public void setAnimationToLedgeClimbing()
@@ -110,12 +122,12 @@ public class PlayerAnimationsManager
     {
         animator.updateMode = AnimatorUpdateMode.Normal;
         animator.applyRootMotion = false;
-        animator.CrossFade(anim(AnimationName.hanging_idle), 0.1f);
+        animator.CrossFade(anim(AnimationName.hanging_idle), 0.2f);
     }
 
-    public void setAnimationToJumping()
+    public void setAnimationToStandingJump()
     {
-        animator.CrossFade(anim(AnimationName.jumping), 0.1f);
+        animator.CrossFade(anim(AnimationName.jump_from_stand), 0.1f);
     }
 
     public void setRunningSpeedParameter(float speed)
@@ -165,5 +177,10 @@ public class PlayerAnimationsManager
             animator.CrossFade(anim(AnimationName.move_backward), 0.1f);
         }
         animator.SetBool("MovingBack", moveBackward);
+    }
+
+    internal void PlayMovingAnimation()
+    {
+        animator.Play(anim(AnimationName.moving));
     }
 }

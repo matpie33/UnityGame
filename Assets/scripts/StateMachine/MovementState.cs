@@ -34,9 +34,13 @@ public abstract class MovementState : State
     {
         if (this.GetType() != typeof(CrouchState) && ActionKeys.IsKeyPressed(ActionKeys.JUMP))
         {
-            WallType detectedWallType = characterController.objectsInFrontDetector.detectedWallType;
+            ObjectsInFrontDetector objectsInFrontDetector =
+                characterController.objectsInFrontDetector;
+            WallType detectedWallType = objectsInFrontDetector.detectedWallType;
             if (detectedWallType.Equals(WallType.BELOW_HIPS) && IsDetectedObjectAWall())
             {
+                Vector3 verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
+                characterController.SetLegAndHipTarget(verticalCollisionPoint);
                 characterController.animationsManager.setAnimationToStepUp();
                 characterController.rigidbody.isKinematic = true;
                 stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
@@ -44,17 +48,25 @@ public abstract class MovementState : State
             }
             if (detectedWallType.Equals(WallType.ABOVE_HIPS) && IsDetectedObjectAWall())
             {
-                Vector3 position = characterController.transform.position;
-                characterController.rigidbody.isKinematic = true;
-                characterController.transform.position =
-                    position + characterController.transform.forward * 0.007f;
-                characterController.animationsManager.setAnimationToClimbMiddleLedge();
-                stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
-                return;
+                //Vector3 position = characterController.transform.position;
+                //characterController.rigidbody.isKinematic = true;
+                //characterController.transform.position =
+                //    position + characterController.transform.forward * 0.007f;
+                //characterController.animationsManager.setAnimationToClimbMiddleLedge();
+                //stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
+                //return;
             }
 
-            JumpState jumpState = stateMachine.jumpState;
-            stateMachine.ChangeState(jumpState);
+            if (newVelocity.magnitude == 0)
+            {
+                characterController.animationsManager.setAnimationToStandingJump();
+            }
+            else
+            {
+                characterController.animationsManager.setAnimationToRunningJump();
+                stateMachine.ChangeState(stateMachine.jumpState);
+            }
+            return;
         }
 
         Vector3 _moveInputVector = new Vector3(

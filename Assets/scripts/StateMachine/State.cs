@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class State
@@ -12,4 +13,6 @@ public class State
     public virtual void PhysicsUpdate() { }
 
     public virtual void OnTrigger(TriggerType triggerType) { }
+
+    internal virtual void LateUpdate() { }
 }

@@ -49,6 +49,15 @@ public class CharacterController : Observer
 
     private ObjectWithHealth objectWithHealth;
 
+    [SerializeField]
+    private GameObject legStepUpTarget;
+
+    [SerializeField]
+    private GameObject hipStepUpTarget;
+
+    [SerializeField]
+    private GameObject hips;
+
     private void Awake()
     {
         wallData = new WallData();
@@ -88,7 +97,7 @@ public class CharacterController : Observer
     {
         wallData.wallCollider = objectsInFrontDetector.wallCollider;
         wallData.directionFromPlayerToWall = objectsInFrontDetector.directionFromPlayerToWall;
-        wallData.distanceToCollider = objectsInFrontDetector.distanceToCollider;
+        wallData.distanceToCollider = objectsInFrontDetector.horizontalDistanceToCollider;
     }
 
     public void TryShimmy(LedgeDirection direction)
@@ -198,6 +207,9 @@ public class CharacterController : Observer
                 animationsManager.setRunningSpeedParameter(0);
                 stateMachine.ChangeState(stateMachine.doingAnimationState);
                 break;
+            case EventType.PLAYER_COLLIDED:
+                stateMachine.OnTriggerType(TriggerType.PLAYER_COLLIDED);
+                break;
         }
     }
 
@@ -214,5 +226,18 @@ public class CharacterController : Observer
     internal void IncreaseMaxHealth(int healthIncrease)
     {
         GetComponent<ObjectWithHealth>().healthState.IncreaseMaxHealth(healthIncrease);
+    }
+
+    internal void SetLegAndHipTarget(Vector3 verticalCollisionPoint)
+    {
+        legStepUpTarget.transform.position = verticalCollisionPoint - transform.forward * 0.3f;
+        Vector3 distanceBetweenHipsAndCollisionPoint =
+            hips.transform.position - verticalCollisionPoint;
+        distanceBetweenHipsAndCollisionPoint.y = 0;
+        hipStepUpTarget.transform.position =
+            verticalCollisionPoint
+            + Vector3.up * 1f
+            + distanceBetweenHipsAndCollisionPoint
+            + transform.forward * 0.2f;
     }
 }

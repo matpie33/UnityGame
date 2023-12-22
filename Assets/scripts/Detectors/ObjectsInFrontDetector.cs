@@ -19,6 +19,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private Transform headLevel;
 
+    [SerializeField]
+    private Transform aboveHeadLevel;
+
     private EventQueue eventQueue;
 
     public WallType detectedWallType { get; private set; }
@@ -29,11 +32,26 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     private float minDistanceToClimbWall = 1f;
 
-    public float distanceToCollider { get; set; }
+    public float horizontalDistanceToCollider { get; set; }
+    public float verticalDistanceToCollider { get; set; }
+
+    public Vector3 verticalCollisionPosition { get; private set; }
 
     public Collider wallCollider { get; private set; }
 
     public GameObject detectedObject { get; private set; }
+
+    [SerializeField]
+    private float forwardPositionModifier;
+
+    [SerializeField]
+    private float upModifierHighestPoint;
+
+    [SerializeField]
+    private float upModifierLowestPoint;
+
+    [SerializeField]
+    private float length;
 
     private void Start()
     {
@@ -41,11 +59,80 @@ public class ObjectsInFrontDetector : MonoBehaviour
         detectedWallType = WallType.NO_WALL;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        Vector3 pointAboveHead =
+            transform.position
+            + transform.forward * forwardPositionModifier
+            + Vector3.up * upModifierHighestPoint;
+        RaycastHit raycastHitVertical;
+        float halfHeight = GetComponent<Collider>().bounds.extents.y;
+        float playerCenterY = halfHeight + transform.position.y;
+        Physics.Raycast(pointAboveHead, Vector3.up * -1, out raycastHitVertical, halfHeight * 2);
+
+        if (raycastHitVertical.collider != null)
+        {
+            wallCollider = raycastHitVertical.collider;
+            verticalDistanceToCollider = raycastHitVertical.distance;
+            if (raycastHitVertical.point.y > playerCenterY)
+            {
+                detectedWallType = WallType.ABOVE_HIPS;
+            }
+            else
+            {
+                detectedWallType = WallType.BELOW_HIPS;
+            }
+            detectedObject = raycastHitVertical.collider.gameObject;
+            verticalCollisionPosition = raycastHitVertical.point;
+
+            RaycastHit raycastHitHorizontal;
+
+            Physics.Raycast(transform.position, transform.forward, out raycastHitHorizontal, 2);
+            directionFromPlayerToWall = -raycastHitHorizontal.normal;
+            horizontalDistanceToCollider = raycastHitHorizontal.distance;
+            return;
+        }
+        else
+        {
+            detectedWallType = WallType.NO_WALL;
+        }
+
+        Vector3 originForStepUp =
+            transform.position
+            + transform.forward * forwardPositionModifier
+            + Vector3.up * upModifierLowestPoint;
+        RaycastHit resultForStepUp;
+        //Physics.Raycast(originForStepUp, Vector3.up * -1, out resultForStepUp, length);
+
+        //Debug.DrawRay(originForStepUp, Vector3.up * -1);
+
+        //if (resultForStepUp.collider != null)
+        //{
+        //    detectedWallType = WallType.BELOW_HIPS;
+        //    directionFromPlayerToWall = resultForAboveHeadLedge.point - transform.position;
+        //    directionFromPlayerToWall = new Vector3(
+        //        directionFromPlayerToWall.x,
+        //        0,
+        //        directionFromPlayerToWall.z
+        //    );
+        //    Debug.Log("above hips");
+
+        //    wallCollider = resultForAboveHeadLedge.collider;
+        //    distanceToCollider = directionFromPlayerToWall.magnitude;
+        //    detectedObject = resultForAboveHeadLedge.collider.gameObject;
+
+        //    return;
+        //}
+
+        if (true)
+        {
+            return;
+        }
+
         RaycastHit feetHit = DoRaycast(feetLevel);
         RaycastHit midHit = DoRaycast(midLevel);
         RaycastHit headHit = DoRaycast(headLevel);
+        RaycastHit aboveHeadHit = DoRaycast(aboveHeadLevel);
 
         if (feetHit.collider != null && midHit.collider == null && headHit.collider == null)
         {
@@ -56,11 +143,21 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedWallType = WallType.ABOVE_HIPS;
             directionFromPlayerToWall = -midHit.normal;
             wallCollider = midHit.collider;
-            distanceToCollider = midHit.distance;
+            horizontalDistanceToCollider = midHit.distance;
+            detectedObject = midHit.collider.gameObject;
         }
-        else if (feetHit.collider != null && midHit.collider != null && headHit.collider != null)
+        else if (
+            feetHit.collider != null
+            && midHit.collider != null
+            && headHit.collider != null
+            && aboveHeadHit.collider == null
+        )
         {
             detectedWallType = WallType.ABOVE_HEAD;
+            directionFromPlayerToWall = -headHit.normal;
+            wallCollider = headHit.collider;
+            horizontalDistanceToCollider = headHit.distance;
+            detectedObject = headHit.collider.gameObject;
         }
         else
         {

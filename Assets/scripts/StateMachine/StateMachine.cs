@@ -67,6 +67,8 @@ public class StateMachine : MonoBehaviour
 
             case TriggerType.MEDIPACK_USED:
             case TriggerType.GROUND_DETECTED:
+            case TriggerType.PLAYER_COLLIDED:
+            case TriggerType.RELEASED_LEDGE:
                 currentState.OnTrigger(triggerType);
                 break;
 
@@ -81,6 +83,11 @@ public class StateMachine : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private void LateUpdate()
+    {
+        currentState.LateUpdate();
     }
 
     private void Update()

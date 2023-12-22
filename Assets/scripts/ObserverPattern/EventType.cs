@@ -27,5 +27,6 @@ public enum EventType
     RESET_HEALTH,
     QUEST_RETRY,
     NPC_REACHED_POINT,
-    ENEMY_KILLED
+    ENEMY_KILLED,
+    PLAYER_COLLIDED
 }
