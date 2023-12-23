@@ -11,6 +11,7 @@ public class PlayerAnimationsManager
 
     private enum AnimationName
     {
+        middle_wall_climb,
         falling_from_stand,
         falling_from_run,
         climbing,
@@ -122,7 +123,7 @@ public class PlayerAnimationsManager
     {
         animator.updateMode = AnimatorUpdateMode.Normal;
         animator.applyRootMotion = false;
-        animator.CrossFade(anim(AnimationName.hanging_idle), 0.2f);
+        animator.CrossFade(anim(AnimationName.hanging_idle), 0.1f);
     }
 
     public void setAnimationToStandingJump()
@@ -182,5 +183,11 @@ public class PlayerAnimationsManager
     internal void PlayMovingAnimation()
     {
         animator.Play(anim(AnimationName.moving));
+    }
+
+    internal void PlayMiddleWallClimb()
+    {
+        animator.applyRootMotion = true;
+        animator.Play(anim(AnimationName.middle_wall_climb));
     }
 }

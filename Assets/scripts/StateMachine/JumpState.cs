@@ -27,8 +27,9 @@ public class JumpState : MovementState
 
     private bool IsDetectedObjectAWall()
     {
-        return characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
-            == null;
+        return !characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.NO_WALL)
+            && characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
+                == null;
     }
 
     public override void PhysicsUpdate()
@@ -36,15 +37,24 @@ public class JumpState : MovementState
         if (characterController.rigidbody.velocity.y < -0.5)
         {
             stateMachine.ChangeState(stateMachine.fallingState);
+            return;
         }
 
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
-        if (
-            objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS)
-            && IsDetectedObjectAWall()
-        )
+        if (IsDetectedObjectAWall())
         {
-            stateMachine.ChangeState(stateMachine.ledgeGrabState);
+            if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD))
+            {
+                stateMachine.ChangeState(stateMachine.ledgeGrabState);
+            }
+            else if (
+                characterController.groundLandingDetector.IsHittingGround()
+                && objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS)
+            )
+            {
+                stateMachine.ChangeState(stateMachine.doingAnimationState);
+                characterController.animationsManager.PlayMiddleWallClimb();
+            }
         }
     }
 

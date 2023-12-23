@@ -48,15 +48,6 @@ public class LedgeGrabState : State
         characterController.rigidbody.isKinematic = false;
     }
 
-    public override void PhysicsUpdate()
-    {
-        if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))
-        {
-            characterController.rigidbody.isKinematic = false;
-            stateMachine.jumpState.PhysicsUpdate();
-        }
-    }
-
     public override void FrameUpdate()
     {
         if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))

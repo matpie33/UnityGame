@@ -38,7 +38,7 @@ public class FallingState : MovementState
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (
             !hasReleasedLedge
-            && objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS)
+            && objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
             && IsDetectedObjectAWall()
         )
         {
