@@ -46,16 +46,6 @@ public abstract class MovementState : State
                 stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
                 return;
             }
-            if (detectedWallType.Equals(WallType.ABOVE_HIPS) && IsDetectedObjectAWall())
-            {
-                //Vector3 position = characterController.transform.position;
-                //characterController.rigidbody.isKinematic = true;
-                //characterController.transform.position =
-                //    position + characterController.transform.forward * 0.007f;
-                //characterController.animationsManager.setAnimationToClimbMiddleLedge();
-                //stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
-                //return;
-            }
 
             if (newVelocity.magnitude == 0)
             {
@@ -67,6 +57,13 @@ public abstract class MovementState : State
                 stateMachine.ChangeState(stateMachine.jumpState);
             }
             return;
+        }
+        if (
+            characterController.objectsInFrontDetector.obstacleFoundInFrontOfCamera
+            && PlayerInputs.MoveAxisForwardRaw != -1
+        )
+        {
+            newSpeed = Mathf.Lerp(newSpeed, 0, Time.deltaTime * moveSharpness);
         }
 
         Vector3 _moveInputVector = new Vector3(
@@ -85,7 +82,27 @@ public abstract class MovementState : State
             targetSpeed = 1f;
         }
 
-        newSpeed = Mathf.Lerp(newSpeed, targetSpeed, Time.deltaTime * moveSharpness);
+        float speedBackward = -1;
+        if (
+            characterController.objectsInFrontDetector.obstacleFoundInFrontOfCamera
+            && PlayerInputs.MoveAxisForwardRaw != -1
+        )
+        {
+            newSpeed = Mathf.Lerp(newSpeed, 0, Time.deltaTime * moveSharpness);
+        }
+        else if (
+            characterController.objectsInFrontDetector.obstacleBehindPlayerDetected
+            && PlayerInputs.MoveAxisForwardRaw == -1
+        )
+        {
+            speedBackward = 0;
+            newSpeed = 0;
+        }
+        else
+        {
+            newSpeed = Mathf.Lerp(newSpeed, targetSpeed, Time.deltaTime * moveSharpness);
+        }
+
         newVelocity = _moveInputVector * newSpeed;
         if (targetSpeed != 0)
         {
@@ -105,7 +122,7 @@ public abstract class MovementState : State
         }
         else
         {
-            characterController.animationsManager.setRunningSpeedParameter(-1);
+            characterController.animationsManager.setRunningSpeedParameter(speedBackward);
         }
         Move(newVelocity);
         characterController.currentVelocity = newVelocity;

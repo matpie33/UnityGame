@@ -17368,7 +17368,7 @@ GameObject:
   - component: {fileID: 329729879}
   - component: {fileID: 329729878}
   - component: {fileID: 329729877}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WallDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32660,10 +32660,10 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0, y: 265.03583, z: 0}
+      - m_Value: {x: -0, y: 82.14227, z: 0}
         m_Name: Transform_angles
         m_Overridden: 1
-      - m_Value: {x: -4.948638, y: 3.893, z: -50.107887}
+      - m_Value: {x: -4.8645034, y: 3.893, z: -49.908504}
         m_Name: Transform_position
         m_Overridden: 1
       - m_Value: {x: 1, y: 1, z: 1}
@@ -47131,6 +47131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minDistanceToInteract: 0.5
+  cameraForwardOffset: 0.45
   forwardPositionModifier: 0.5
   upModifierHighestPoint: 2
   upModifierLowestPoint: 0.3
@@ -56163,7 +56164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: eb7437ae3c7534143835f72dc3e9f90c, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: eb7437ae3c7534143835f72dc3e9f90c, type: 3}
       propertyPath: m_TagString

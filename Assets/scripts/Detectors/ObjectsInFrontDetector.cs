@@ -10,6 +10,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
 {
     public float minDistanceToInteract;
 
+    public bool obstacleBehindPlayerDetected { get; private set; }
+
     public WallType detectedWallType { get; private set; }
 
     public Vector3 directionFromPlayerToWall { get; private set; }
@@ -26,6 +28,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
     public GameObject detectedObject { get; private set; }
 
     [SerializeField]
+    private float cameraForwardOffset;
+
+    [SerializeField]
     private float forwardPositionModifier;
 
     [SerializeField]
@@ -40,12 +45,19 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private float offsetFromPlayerCenter;
 
+    public bool obstacleFoundInFrontOfCamera { get; private set; }
+
     private void Start()
     {
         detectedWallType = WallType.NO_WALL;
     }
 
     private void FixedUpdate()
+    {
+        DetectWallsInForwardDirection();
+    }
+
+    private void DetectWallsInForwardDirection()
     {
         Vector3 pointAboveHead =
             transform.position
@@ -56,10 +68,31 @@ public class ObjectsInFrontDetector : MonoBehaviour
         float playerCenterY = halfHeight + transform.position.y;
         Physics.Raycast(pointAboveHead, Vector3.up * -1, out raycastHitVertical, halfHeight * 2.1f);
 
+        Vector3 pointBehindPlayer =
+            transform.position - transform.forward * .3f + Vector3.up * upModifierHighestPoint;
+
+        RaycastHit raycastHitBehind;
+        Physics.Raycast(
+            pointBehindPlayer,
+            Vector3.up * -1,
+            out raycastHitBehind,
+            halfHeight * 2.1f
+        );
+
+        if (raycastHitBehind.collider != null)
+        {
+            obstacleBehindPlayerDetected = true;
+        }
+        else
+        {
+            obstacleBehindPlayerDetected = false;
+        }
+
         if (raycastHitVertical.collider != null)
         {
             wallCollider = raycastHitVertical.collider;
             verticalDistanceToCollider = raycastHitVertical.distance;
+            obstacleFoundInFrontOfCamera = true;
 
             float raycastYValue = raycastHitVertical.point.y;
             if (raycastYValue > playerCenterY + offsetFromPlayerCenter)
@@ -89,6 +122,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         else
         {
             detectedWallType = WallType.NO_WALL;
+            obstacleFoundInFrontOfCamera = false;
         }
     }
 }
