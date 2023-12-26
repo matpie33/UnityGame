@@ -121,8 +121,23 @@ public class ObjectsInFrontDetector : MonoBehaviour
         }
         else
         {
-            detectedWallType = WallType.NO_WALL;
-            obstacleFoundInFrontOfCamera = false;
+            RaycastHit raycastHitHorizontal;
+
+            Physics.Raycast(
+                transform.position + Vector3.up * .3f,
+                transform.forward,
+                out raycastHitHorizontal,
+                .6f
+            );
+            if (raycastHitHorizontal.collider != null)
+            {
+                obstacleFoundInFrontOfCamera = true;
+            }
+            else
+            {
+                detectedWallType = WallType.NO_WALL;
+                obstacleFoundInFrontOfCamera = false;
+            }
         }
     }
 }
