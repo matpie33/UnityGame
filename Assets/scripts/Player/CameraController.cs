@@ -11,7 +11,7 @@ public class CameraController : Observer
     private new Camera camera = null;
 
     [SerializeField]
-    private Transform playerTransform = null;
+    private Transform playerCenterPoint = null;
 
     private Vector3 planarDirection; //camera's forward on xz plane
     private Quaternion targetRotation;
@@ -33,10 +33,10 @@ public class CameraController : Observer
     private float rotationSharpness = 25;
 
     [SerializeField]
-    private float minDistance = 0;
+    private float minDistance;
 
     [SerializeField]
-    private float maxDistance = 10f;
+    private float maxDistance;
 
     [SerializeField]
     private float defaultDistance = 2f;
@@ -57,8 +57,7 @@ public class CameraController : Observer
         get => planarDirection;
     }
 
-    [SerializeField]
-    private Vector3 framing;
+    private Vector3 playerPositionOffset;
 
     [SerializeField]
     private bool invertX;
@@ -73,6 +72,8 @@ public class CameraController : Observer
 
     private Quaternion newRotation;
 
+    private float modifiedDistance;
+
     private void OnValidate()
     {
         defaultDistance = Mathf.Clamp(defaultDistance, minDistance, maxDistance);
@@ -85,23 +86,23 @@ public class CameraController : Observer
 
     public void adjustCameraForCrouch()
     {
-        framing.x = -0.02f;
-        framing.y = -0.69f;
+        playerPositionOffset.x = -0.02f;
+        playerPositionOffset.y = -0.69f;
     }
 
     public void adjustCameraForStanding()
     {
-        framing.x = 0;
-        framing.y = 0;
+        playerPositionOffset.x = 0;
+        playerPositionOffset.y = 0;
     }
 
     private void Start()
     {
         obstructionLayers = 1 << 2;
         obstructionLayers = ~obstructionLayers;
-        framing = new Vector3(0, 0, 0);
+        playerPositionOffset = new Vector3(0, 0, 0);
         ignoredColliders.AddRange(GetComponentsInChildren<Collider>());
-        planarDirection = playerTransform.forward;
+        planarDirection = playerCenterPoint.forward;
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Locked;
@@ -110,13 +111,34 @@ public class CameraController : Observer
         targetRotation =
             Quaternion.LookRotation(planarDirection) * Quaternion.Euler(targetVerticalAngle, 0, 0);
         targetPosition =
-            playerTransform.position - (targetRotation * Vector3.forward) * targetDistance;
+            playerCenterPoint.position - (targetRotation * Vector3.forward) * targetDistance;
+    }
+
+    private void FixedUpdate()
+    {
+        RaycastHit hit;
+        bool didHit = Physics.Raycast(
+            playerCenterPoint.position,
+            -camera.transform.forward,
+            out hit,
+            targetDistance,
+            obstructionLayers
+        );
+
+        if (didHit && hit.collider.gameObject != gameObject)
+        {
+            modifiedDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+        }
+        else
+        {
+            modifiedDistance = Mathf.Infinity;
+        }
     }
 
     private void LateUpdate()
     {
-        float zoom = -PlayerInputs.MouseScrollInput * zoomSpeed; // -0.5 lub 0.5
-        float mouseX = PlayerInputs.MouseXInput; //wartosc od okolo -40 do 40 - 40 bardzo szybki ruch, 10 srednio szybki,
+        float zoom = -PlayerInputs.MouseScrollInput * zoomSpeed;
+        float mouseX = PlayerInputs.MouseXInput;
         float mouseY = -PlayerInputs.MouseYInput;
         if (invertX)
         {
@@ -127,35 +149,24 @@ public class CameraController : Observer
             mouseY *= -1;
         }
 
-        Vector3 focusPosition = playerTransform.position + new Vector3(framing.x, framing.y, 0);
+        Vector3 focusPosition =
+            playerCenterPoint.position
+            + new Vector3(playerPositionOffset.x, playerPositionOffset.y, 0);
 
         planarDirection = Quaternion.Euler(0, mouseX, 0) * planarDirection; //rotate planar direction (mouseX degrees) around y axis
-        targetDistance = Mathf.Clamp(targetDistance + zoom, minDistance, maxDistance); //zwiekszamy/zmniejszamy dystans o wartosc _zoom
+        targetDistance = Mathf.Clamp(targetDistance + zoom, minDistance, maxDistance);
         targetVerticalAngle = Mathf.Clamp(
             targetVerticalAngle + mouseY,
             minVerticalAngle,
             maxVerticalAngle
         );
 
-        float smallestDistance = targetDistance;
-        RaycastHit hit;
-        bool didHit = Physics.Raycast(
-            playerTransform.position,
-            -camera.transform.forward,
-            out hit,
-            Vector3.Distance(camera.transform.position, playerTransform.position),
-            obstructionLayers
-        );
-
-        if (didHit && hit.collider.gameObject != gameObject)
-        {
-            smallestDistance = hit.distance;
-        }
+        float smallestDistance = Math.Min(targetDistance, modifiedDistance);
 
         targetRotation =
             Quaternion.LookRotation(planarDirection) * Quaternion.Euler(targetVerticalAngle, 0, 0);
-        targetPosition = focusPosition - (targetRotation * Vector3.forward) * smallestDistance;
-        newRotation = Quaternion.Slerp(
+        targetPosition = focusPosition - (targetRotation * Vector3.forward) * (smallestDistance);
+        newRotation = Quaternion.Lerp(
             camera.transform.rotation,
             targetRotation,
             Time.deltaTime * rotationSharpness

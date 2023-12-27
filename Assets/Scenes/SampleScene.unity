@@ -32682,10 +32682,10 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0, y: 189.5082, z: 0}
+      - m_Value: {x: -0, y: 8.193204, z: 0}
         m_Name: Transform_angles
         m_Overridden: 1
-      - m_Value: {x: -27.851469, y: 2.574583, z: -31.318102}
+      - m_Value: {x: -28.038982, y: 1.855, z: -31.339502}
         m_Name: Transform_position
         m_Overridden: 1
       - m_Value: {x: 1, y: 1, z: 1}
@@ -47191,21 +47191,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 963194227}
-  playerTransform: {fileID: 399540514}
+  playerCenterPoint: {fileID: 399540514}
   minVerticalAngle: -90
   maxVerticalAngle: 90
   zoomSpeed: 10
   rotationSharpness: 25
-  minDistance: 0
+  minDistance: 1
   maxDistance: 10
-  defaultDistance: 2
+  defaultDistance: 3
   obstructionLayers:
     serializedVersion: 2
     m_Bits: 0
-  framing: {x: 0, y: 0, z: 0}
   invertX: 0
   invertY: 0
   defaultVerticalAngle: 20
+  lerpValue: 10
 --- !u!136 &1027043749
 CapsuleCollider:
   m_ObjectHideFlags: 0
