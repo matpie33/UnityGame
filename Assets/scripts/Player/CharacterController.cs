@@ -11,6 +11,12 @@ public class CharacterController : Observer
     public CapsuleCollider capsuleCollider { get; private set; }
     public CameraController cameraController { get; private set; }
 
+    [SerializeField]
+    public float forwardOffset;
+
+    [SerializeField]
+    public float upOffset;
+
     public float initialHeight { get; private set; }
 
     public new Rigidbody rigidbody { get; private set; }
@@ -97,7 +103,8 @@ public class CharacterController : Observer
     {
         wallData.wallCollider = objectsInFrontDetector.wallCollider;
         wallData.directionFromPlayerToWall = objectsInFrontDetector.directionFromPlayerToWall;
-        wallData.distanceToCollider = objectsInFrontDetector.horizontalDistanceToCollider;
+        wallData.verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
+        wallData.horizontalCollisionPoint = objectsInFrontDetector.horizontalCollisionPosition;
     }
 
     public void TryShimmy(LedgeDirection direction)
@@ -118,6 +125,7 @@ public class CharacterController : Observer
 
     public void ClimbingFinished()
     {
+        transform.position = wallData.verticalCollisionPoint;
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 

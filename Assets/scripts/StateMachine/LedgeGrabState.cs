@@ -22,24 +22,23 @@ public class LedgeGrabState : State
         characterController.GetWallData();
 
         WallData wallData = characterController.wallData;
-        Vector3 directionToWall = wallData.directionFromPlayerToWall;
         characterController.transform.rotation = Quaternion.LookRotation(
             wallData.directionFromPlayerToWall,
             Vector3.up
         );
-        float distanceToCollider = wallData.distanceToCollider;
-        if (distanceToCollider < expectedDistanceToWall)
-        {
-            float valueToAdd = expectedDistanceToWall - distanceToCollider;
-            characterController.transform.position =
-                characterController.transform.position - directionToWall * valueToAdd;
-        }
-        else if (distanceToCollider > expectedDistanceToWall)
-        {
-            float valueToDecrease = distanceToCollider - expectedDistanceToWall;
-            characterController.transform.position =
-                characterController.transform.position + directionToWall * valueToDecrease;
-        }
+        Vector3 point = new Vector3(
+            wallData.horizontalCollisionPoint.x,
+            wallData.verticalCollisionPoint.y,
+            wallData.horizontalCollisionPoint.z
+        );
+        characterController.transform.position =
+            point
+            - Vector3.up
+                * (
+                    2 * characterController.capsuleCollider.bounds.extents.y
+                    + characterController.upOffset
+                )
+            + characterController.transform.forward * characterController.forwardOffset;
     }
 
     public override void ExitState()

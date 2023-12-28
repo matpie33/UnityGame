@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class LedgeContinuationDetector : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class LedgeContinuationDetector : MonoBehaviour
 
         Vector3 abovePoint = getAboveCheckPoint(isLeftSide);
 
-        bool aboveCheckHit = Physics.Raycast(abovePoint, direction, 1f);
+        bool aboveCheckHit = Physics.Raycast(abovePoint, direction, .4f);
 
         return !aboveCheckHit;
     }
@@ -76,7 +77,7 @@ public class LedgeContinuationDetector : MonoBehaviour
     {
         return (isLeftSide ? leftHand : rightHand).transform.position
             + (isLeftSide ? -1 : 1) * 0.05f * characterController.transform.right
-            + Vector3.up * 0.15f
+            + Vector3.up * 0.25f
             - characterController.transform.forward * 0.2f;
     }
 

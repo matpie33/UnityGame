@@ -18,10 +18,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public Vector3 ledgePosition { get; private set; }
 
-    public float horizontalDistanceToCollider { get; set; }
-    public float verticalDistanceToCollider { get; set; }
-
     public Vector3 verticalCollisionPosition { get; private set; }
+    public Vector3 horizontalCollisionPosition { get; private set; }
 
     public Collider wallCollider { get; private set; }
 
@@ -91,7 +89,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
         if (raycastHitVertical.collider != null)
         {
             wallCollider = raycastHitVertical.collider;
-            verticalDistanceToCollider = raycastHitVertical.distance;
             obstacleFoundInFrontOfCamera = true;
 
             float raycastYValue = raycastHitVertical.point.y;
@@ -115,9 +112,26 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
             RaycastHit raycastHitHorizontal;
 
-            Physics.Raycast(transform.position, transform.forward, out raycastHitHorizontal, 2);
-            directionFromPlayerToWall = -raycastHitHorizontal.normal;
-            horizontalDistanceToCollider = raycastHitHorizontal.distance;
+            bool didHit = Physics.Raycast(
+                transform.position,
+                transform.forward,
+                out raycastHitHorizontal,
+                2
+            );
+            if (!didHit)
+            {
+                didHit = Physics.Raycast(
+                    transform.position + halfHeight * Vector3.up,
+                    transform.forward,
+                    out raycastHitHorizontal,
+                    2
+                );
+            }
+            if (didHit)
+            {
+                horizontalCollisionPosition = raycastHitHorizontal.point;
+                directionFromPlayerToWall = -raycastHitHorizontal.normal;
+            }
         }
         else
         {
