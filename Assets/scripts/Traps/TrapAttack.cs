@@ -25,10 +25,11 @@ public class TrapAttack : MonoBehaviour
 
     private IEnumerator DoAnimations()
     {
-        float waitTime = timeInAttack;
+        float startDelay = Random.value * 2;
+        yield return new WaitForSeconds(startDelay);
+        float waitTime;
         while (isRunning)
         {
-            yield return new WaitForSeconds(waitTime);
             if (isInAttack)
             {
                 animator.Play("Base Layer.GoIdle");
@@ -39,6 +40,7 @@ public class TrapAttack : MonoBehaviour
                 animator.Play("Base Layer.DoHarm");
                 waitTime = timeInAttack;
             }
+            yield return new WaitForSeconds(waitTime);
             isInAttack = !isInAttack;
         }
     }
