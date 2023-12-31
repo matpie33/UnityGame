@@ -19,7 +19,7 @@ public class TrapAttack : MonoBehaviour
     private void Start()
     {
         isInAttack = true;
-        animator = transform.parent.GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         StartCoroutine(DoAnimations());
     }
 

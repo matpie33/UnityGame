@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 603282517629682408}
   - component: {fileID: 1141085526697440102}
+  - component: {fileID: 7850414031793029914}
   m_Layer: 0
   m_Name: WallTrap
   m_TagString: Untagged
@@ -55,6 +56,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7850414031793029914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221972622067701842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 369a7f8e96dbe2842ba7a7d4574876c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeInAttack: 1.5
+  timeInIdle: 1
 --- !u!1 &4434277146978096312
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,7 +83,6 @@ GameObject:
   - component: {fileID: 3370316396163107364}
   - component: {fileID: 1141085527872368979}
   - component: {fileID: 1141085527872368977}
-  - component: {fileID: 1141085527872368982}
   - component: {fileID: 1141085527872368976}
   m_Layer: 0
   m_Name: moving1
@@ -190,20 +204,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.019999998, y: 0.003289428, z: 0.019999994}
   m_Center: {x: 0.004864628, y: 0, z: 0.010782636}
---- !u!114 &1141085527872368982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4434277146978096312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 369a7f8e96dbe2842ba7a7d4574876c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeInAttack: 1
-  timeInIdle: 1.5
 --- !u!114 &1141085527872368976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,7 +229,6 @@ GameObject:
   - component: {fileID: 3071444793135977126}
   - component: {fileID: 1141085526757523774}
   - component: {fileID: 1141085526757523772}
-  - component: {fileID: 1141085526757523773}
   - component: {fileID: 1141085526757523775}
   m_Layer: 0
   m_Name: moving2
@@ -351,20 +350,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.019999998, y: 0.003289428, z: 0.019999994}
   m_Center: {x: 0.0048646205, y: 0, z: 0.010782636}
---- !u!114 &1141085526757523773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7815579823454163111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 369a7f8e96dbe2842ba7a7d4574876c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeInAttack: 1
-  timeInIdle: 1.5
 --- !u!114 &1141085526757523775
 MonoBehaviour:
   m_ObjectHideFlags: 0
