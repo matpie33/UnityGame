@@ -48,14 +48,14 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLedgeRotateLeft()
     {
-        animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
+        animator.updateMode = AnimatorUpdateMode.Fixed;
         animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_left));
     }
 
     public void setAnimationToLedgeRotateRight()
     {
-        animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
+        animator.updateMode = AnimatorUpdateMode.Fixed;
         animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_right));
     }
