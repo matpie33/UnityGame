@@ -12,9 +12,9 @@ public class PlayerKill : MonoBehaviour
         eventQueue = FindObjectOfType<EventQueue>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(UnityEngine.Collider other)
     {
-        if (collision.collider.tag.Equals(Tags.PLAYER))
+        if (other.tag.Equals(Tags.PLAYER))
         {
             eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_DIED, null));
         }
