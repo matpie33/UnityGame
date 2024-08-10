@@ -32,12 +32,12 @@ public class TrapAttack : MonoBehaviour
         {
             if (isInAttack)
             {
-                animator.Play("Base Layer.GoIdle");
+                animator.Play("Base Layer.moveout");
                 waitTime = timeInIdle;
             }
             else
             {
-                animator.Play("Base Layer.DoHarm");
+                animator.Play("Base Layer.movein");
                 waitTime = timeInAttack;
             }
             yield return new WaitForSeconds(waitTime);

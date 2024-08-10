@@ -12,7 +12,7 @@ public class PlayerKill : MonoBehaviour
         eventQueue = FindObjectOfType<EventQueue>();
     }
 
-    private void OnTriggerEnter(UnityEngine.Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Tags.PLAYER))
         {
