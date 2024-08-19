@@ -16,8 +16,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public Vector3 directionFromPlayerToWall { get; private set; }
 
-    public Vector3 ledgePosition { get; private set; }
-
     public Vector3 verticalCollisionPosition { get; private set; }
     public Vector3 horizontalCollisionPosition { get; private set; }
 
@@ -26,22 +24,28 @@ public class ObjectsInFrontDetector : MonoBehaviour
     public GameObject detectedObject { get; private set; }
 
     [SerializeField]
-    private float cameraForwardOffset;
+    private float forwardOffsetFromPlayer;
 
     [SerializeField]
-    private float forwardPositionModifier;
+    private float minHeightToStep;
 
     [SerializeField]
-    private float upModifierHighestPoint;
+    private float minHeightToClimb;
 
     [SerializeField]
-    private float upModifierLowestPoint;
+    private float maxDistanceToWallStep;
 
     [SerializeField]
-    private float length;
+    private float maxDistanceToWallClimb;
 
     [SerializeField]
-    private float offsetFromPlayerCenter;
+    private float offsetYForFindingLedge;
+
+    [SerializeField]
+    private float maxDistanceToWallHorizontal;
+
+    [SerializeField]
+    private float maxSlopeAngle;
 
     public bool obstacleFoundInFrontOfCamera { get; private set; }
 
@@ -57,24 +61,69 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     private void DetectWallsInForwardDirection()
     {
-        Vector3 pointAboveHead =
-            transform.position
-            + transform.forward * forwardPositionModifier
-            + Vector3.up * upModifierHighestPoint;
-        RaycastHit raycastHitVertical;
-        float halfHeight = GetComponent<Collider>().bounds.extents.y;
-        float playerCenterY = halfHeight + transform.position.y;
-        Physics.Raycast(pointAboveHead, Vector3.up * -1, out raycastHitVertical, halfHeight * 2.1f);
+        RaycastHit feetLevelHit = CastRayHorizontal(0);
 
-        Vector3 pointBehindPlayer =
-            transform.position - transform.forward * .3f + Vector3.up * upModifierHighestPoint;
+        float angle = Vector3.Angle(Vector3.up, feetLevelHit.normal);
+        if (angle > 0 && angle < maxSlopeAngle)
+        {
+            detectedWallType = WallType.NO_WALL;
+            obstacleFoundInFrontOfCamera = false;
+            return;
+        }
+
+        RaycastHit grabLevelCheckLow = CastRayHorizontal(minHeightToClimb);
+        RaycastHit grabLevelCheckHigher = CastRayHorizontal(
+            minHeightToClimb + offsetYForFindingLedge
+        );
+        RaycastHit stepLevelHit = CastRay(minHeightToStep, false, maxDistanceToWallStep);
+        RaycastHit climbLevelHit = CastRay(minHeightToClimb, true, maxDistanceToWallClimb);
+
+        if (
+            feetLevelHit.collider == null
+            && stepLevelHit.collider == null
+            && climbLevelHit.collider == null
+        )
+        {
+            obstacleFoundInFrontOfCamera = false;
+            detectedWallType = WallType.NO_WALL;
+        }
+
+        if (feetLevelHit.collider != null)
+        {
+            obstacleFoundInFrontOfCamera = true;
+        }
+
+        if (feetLevelHit.collider != null && stepLevelHit.collider != null)
+        {
+            detectedWallType = WallType.BELOW_HIPS;
+            obstacleFoundInFrontOfCamera = true;
+            detectedObject = stepLevelHit.collider.gameObject;
+            verticalCollisionPosition = stepLevelHit.point;
+        }
+
+        if (feetLevelHit.collider != null && climbLevelHit.collider != null)
+        {
+            detectedWallType = WallType.ABOVE_HIPS;
+            obstacleFoundInFrontOfCamera = true;
+            detectedObject = climbLevelHit.collider.gameObject;
+            verticalCollisionPosition = climbLevelHit.point;
+        }
+        if (grabLevelCheckLow.collider != null && grabLevelCheckHigher.collider == null)
+        {
+            detectedWallType = WallType.ABOVE_HEAD;
+            obstacleFoundInFrontOfCamera = true;
+            detectedObject = grabLevelCheckLow.collider.gameObject;
+            verticalCollisionPosition = grabLevelCheckLow.point;
+            horizontalCollisionPosition = grabLevelCheckLow.point;
+            directionFromPlayerToWall = -grabLevelCheckLow.normal;
+        }
 
         RaycastHit raycastHitBehind;
         Physics.Raycast(
-            pointBehindPlayer,
-            Vector3.up * -1,
+            transform.position,
+            -transform.forward,
             out raycastHitBehind,
-            halfHeight * 2.1f
+            maxDistanceToWallHorizontal
         );
 
         if (raycastHitBehind.collider != null)
@@ -85,73 +134,31 @@ public class ObjectsInFrontDetector : MonoBehaviour
         {
             obstacleBehindPlayerDetected = false;
         }
+    }
 
-        if (raycastHitVertical.collider != null)
+    private RaycastHit CastRayHorizontal(float height)
+    {
+        RaycastHit raycastHit;
+        Vector3 playerPosition = transform.position;
+        Physics.Raycast(
+            playerPosition + Vector3.up * height,
+            transform.forward,
+            out raycastHit,
+            maxDistanceToWallHorizontal
+        );
+        return raycastHit;
+    }
+
+    private RaycastHit CastRay(float height, bool debug, float maxDistance)
+    {
+        RaycastHit result;
+        Vector3 feetLevelPosition =
+            transform.position + transform.forward * forwardOffsetFromPlayer + Vector3.up * height;
+        Physics.Raycast(feetLevelPosition, Vector3.up * -1, out result, maxDistance);
+        if (debug)
         {
-            wallCollider = raycastHitVertical.collider;
-            obstacleFoundInFrontOfCamera = true;
-
-            float raycastYValue = raycastHitVertical.point.y;
-            if (raycastYValue > playerCenterY + offsetFromPlayerCenter)
-            {
-                detectedWallType = WallType.ABOVE_HEAD;
-            }
-            else if (
-                raycastYValue > playerCenterY
-                && raycastYValue < playerCenterY + offsetFromPlayerCenter
-            )
-            {
-                detectedWallType = WallType.ABOVE_HIPS;
-            }
-            else
-            {
-                detectedWallType = WallType.BELOW_HIPS;
-            }
-            detectedObject = raycastHitVertical.collider.gameObject;
-            verticalCollisionPosition = raycastHitVertical.point;
-
-            RaycastHit raycastHitHorizontal;
-
-            bool didHit = Physics.Raycast(
-                transform.position,
-                transform.forward,
-                out raycastHitHorizontal,
-                2
-            );
-            if (!didHit)
-            {
-                didHit = Physics.Raycast(
-                    transform.position + halfHeight * Vector3.up,
-                    transform.forward,
-                    out raycastHitHorizontal,
-                    2
-                );
-            }
-            if (didHit)
-            {
-                horizontalCollisionPosition = raycastHitHorizontal.point;
-                directionFromPlayerToWall = -raycastHitHorizontal.normal;
-            }
+            Debug.DrawRay(feetLevelPosition, Vector3.up * -1);
         }
-        else
-        {
-            RaycastHit raycastHitHorizontal;
-
-            Physics.Raycast(
-                transform.position + Vector3.up * .3f,
-                transform.forward,
-                out raycastHitHorizontal,
-                .6f
-            );
-            if (raycastHitHorizontal.collider != null)
-            {
-                obstacleFoundInFrontOfCamera = true;
-            }
-            else
-            {
-                detectedWallType = WallType.NO_WALL;
-                obstacleFoundInFrontOfCamera = false;
-            }
-        }
+        return result;
     }
 }
