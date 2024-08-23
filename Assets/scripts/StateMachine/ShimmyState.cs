@@ -7,10 +7,10 @@ public class ShimmyState : State
 {
     private CharacterController characterController;
     private LedgeDirection ledgeDirection;
-    private StateMachine stateMachine;
+    private PlayerStateMachine stateMachine;
     private bool movingStarted = false;
 
-    public ShimmyState(CharacterController characterController, StateMachine stateMachine)
+    public ShimmyState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
         this.characterController = characterController;
         this.stateMachine = stateMachine;

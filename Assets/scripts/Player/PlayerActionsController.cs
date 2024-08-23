@@ -19,7 +19,7 @@ public class PlayerActionsController : MonoBehaviour
     void Update()
     {
         PlayerState playerState = characterController.playerState;
-        StateMachine stateMachine = characterController.stateMachine;
+        PlayerStateMachine stateMachine = characterController.stateMachine;
         PlayerAnimationsManager animationsManager = characterController.animationsManager;
         if (playerState.HasMedipacks() && ActionKeys.IsKeyPressed(ActionKeys.USE_MEDIPACK))
         {

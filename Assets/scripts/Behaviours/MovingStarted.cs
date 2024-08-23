@@ -10,7 +10,7 @@ public class MovingStarted : StateMachineBehaviour
         int layerIndex
     )
     {
-        CharacterController characterController = FindObjectOfType<CharacterController>();
+        CharacterController characterController = FindAnyObjectByType<CharacterController>();
         characterController.stateMachine.ChangeState(characterController.stateMachine.runState);
     }
 }

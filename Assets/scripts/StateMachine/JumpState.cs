@@ -7,7 +7,7 @@ public class JumpState : MovementState
     public float jumpForce = 7;
     public float gravity = 8;
 
-    public JumpState(CharacterController characterController, StateMachine stateMachine)
+    public JumpState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
     public override void EnterState()

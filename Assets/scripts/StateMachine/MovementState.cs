@@ -6,7 +6,7 @@ public abstract class MovementState : State
 {
     protected CharacterController characterController;
     private CameraController cameraController;
-    protected StateMachine stateMachine;
+    protected PlayerStateMachine stateMachine;
 
     protected float targetSpeed;
     public Vector3 newVelocity { get; protected set; }
@@ -17,7 +17,7 @@ public abstract class MovementState : State
     private float rotationSharpness = 10;
     private float moveSharpness = 10;
 
-    public MovementState(CharacterController characterController, StateMachine stateMachine)
+    public MovementState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
         this.characterController = characterController;
         this.stateMachine = stateMachine;

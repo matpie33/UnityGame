@@ -5,7 +5,7 @@ public class SprintState : MovementState
 {
     private float sprintSpeed = 8f;
 
-    public SprintState(CharacterController characterController, StateMachine stateMachine)
+    public SprintState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
     public override void FrameUpdate()

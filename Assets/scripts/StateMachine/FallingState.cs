@@ -6,7 +6,7 @@ public class FallingState : MovementState
 {
     public bool hasReleasedLedge { get; set; }
 
-    public FallingState(CharacterController characterController, StateMachine stateMachine)
+    public FallingState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
     public override void EnterState()

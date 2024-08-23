@@ -10,7 +10,6 @@ using UnityEngine.UI;
 public class Enemy : Observer
 {
     private readonly float minimumDistanceToChase = 10;
-    private Animator animator;
     private float minimumDistanceToAttack = 2;
     private bool isAttacking;
     public bool isInRange { get; set; }
@@ -31,14 +30,16 @@ public class Enemy : Observer
     [field: SerializeField]
     public EnemyType enemyType { get; private set; }
 
+    private WolfStateMachine wolfStateMachine;
+
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
         objectsWithHealth = FindObjectOfType<GameManager>().objectsWithHealth;
         characterController = FindObjectOfType<CharacterController>();
         initialPosition = transform.position;
         initialRotation = transform.rotation;
+        wolfStateMachine = GetComponent<WolfStateMachine>();
     }
 
     public bool GetIsAttacking()
@@ -108,9 +109,6 @@ public class Enemy : Observer
 
             if (distance < minimumDistanceToAttack)
             {
-                animator.SetBool(WolfAnimationVariables.IS_ATTACKING, true);
-                animator.SetBool(WolfAnimationVariables.IS_CHASING, false);
-
                 Quaternion current = gameObject.transform.rotation;
 
                 gameObject.transform.rotation = Quaternion.Lerp(
@@ -124,13 +122,12 @@ public class Enemy : Observer
             }
             else
             {
-                animator.SetBool(WolfAnimationVariables.IS_CHASING, true);
-                animator.SetBool(WolfAnimationVariables.IS_ATTACKING, false);
+                wolfStateMachine.ChangeState(wolfStateMachine.wolfRunState);
             }
         }
         else
         {
-            animator.SetBool(WolfAnimationVariables.IS_CHASING, false);
+            wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
             navMeshAgent.ResetPath();
             attackedPerson = null;
         }

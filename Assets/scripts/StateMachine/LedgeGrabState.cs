@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class LedgeGrabState : State
 {
-    private const float expectedDistanceToWall = 0.18f;
     private CharacterController characterController;
-    private StateMachine stateMachine;
+    private PlayerStateMachine stateMachine;
 
-    public LedgeGrabState(CharacterController characterController, StateMachine stateMachine)
+    public LedgeGrabState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
         this.characterController = characterController;
         this.stateMachine = stateMachine;

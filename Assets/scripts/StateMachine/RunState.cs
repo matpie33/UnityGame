@@ -5,7 +5,7 @@ public class RunState : MovementState
 {
     private float runSpeed = 6f;
 
-    public RunState(CharacterController characterController, StateMachine stateMachine)
+    public RunState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
     public override void EnterState()

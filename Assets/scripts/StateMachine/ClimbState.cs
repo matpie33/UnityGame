@@ -4,9 +4,9 @@ using UnityEngine;
 public class ClimbState : State
 {
     protected CharacterController characterController;
-    protected StateMachine stateMachine;
+    protected PlayerStateMachine stateMachine;
 
-    public ClimbState(CharacterController characterController, StateMachine stateMachine)
+    public ClimbState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
         this.characterController = characterController;
         this.stateMachine = stateMachine;

@@ -5,7 +5,7 @@ public class CrouchState : MovementState
 {
     private float crouchSpeed = 3f;
 
-    public CrouchState(CharacterController characterController, StateMachine stateMachine)
+    public CrouchState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
     public override void EnterState()

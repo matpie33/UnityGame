@@ -23,7 +23,7 @@ public class CharacterController : Observer
 
     public Vector3 currentVelocity { get; set; }
 
-    public StateMachine stateMachine { get; private set; }
+    public PlayerStateMachine stateMachine { get; private set; }
 
     public PlayerState playerState { get; private set; }
 
@@ -89,7 +89,7 @@ public class CharacterController : Observer
 
     private void Start()
     {
-        stateMachine = GetComponent<StateMachine>();
+        stateMachine = GetComponent<PlayerStateMachine>();
         uiUpdater.InitializeStatsPanel(GetStats());
         uiUpdater.UpdatePlayerHealth(objectWithHealth.healthState);
     }
