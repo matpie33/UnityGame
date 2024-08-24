@@ -33,9 +33,9 @@ public class UIUpdater : Observer
         playerUI = GetComponent<PlayerUI>();
         playerUI.healthBar.fillAmount = 1;
         statsAddingDTO = new StatsAddingDTO();
-        characterController = FindObjectOfType<CharacterController>();
+        characterController = FindAnyObjectByType<CharacterController>();
         addStatsIcon.SetActive(false);
-        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList();
+        objectsWithHealth = FindObjectsByType<ObjectWithHealth>(FindObjectsSortMode.None).ToList();
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
             if (!objectWithHealth.skipHealthBar)
@@ -64,6 +64,11 @@ public class UIUpdater : Observer
 
     private Image findHealthBarForegroundInObject(GameObject gameObject)
     {
+        if (gameObject.tag.Equals(Tags.PLAYER))
+        {
+            return playerUI.healthBar;
+        }
+
         foreach (Image image in gameObject.GetComponentsInChildren<Image>())
         {
             if (image.gameObject.name.Equals("Foreground"))
@@ -71,7 +76,7 @@ public class UIUpdater : Observer
                 return image;
             }
         }
-        throw new Exception("Image with name foreground is not found");
+        throw new Exception("Image with name foreground is not found for: " + gameObject);
     }
 
     public void UpdateMedipackAmount(int newValue)
@@ -213,6 +218,14 @@ public class UIUpdater : Observer
                 : CursorLockMode.Locked;
         }
         UpdateExperience(characterController.levelData);
+        foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
+        {
+            UpdateHealthBar(
+                objectWithHealth.healthState,
+                findHpTextInObject(objectWithHealth.gameObject),
+                findHealthBarForegroundInObject(objectWithHealth.gameObject)
+            );
+        }
     }
 
     public void OpenStatsPanel()
@@ -250,20 +263,14 @@ public class UIUpdater : Observer
             case EventType.CHARACTER_LEVEL_UP:
                 addStatsIcon.SetActive(true);
                 break;
-            case EventType.OBJECT_HP_DECREASE:
-                ObjectWithHealth objectWithHealth = (ObjectWithHealth)eventDTO.eventData;
-                if (objectWithHealth.gameObject.tag.Equals(Tags.PLAYER))
-                {
-                    UpdatePlayerHealth(objectWithHealth.healthState);
-                }
-                else
-                {
-                    SetHealthForObject(objectWithHealth);
-                }
                 break;
             case EventType.RESET_HEALTH:
                 ObjectWithHealth objectToReset = (ObjectWithHealth)eventDTO.eventData;
                 SetHealthForObject(objectToReset);
+                break;
+            case EventType.ENEMY_KILLED:
+                GameObject enemy = (GameObject)eventDTO.eventData;
+                objectsWithHealth.Remove(enemy.GetComponent<ObjectWithHealth>());
                 break;
         }
     }
@@ -279,6 +286,11 @@ public class UIUpdater : Observer
 
     private TextMeshProUGUI findHpTextInObject(GameObject gameObject)
     {
+        if (gameObject.tag.Equals(Tags.PLAYER))
+        {
+            return playerUI.healthText;
+        }
+
         foreach (TextMeshProUGUI textField in gameObject.GetComponentsInChildren<TextMeshProUGUI>())
         {
             if (textField.gameObject.name.Equals("HpText"))
@@ -286,7 +298,7 @@ public class UIUpdater : Observer
                 return textField;
             }
         }
-        throw new Exception("Not found hp text");
+        throw new Exception("Not found hp text: " + gameObject);
     }
 
     internal void HideAddStatsIcon()

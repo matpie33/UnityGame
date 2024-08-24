@@ -27,8 +27,8 @@ public class GenericNpc : Interactable
     {
         npcSounds = GetComponent<NpcSounds>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        eventQueue = FindObjectOfType<EventQueue>();
-        prefabFactory = FindObjectOfType<PrefabFactory>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
+        prefabFactory = FindAnyObjectByType<PrefabFactory>();
         animator = GetComponent<Animator>();
     }
 

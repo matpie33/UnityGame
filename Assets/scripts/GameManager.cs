@@ -35,16 +35,16 @@ public class GameManager : Observer
 
     private void Awake()
     {
-        objectsWithHealth = FindObjectsOfType<ObjectWithHealth>().ToList();
+        objectsWithHealth = FindObjectsByType<ObjectWithHealth>(FindObjectsSortMode.None).ToList();
     }
 
     private void Start()
     {
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
         gameOverText.SetActive(false);
 
         statsToValuesConverter = new StatsToValuesConverter();
-        characterController = FindObjectOfType<CharacterController>();
+        characterController = FindAnyObjectByType<CharacterController>();
     }
 
     void Update()
@@ -71,6 +71,9 @@ public class GameManager : Observer
                             objectWithHealth.GetComponent<Enemy>().experienceValue
                         );
                     }
+                    eventQueue.SubmitEvent(
+                        new EventDTO(EventType.ENEMY_KILLED, objectWithHealth.gameObject)
+                    );
                     if (objectWithHealth.GetComponentInParent<QuestObject>())
                     {
                         objectWithHealth.gameObject.SetActive(false);
@@ -80,9 +83,6 @@ public class GameManager : Observer
                         Destroy(objectWithHealth.gameObject);
                         objectsToDelete.Add(objectWithHealth);
                     }
-                    eventQueue.SubmitEvent(
-                        new EventDTO(EventType.ENEMY_KILLED, objectWithHealth.gameObject)
-                    );
                 }
                 else if (objectType.Equals(TypeOfObjectWithHealth.NPC))
                 {
@@ -115,7 +115,6 @@ public class GameManager : Observer
                     characterController.GetStats().strength
                 )
             );
-            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_HP_DECREASE, enemyObject));
         }
         if (enemy.GetIsAttacking())
         {
@@ -127,7 +126,6 @@ public class GameManager : Observer
                     enemyObject.stats.strength
                 )
             );
-            eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_HP_DECREASE, attackTarget));
         }
     }
 }

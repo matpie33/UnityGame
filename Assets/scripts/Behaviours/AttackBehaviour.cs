@@ -11,6 +11,6 @@ public class AttackBehaviour : StateMachineBehaviour
         int layerIndex
     )
     {
-        FindObjectOfType<CharacterController>().attackAnimationStart();
+        FindAnyObjectByType<CharacterController>().attackAnimationStart();
     }
 }

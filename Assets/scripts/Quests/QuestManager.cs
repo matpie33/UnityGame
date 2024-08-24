@@ -22,14 +22,14 @@ public class QuestManager : Observer
 
     private void Start()
     {
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
         eventQueue.SubmitEvent(new EventDTO(EventType.NPC_QUEST_AVAILABLE, npcJim));
         eventQueue.SubmitEvent(new EventDTO(EventType.NPC_QUEST_AVAILABLE, npcWolves));
     }
 
     private void Update()
     {
-        uiUpdater = FindObjectOfType<UIUpdater>();
+        uiUpdater = FindAnyObjectByType<UIUpdater>();
     }
 
     public void ReceiveQuest(Quest quest)

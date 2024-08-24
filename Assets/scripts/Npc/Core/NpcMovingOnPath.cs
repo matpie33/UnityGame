@@ -31,7 +31,7 @@ public class NpcMovingOnPath : Observer
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
         animator = GetComponent<Animator>();
         ResetPathList();
     }

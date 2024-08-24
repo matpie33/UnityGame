@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Enemy : Observer
+public class Enemy : MonoBehaviour
 {
     private readonly float minimumDistanceToChase = 10;
     private float minimumDistanceToAttack = 2;
@@ -35,8 +35,8 @@ public class Enemy : Observer
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        objectsWithHealth = FindObjectOfType<GameManager>().objectsWithHealth;
-        characterController = FindObjectOfType<CharacterController>();
+        objectsWithHealth = FindAnyObjectByType<GameManager>().objectsWithHealth;
+        characterController = FindAnyObjectByType<CharacterController>();
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         wolfStateMachine = GetComponent<WolfStateMachine>();
@@ -130,21 +130,6 @@ public class Enemy : Observer
             wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
             navMeshAgent.ResetPath();
             attackedPerson = null;
-        }
-    }
-
-    public override void OnEvent(EventDTO eventDTO)
-    {
-        switch (eventDTO.eventType)
-        {
-            case EventType.OBJECT_HP_DECREASE:
-                ObjectWithHealth objectWithHealth = (ObjectWithHealth)eventDTO.eventData;
-                ObjectWithHealth thisObject = GetComponent<ObjectWithHealth>();
-                if (thisObject == objectWithHealth)
-                {
-                    attackedPerson = characterController.GetComponent<ObjectWithHealth>();
-                }
-                break;
         }
     }
 

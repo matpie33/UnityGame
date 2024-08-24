@@ -32,11 +32,11 @@ public class NpcKillWolves : Observer
     {
         npcSounds = GetComponent<NpcSounds>();
         killCounter = 0;
-        uiUpdater = FindObjectOfType<UIUpdater>();
+        uiUpdater = FindAnyObjectByType<UIUpdater>();
         quest = GetComponent<GenericNpc>().quest;
         UpdateRemainingKills();
         genericNpc = GetComponent<GenericNpc>();
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
     }
 
     public override void OnEvent(EventDTO eventDTO)

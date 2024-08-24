@@ -8,7 +8,7 @@ public class DestroyWhenEmpty : MonoBehaviour
 
     private void Start()
     {
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
     }
 
     void Update()

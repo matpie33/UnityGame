@@ -8,7 +8,7 @@ public class BillBoard : MonoBehaviour
 
     private void Start()
     {
-        cam = FindObjectOfType<Camera>().transform;
+        cam = FindAnyObjectByType<Camera>().transform;
     }
 
     private void LateUpdate()

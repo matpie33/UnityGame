@@ -9,7 +9,7 @@ public class ObjectDetector : MonoBehaviour
 
     private void Start()
     {
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
     }
 
     private void OnTriggerEnter(Collider other)

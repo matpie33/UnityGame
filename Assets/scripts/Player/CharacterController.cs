@@ -64,13 +64,19 @@ public class CharacterController : Observer
     [SerializeField]
     private GameObject hips;
 
+    [SerializeField]
+    private int velocityThatDecreasesHealth;
+
+    [SerializeField]
+    private int hpDecrease;
+
     private void Awake()
     {
         wallData = new WallData();
         playerBackpack = new PlayerBackpack();
         levelData = new LevelData();
 
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
 
         cameraController = GetComponent<CameraController>();
@@ -83,7 +89,7 @@ public class CharacterController : Observer
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
 
-        uiUpdater = FindObjectOfType<UIUpdater>();
+        uiUpdater = FindAnyObjectByType<UIUpdater>();
         objectWithHealth = GetComponent<ObjectWithHealth>();
     }
 
@@ -247,5 +253,17 @@ public class CharacterController : Observer
             + Vector3.up * 1f
             + distanceBetweenHipsAndCollisionPoint
             + transform.forward * 0.2f;
+    }
+
+    public void modifyHealthAfterLanding(float verticalSpeed)
+    {
+        int velocityYAbsolute = (int)Math.Abs(verticalSpeed);
+        if (velocityYAbsolute > velocityThatDecreasesHealth)
+        {
+            int difference = velocityYAbsolute - velocityThatDecreasesHealth;
+            int healthDecrease = difference * hpDecrease;
+
+            objectWithHealth.DecreaseHealth(healthDecrease);
+        }
     }
 }

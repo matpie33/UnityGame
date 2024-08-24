@@ -19,7 +19,7 @@ public class LockedDoor : Interactable
 
     private void Start()
     {
-        characterController = FindObjectOfType<CharacterController>();
+        characterController = FindAnyObjectByType<CharacterController>();
         animator = GetComponent<Animator>();
     }
 

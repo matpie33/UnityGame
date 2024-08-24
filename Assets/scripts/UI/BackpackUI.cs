@@ -49,12 +49,12 @@ public class BackpackUI : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        cameraController = FindObjectOfType<CameraController>();
-        eventQueue = FindObjectOfType<EventQueue>();
-        cameraObject = FindObjectOfType<Camera>();
+        cameraController = FindAnyObjectByType<CameraController>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
+        cameraObject = FindAnyObjectByType<Camera>();
         blurringBackground.SetActive(false);
         backpackPanel.SetActive(false);
-        characterController = FindObjectOfType<CharacterController>();
+        characterController = FindAnyObjectByType<CharacterController>();
     }
 
     private void Toggle()

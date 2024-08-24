@@ -27,7 +27,7 @@ public class NpcEscort : Observer
         npcMovingOnPath = GetComponent<NpcMovingOnPath>();
         npcSounds = GetComponent<NpcSounds>();
         animator = GetComponent<Animator>();
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
         genericNpc = GetComponent<GenericNpc>();
     }
 
@@ -110,7 +110,7 @@ public class NpcEscort : Observer
                     {
                         float clipLength = npcSounds.PlayNextMessage();
                         genericNpc.SetLookAtTarget(
-                            FindObjectOfType<CharacterController>().gameObject
+                            FindAnyObjectByType<CharacterController>().gameObject
                         );
                         Invoke(nameof(ClearLookAtTarget), clipLength);
 

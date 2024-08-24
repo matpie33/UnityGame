@@ -13,7 +13,7 @@ public class WolfStateMachine : StateMachine
     {
         wolfRunState = new WolfRunState(this);
         wolfIdleState = new WolfIdleState(this);
-        wolfAnimationsManager = new WolfAnimationsManager(GetComponent<Animator>());
+        wolfAnimationsManager = new WolfAnimationsManager(GetComponentInParent<Animator>());
 
         currentState = wolfIdleState;
         currentState.EnterState();

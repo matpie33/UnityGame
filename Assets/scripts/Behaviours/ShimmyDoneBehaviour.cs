@@ -6,7 +6,7 @@ public class ShimmyDoneBehaviour : StateMachineBehaviour
 {
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        CharacterController charController = FindObjectOfType<CharacterController>();
+        CharacterController charController = FindAnyObjectByType<CharacterController>();
         if (PlayerInputs.left.Pressed())
         {
             charController.ShimmyContinue(LedgeDirection.LEFT);

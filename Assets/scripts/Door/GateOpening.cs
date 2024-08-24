@@ -10,7 +10,7 @@ public class GateOpening : Observer
     private void Start()
     {
         animator = GetComponent<Animator>();
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
     }
 
     public override void OnEvent(EventDTO eventDTO)

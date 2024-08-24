@@ -9,7 +9,7 @@ public class WallHitDetector : MonoBehaviour
 
     private void Start()
     {
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
     }
 
     private void OnCollisionEnter(Collision collision)

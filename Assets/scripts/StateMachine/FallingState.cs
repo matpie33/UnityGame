@@ -6,6 +6,8 @@ public class FallingState : MovementState
 {
     public bool hasReleasedLedge { get; set; }
 
+    private float verticalSpeed;
+
     public FallingState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
@@ -30,6 +32,7 @@ public class FallingState : MovementState
     public override void PhysicsUpdate()
     {
         characterController.rigidbody.AddForce(Vector3.up * -1 * 4, ForceMode.Force);
+        verticalSpeed = characterController.rigidbody.velocity.y;
     }
 
     public override void FrameUpdate()
@@ -69,6 +72,8 @@ public class FallingState : MovementState
         {
             case TriggerType.GROUND_DETECTED:
                 stateMachine.ChangeState(stateMachine.runState);
+                characterController.modifyHealthAfterLanding(verticalSpeed);
+                Debug.Log("landing");
                 break;
 
             case TriggerType.PLAYER_COLLIDED:

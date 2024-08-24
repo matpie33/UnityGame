@@ -12,7 +12,7 @@ public class ButtonClickHandler : MonoBehaviour
 
     private void Start()
     {
-        characterController = FindObjectOfType<CharacterController>();
+        characterController = FindAnyObjectByType<CharacterController>();
         uiUpdater = GetComponent<UIUpdater>();
         statsToValuesConverter = new StatsToValuesConverter();
     }

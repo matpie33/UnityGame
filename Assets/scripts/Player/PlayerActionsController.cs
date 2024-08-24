@@ -13,7 +13,7 @@ public class PlayerActionsController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
     }
 
     void Update()

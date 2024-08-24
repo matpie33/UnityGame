@@ -14,7 +14,7 @@ public class Lever : Pullable
     private void Start()
     {
         animator = GetComponent<Animator>();
-        eventQueue = FindObjectOfType<EventQueue>();
+        eventQueue = FindAnyObjectByType<EventQueue>();
     }
 
     public override void Interact(Object data)
