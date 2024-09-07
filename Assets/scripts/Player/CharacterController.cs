@@ -11,11 +11,20 @@ public class CharacterController : Observer
     public CapsuleCollider capsuleCollider { get; private set; }
     public CameraController cameraController { get; private set; }
 
+    [field: SerializeField]
+    public float minHeightToChangeAnimToFall;
+
     [SerializeField]
     public float forwardOffset;
 
     [SerializeField]
     public float upOffset;
+
+    [field: SerializeField]
+    public float verticalDrag { get; private set; }
+
+    [field: SerializeField]
+    public float jumpForce { get; private set; }
 
     public float initialHeight { get; private set; }
 
@@ -65,7 +74,7 @@ public class CharacterController : Observer
     private GameObject hips;
 
     [SerializeField]
-    private int velocityThatDecreasesHealth;
+    private int minHeightToDecreaseHp;
 
     [SerializeField]
     private int hpDecrease;
@@ -255,13 +264,12 @@ public class CharacterController : Observer
             + transform.forward * 0.2f;
     }
 
-    public void modifyHealthAfterLanding(float verticalSpeed)
+    public void modifyHealthAfterLanding(float fallingHeight)
     {
-        int velocityYAbsolute = (int)Math.Abs(verticalSpeed);
-        if (velocityYAbsolute > velocityThatDecreasesHealth)
+        float difference = fallingHeight - minHeightToDecreaseHp;
+        if (difference > 0)
         {
-            int difference = velocityYAbsolute - velocityThatDecreasesHealth;
-            int healthDecrease = difference * hpDecrease;
+            int healthDecrease = (int)Math.Round(difference * hpDecrease);
 
             objectWithHealth.DecreaseHealth(healthDecrease);
         }

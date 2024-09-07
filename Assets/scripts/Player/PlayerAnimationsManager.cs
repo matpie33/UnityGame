@@ -32,13 +32,19 @@ public class PlayerAnimationsManager
         walk_down_ledge,
         move_backward,
         open_door,
-        running_jump
+        running_jump,
+        sliding
     }
 
     public PlayerAnimationsManager(Animator animator)
     {
         this.animator = animator;
         animator.applyRootMotion = false;
+    }
+
+    public void SetAnimationToSliding()
+    {
+        animator.CrossFade(anim(AnimationName.sliding), 0.1f);
     }
 
     public void SetAnimationToOpenDoor()

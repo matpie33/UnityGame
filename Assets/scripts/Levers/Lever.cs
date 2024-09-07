@@ -19,15 +19,10 @@ public class Lever : Pullable
 
     public override void Interact(Object data)
     {
-        animator.Play("Base Layer.open");
-    }
-
-    public void SubmitLeverOpenedEvent()
-    {
         Invoke(nameof(SubmitEvent), 0.5f);
     }
 
-    private void SubmitEvent()
+    public void SubmitEvent()
     {
         eventQueue.SubmitEvent(new EventDTO(EventType.LEVER_OPENED, gateToOpen));
     }

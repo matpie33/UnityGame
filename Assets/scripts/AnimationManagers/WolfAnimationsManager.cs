@@ -11,7 +11,8 @@ public class WolfAnimationsManager
     private enum Animation
     {
         run,
-        idle
+        idle,
+        bite
     }
 
     private String anim(Animation animation)
@@ -26,11 +27,16 @@ public class WolfAnimationsManager
 
     public void setAnimationToRun()
     {
-        animator.CrossFade(anim(Animation.run), 0.1f);
+        animator.CrossFade(anim(Animation.run), 0.03f);
     }
 
     public void setAnimationToIdle()
     {
         animator.CrossFade(anim(Animation.idle), 0.1f);
+    }
+
+    public void setAnimationToBite()
+    {
+        animator.CrossFade(anim(Animation.bite), 0.1f);
     }
 }

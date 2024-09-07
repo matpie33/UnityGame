@@ -61,7 +61,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     private void DetectWallsInForwardDirection()
     {
-        RaycastHit feetLevelHit = CastRayHorizontal(0);
+        RaycastHit feetLevelHit = CastRayHorizontal(0, false);
 
         float angle = Vector3.Angle(Vector3.up, feetLevelHit.normal);
         if (angle > 0 && angle < maxSlopeAngle)
@@ -71,12 +71,13 @@ public class ObjectsInFrontDetector : MonoBehaviour
             return;
         }
 
-        RaycastHit grabLevelCheckLow = CastRayHorizontal(minHeightToClimb);
+        RaycastHit grabLevelCheckLow = CastRayHorizontal(minHeightToClimb, false);
         RaycastHit grabLevelCheckHigher = CastRayHorizontal(
-            minHeightToClimb + offsetYForFindingLedge
+            minHeightToClimb + offsetYForFindingLedge,
+            false
         );
         RaycastHit stepLevelHit = CastRay(minHeightToStep, false, maxDistanceToWallStep);
-        RaycastHit climbLevelHit = CastRay(minHeightToClimb, true, maxDistanceToWallClimb);
+        RaycastHit climbLevelHit = CastRay(minHeightToClimb, false, maxDistanceToWallClimb);
 
         if (
             feetLevelHit.collider == null
@@ -136,7 +137,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         }
     }
 
-    private RaycastHit CastRayHorizontal(float height)
+    private RaycastHit CastRayHorizontal(float height, Boolean debug)
     {
         RaycastHit raycastHit;
         Vector3 playerPosition = transform.position;
@@ -146,6 +147,10 @@ public class ObjectsInFrontDetector : MonoBehaviour
             out raycastHit,
             maxDistanceToWallHorizontal
         );
+        if (debug)
+        {
+            Debug.DrawRay(playerPosition + Vector3.up * height, transform.forward);
+        }
         return raycastHit;
     }
 

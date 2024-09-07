@@ -103,18 +103,24 @@ public abstract class MovementState : State
             newSpeed = Mathf.Lerp(newSpeed, targetSpeed, Time.deltaTime * moveSharpness);
         }
 
+        RaycastHit result;
+        Physics.Raycast(characterController.transform.position, Vector3.up * -1, out result, .2f);
+        Vector3 vectorNormalToGround = Vector3.zero;
+        float slerpTime = 0.2f;
+        if (result.collider != null)
+        {
+            vectorNormalToGround = result.normal;
+            slerpTime = .5f;
+        }
+
         newVelocity = _moveInputVector * newSpeed;
         if (targetSpeed != 0)
         {
-            targetRotation = Quaternion.LookRotation(_moveInputVector);
-            newRotation = Quaternion.Slerp(
-                characterController.transform.rotation,
-                PlayerInputs.MoveAxisForwardRaw != -1
-                    ? targetRotation
-                    : targetRotation * Quaternion.Euler(0, 180f, 0),
-                Time.deltaTime * rotationSharpness
+            characterController.transform.forward = Vector3.Slerp(
+                characterController.transform.forward,
+                Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround),
+                slerpTime
             );
-            characterController.transform.rotation = newRotation;
         }
         if (PlayerInputs.MoveAxisForwardRaw != -1)
         {

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,30 +9,46 @@ public class FallingState : MovementState
 
     private float verticalSpeed;
 
+    private float fallingHeight;
+
     public FallingState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
     public override void EnterState()
     {
+        fallingHeight = characterController.transform.position.y;
         bool isHittingGround = characterController.groundLandingDetector.IsHittingGround();
         if (isHittingGround)
         {
             stateMachine.ChangeState(stateMachine.runState);
             return;
         }
-        if (characterController.currentVelocity.magnitude == 0)
+        RaycastHit result;
+        Physics.Raycast(
+            characterController.transform.position,
+            Vector3.up * -1,
+            out result,
+            characterController.minHeightToChangeAnimToFall
+        );
+        if (result.collider == null)
         {
-            characterController.animationsManager.setAnimationToFallingFromStanding();
-        }
-        else
-        {
-            characterController.animationsManager.setAnimationToFallingFromRunning();
+            if (characterController.currentVelocity.magnitude == 0)
+            {
+                characterController.animationsManager.setAnimationToFallingFromStanding();
+            }
+            else
+            {
+                characterController.animationsManager.setAnimationToFallingFromRunning();
+            }
         }
     }
 
     public override void PhysicsUpdate()
     {
-        characterController.rigidbody.AddForce(Vector3.up * -1 * 4, ForceMode.Force);
+        characterController.rigidbody.AddForce(
+            Vector3.up * -1 * characterController.verticalDrag,
+            ForceMode.Force
+        );
         verticalSpeed = characterController.rigidbody.velocity.y;
     }
 
@@ -47,6 +64,9 @@ public class FallingState : MovementState
         {
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
+        float currentPosition = characterController.transform.position.y;
+        float currentFallHeight = fallingHeight - currentPosition;
+        if (currentFallHeight > characterController.minHeightToChangeAnimToFall) { }
     }
 
     private bool IsDetectedObjectAWall()
@@ -71,9 +91,9 @@ public class FallingState : MovementState
         switch (triggerType)
         {
             case TriggerType.GROUND_DETECTED:
+                fallingHeight = fallingHeight - characterController.transform.position.y;
                 stateMachine.ChangeState(stateMachine.runState);
-                characterController.modifyHealthAfterLanding(verticalSpeed);
-                Debug.Log("landing");
+                characterController.modifyHealthAfterLanding(fallingHeight);
                 break;
 
             case TriggerType.PLAYER_COLLIDED:

@@ -4,15 +4,15 @@ using UnityEngine.AI;
 
 public class JumpState : MovementState
 {
-    public float jumpForce = 7;
-    public float gravity = 8;
-
     public JumpState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
 
     public override void EnterState()
     {
-        characterController.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        characterController.rigidbody.AddForce(
+            Vector3.up * characterController.jumpForce,
+            ForceMode.Impulse
+        );
     }
 
     public override float getTargetSpeed()

@@ -119,6 +119,7 @@ public class Enemy : MonoBehaviour
                     ),
                     0.1f
                 );
+                wolfStateMachine.ChangeState(wolfStateMachine.wolfBiteState);
             }
             else
             {
