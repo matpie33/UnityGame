@@ -10,11 +10,8 @@ public abstract class MovementState : State
 
     protected float targetSpeed;
     public Vector3 newVelocity { get; protected set; }
-    private Quaternion targetRotation;
     private float newSpeed;
-    private Quaternion newRotation;
 
-    private float rotationSharpness = 10;
     private float moveSharpness = 10;
 
     public MovementState(CharacterController characterController, PlayerStateMachine stateMachine)
@@ -79,10 +76,9 @@ public abstract class MovementState : State
         targetSpeed = _moveInputVector == Vector3.zero ? 0 : getTargetSpeed();
         if (PlayerInputs.MoveAxisForwardRaw == -1)
         {
-            targetSpeed = 1f;
+            targetSpeed = 1.3f;
         }
 
-        float speedBackward = -1;
         if (
             characterController.objectsInFrontDetector.obstacleFoundInFrontOfCamera
             && PlayerInputs.MoveAxisForwardRaw != -1
@@ -95,7 +91,6 @@ public abstract class MovementState : State
             && PlayerInputs.MoveAxisForwardRaw == -1
         )
         {
-            speedBackward = 0;
             newSpeed = 0;
         }
         else
@@ -118,7 +113,11 @@ public abstract class MovementState : State
         {
             characterController.transform.forward = Vector3.Slerp(
                 characterController.transform.forward,
-                Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround),
+                (
+                    PlayerInputs.MoveAxisForwardRaw != 0
+                        ? PlayerInputs.MoveAxisForwardRaw
+                        : Mathf.Abs(PlayerInputs.MoveAxisRightRaw)
+                ) * Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround),
                 slerpTime
             );
         }
@@ -128,7 +127,7 @@ public abstract class MovementState : State
         }
         else
         {
-            characterController.animationsManager.setRunningSpeedParameter(speedBackward);
+            characterController.animationsManager.setRunningSpeedParameter(-newSpeed);
         }
         Move(newVelocity);
         characterController.currentVelocity = newVelocity;
