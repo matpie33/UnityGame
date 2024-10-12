@@ -34,7 +34,8 @@ public class PlayerAnimationsManager
         open_door,
         running_jump,
         sliding,
-        landing_from_run
+        landing_from_run,
+        landing_from_stand
     }
 
     public PlayerAnimationsManager(Animator animator)
@@ -108,6 +109,11 @@ public class PlayerAnimationsManager
     public void setAnimationToLandingFromRun()
     {
         animator.CrossFade(anim(AnimationName.landing_from_run), 0.1f);
+    }
+
+    public void setAnimationToLandingFromStand()
+    {
+        animator.CrossFade(anim(AnimationName.landing_from_stand), 0.1f);
     }
 
     public void setAnimationToFallingFromStanding()

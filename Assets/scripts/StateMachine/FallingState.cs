@@ -93,7 +93,7 @@ public class FallingState : MovementState
                 }
                 else
                 {
-                    //characterController.animationsManager.setAnimationToLandingFromStanding();
+                    characterController.animationsManager.setAnimationToLandingFromStand();
                 }
                 characterController.modifyHealthAfterLanding(fallingHeight);
                 break;
