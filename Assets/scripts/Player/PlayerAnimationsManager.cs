@@ -144,7 +144,7 @@ public class PlayerAnimationsManager
 
     internal void setAnimationToMoving()
     {
-        animator.CrossFade(anim(AnimationName.moving), 0.1f);
+        animator.CrossFade(anim(AnimationName.moving), 1f);
     }
 
     internal void setAnimationToCrouch()

@@ -17,12 +17,6 @@ public class FallingState : MovementState
     public override void EnterState()
     {
         fallingHeight = characterController.transform.position.y;
-        bool isHittingGround = characterController.groundLandingDetector.IsHittingGround();
-        if (isHittingGround)
-        {
-            stateMachine.ChangeState(stateMachine.runState);
-            return;
-        }
         RaycastHit result;
         Physics.Raycast(
             characterController.transform.position,

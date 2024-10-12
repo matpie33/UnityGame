@@ -21,7 +21,7 @@ public abstract class StateMachine : MonoBehaviour
         currentState.LateUpdate();
     }
 
-    private void Update()
+    protected void BaseUpdate()
     {
         currentState.FrameUpdate();
     }

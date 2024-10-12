@@ -72,4 +72,9 @@ public class PlayerStateMachine : StateMachine
                 break;
         }
     }
+
+    private void Update()
+    {
+        base.BaseUpdate();
+    }
 }

@@ -63,7 +63,6 @@ public class JumpState : MovementState
         switch (triggerType)
         {
             case TriggerType.GROUND_DETECTED:
-                characterController.animationsManager.setAnimationToMoving();
                 stateMachine.ChangeState(stateMachine.runState);
                 break;
             case TriggerType.PLAYER_COLLIDED:
