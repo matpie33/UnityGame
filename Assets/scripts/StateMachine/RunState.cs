@@ -12,7 +12,6 @@ public class RunState : MovementState
     {
         characterController.rigidbody.isKinematic = false;
         characterController.animationsManager.disableRootMotion();
-        characterController.animationsManager.setAnimationToMoving();
     }
 
     public override void FrameUpdate()

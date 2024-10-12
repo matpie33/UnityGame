@@ -33,7 +33,8 @@ public class PlayerAnimationsManager
         move_backward,
         open_door,
         running_jump,
-        sliding
+        sliding,
+        landing_from_run
     }
 
     public PlayerAnimationsManager(Animator animator)
@@ -102,6 +103,11 @@ public class PlayerAnimationsManager
     {
         animator.applyRootMotion = true;
         animator.Play(AnimationName.climb_middle_ledge.ToString());
+    }
+
+    public void setAnimationToLandingFromRun()
+    {
+        animator.CrossFade(anim(AnimationName.landing_from_run), 0.1f);
     }
 
     public void setAnimationToFallingFromStanding()
