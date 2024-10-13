@@ -59,10 +59,6 @@ public class FallingState : MovementState
     public override void FrameUpdate()
     {
         base.Move(characterController.currentVelocity);
-
-        float currentPosition = characterController.transform.position.y;
-        float currentFallHeight = fallingHeight - currentPosition;
-        if (currentFallHeight > characterController.minHeightToChangeAnimToFall) { }
     }
 
     private bool IsDetectedObjectAWall()

@@ -109,6 +109,7 @@ public abstract class MovementState : State
         }
 
         newVelocity = _moveInputVector * newSpeed;
+        newVelocity = Vector3.ProjectOnPlane(newVelocity, vectorNormalToGround);
         if (targetSpeed != 0)
         {
             characterController.transform.forward = Vector3.Slerp(
@@ -129,8 +130,8 @@ public abstract class MovementState : State
         {
             characterController.animationsManager.setRunningSpeedParameter(-newSpeed);
         }
-        Move(newVelocity);
         characterController.currentVelocity = newVelocity;
+        Move(newVelocity);
     }
 
     protected void Move(Vector3 newVelocity)

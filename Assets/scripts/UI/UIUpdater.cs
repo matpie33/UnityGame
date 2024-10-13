@@ -263,7 +263,6 @@ public class UIUpdater : Observer
             case EventType.CHARACTER_LEVEL_UP:
                 addStatsIcon.SetActive(true);
                 break;
-                break;
             case EventType.RESET_HEALTH:
                 ObjectWithHealth objectToReset = (ObjectWithHealth)eventDTO.eventData;
                 SetHealthForObject(objectToReset);

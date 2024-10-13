@@ -61,6 +61,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     private void DetectWallsInForwardDirection()
     {
+        //TODO make it possible to pass max distance to CastRayHorizontal, maybe merge these 2 methods
         RaycastHit feetLevelHit = CastRayHorizontal(0, false);
 
         float angle = Vector3.Angle(Vector3.up, feetLevelHit.normal);
@@ -87,11 +88,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
         {
             obstacleFoundInFrontOfCamera = false;
             detectedWallType = WallType.NO_WALL;
-        }
-
-        if (feetLevelHit.collider != null)
-        {
-            obstacleFoundInFrontOfCamera = true;
         }
 
         if (feetLevelHit.collider != null && stepLevelHit.collider != null)
@@ -142,14 +138,14 @@ public class ObjectsInFrontDetector : MonoBehaviour
         RaycastHit raycastHit;
         Vector3 playerPosition = transform.position;
         Physics.Raycast(
-            playerPosition + Vector3.up * height,
+            playerPosition + transform.up * height,
             transform.forward,
             out raycastHit,
             maxDistanceToWallHorizontal
         );
         if (debug)
         {
-            Debug.DrawRay(playerPosition + Vector3.up * height, transform.forward);
+            Debug.DrawRay(playerPosition + transform.up * height, transform.forward);
         }
         return raycastHit;
     }
@@ -158,7 +154,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
     {
         RaycastHit result;
         Vector3 feetLevelPosition =
-            transform.position + transform.forward * forwardOffsetFromPlayer + Vector3.up * height;
+            transform.position
+            + transform.forward * forwardOffsetFromPlayer
+            + transform.up * height;
         Physics.Raycast(feetLevelPosition, Vector3.up * -1, out result, maxDistance);
         if (debug)
         {

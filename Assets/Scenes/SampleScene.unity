@@ -15913,7 +15913,7 @@ Transform:
   m_GameObject: {fileID: 281421073}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.5804021, z: -0, w: 0.8143301}
-  m_LocalPosition: {x: -291.9409, y: 4.061, z: 229.48056}
+  m_LocalPosition: {x: -318.8, y: 8.87, z: 300.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -33248,15 +33248,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.673501
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.998
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.254934
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -36034,10 +36034,10 @@ MonoBehaviour:
   forwardOffsetFromPlayer: 0.5
   minHeightToStep: 0.7
   minHeightToClimb: 1.7
-  maxDistanceToWallStep: 0.5
+  maxDistanceToWallStep: 0.2
   maxDistanceToWallClimb: 0.8
   offsetYForFindingLedge: 0.3
-  maxDistanceToWallHorizontal: 1
+  maxDistanceToWallHorizontal: 0.5
   maxSlopeAngle: 45
 --- !u!114 &677224134
 MonoBehaviour:
