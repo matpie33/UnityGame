@@ -4,7 +4,6 @@ public class PlayerStateMachine : StateMachine
 {
     public RunState runState { get; private set; }
     public JumpState jumpState { get; private set; }
-    public SprintState sprintState { get; private set; }
     public CrouchState crouchState { get; private set; }
     public LedgeGrabState ledgeGrabState { get; private set; }
     public FallingState fallingState { get; private set; }
@@ -22,7 +21,6 @@ public class PlayerStateMachine : StateMachine
     {
         runState = new RunState(characterController, this);
         ledgeGrabState = new LedgeGrabState(characterController, this);
-        sprintState = new SprintState(characterController, this);
         crouchState = new CrouchState(characterController, this);
         jumpState = new JumpState(characterController, this);
         fallingState = new FallingState(characterController, this);

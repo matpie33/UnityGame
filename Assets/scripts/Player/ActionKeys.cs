@@ -23,6 +23,11 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode LEFT_KEY = KeyCode.A;
     public const KeyCode RIGHT_KEY = KeyCode.D;
 
+    public static bool IsKeyHold(KeyCode key)
+    {
+        return UnityEngine.Input.GetKey(key);
+    }
+
     public static bool IsKeyPressed(KeyCode key)
     {
         return UnityEngine.Input.GetKeyDown(key);

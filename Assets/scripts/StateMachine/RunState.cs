@@ -4,6 +4,7 @@ using UnityEngine;
 public class RunState : MovementState
 {
     private float runSpeed = 6f;
+    private float sprintSpeed = 8f;
 
     public RunState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
@@ -26,10 +27,6 @@ public class RunState : MovementState
             characterController.animationsManager.setAnimationToWalkDownLedge();
             stateMachine.ChangeState(stateMachine.doingAnimationState);
         }
-        else if (ActionKeys.IsKeyPressed(ActionKeys.SPRINT))
-        {
-            stateMachine.ChangeState(stateMachine.sprintState);
-        }
         else if (ActionKeys.IsKeyPressed(ActionKeys.CROUCH))
         {
             stateMachine.ChangeState(stateMachine.crouchState);
@@ -51,6 +48,6 @@ public class RunState : MovementState
 
     public override float getTargetSpeed()
     {
-        return runSpeed;
+        return ActionKeys.IsKeyHold(ActionKeys.SPRINT) ? sprintSpeed : runSpeed;
     }
 }

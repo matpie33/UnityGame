@@ -15,7 +15,7 @@ public class PlayerAnimationsManager
         falling_from_stand,
         falling_from_run,
         climbing,
-        jump_from_stand,
+        standing_jump,
         moving,
         crouching,
         punching,
@@ -146,7 +146,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToStandingJump()
     {
-        animator.CrossFade(anim(AnimationName.jump_from_stand), 0.1f);
+        animator.CrossFade(anim(AnimationName.standing_jump), 0.1f);
     }
 
     public void setRunningSpeedParameter(float speed)
