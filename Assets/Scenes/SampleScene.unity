@@ -18013,82 +18013,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b85e0c5ad99e70748997abdd833e7732, type: 3}
---- !u!1 &329729875
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 329729876}
-  - component: {fileID: 329729879}
-  - component: {fileID: 329729878}
-  - component: {fileID: 329729877}
-  m_Layer: 2
-  m_Name: WallDetector
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &329729876
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329729875}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.6681685, y: 0.3437605, z: 2.1239345}
-  m_LocalScale: {x: 0.40132996, y: 0.9250837, z: 0.10604974}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 677224123}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &329729877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329729875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e7993796eb8e7244b538f02183cbe6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectInFrontDetected: 0
---- !u!65 &329729878
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329729875}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &329729879
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329729875}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &329852658 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b85e0c5ad99e70748997abdd833e7732, type: 3}
@@ -33324,15 +33248,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.7421625
+      value: -11.673501
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.9377604
+      value: -3.998
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.8909416
+      value: 9.254934
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -35893,9 +35817,6 @@ PrefabInstance:
       addedObject: {fileID: 1632208293}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 329729876}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1322871473}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       insertIndex: -1
@@ -36084,8 +36005,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minHeightToChangeAnimToFall: 0.5
-  forwardOffset: -0.15
-  upOffset: 0.1
+  forwardOffset: -0.35
+  upOffset: -0.1
   <verticalDrag>k__BackingField: 25
   <jumpForce>k__BackingField: 6
   <canClimbUpWallChecker>k__BackingField: {fileID: 794670600}
@@ -36112,11 +36033,11 @@ MonoBehaviour:
   minDistanceToInteract: 0.5
   forwardOffsetFromPlayer: 0.5
   minHeightToStep: 0.7
-  minHeightToClimb: 2
+  minHeightToClimb: 1.7
   maxDistanceToWallStep: 0.5
   maxDistanceToWallClimb: 0.8
-  offsetYForFindingLedge: 0.1
-  maxDistanceToWallHorizontal: 0.5
+  offsetYForFindingLedge: 0.3
+  maxDistanceToWallHorizontal: 1
   maxSlopeAngle: 45
 --- !u!114 &677224134
 MonoBehaviour:
@@ -52593,8 +52514,8 @@ Transform:
   m_GameObject: {fileID: 1041477344}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.013, y: -0.53, z: -0.01}
-  m_LocalScale: {x: 0.27522, y: 1.0067961, z: 0.27522}
+  m_LocalPosition: {x: 0.013, y: -0.041, z: -0.01}
+  m_LocalScale: {x: 0.27522, y: 0.43901765, z: 0.27522}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 677224123}
@@ -83813,6 +83734,18 @@ PrefabInstance:
     - target: {fileID: -4590334849682627571, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -4433555312444388634, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 112.20545
+      objectReference: {fileID: 0}
+    - target: {fileID: -4433555312444388634, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -170.32
+      objectReference: {fileID: 0}
+    - target: {fileID: -4433555312444388634, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: -4183885870762888810, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       propertyPath: m_StaticEditorFlags

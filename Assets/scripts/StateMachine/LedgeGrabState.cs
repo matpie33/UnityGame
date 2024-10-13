@@ -15,9 +15,17 @@ public class LedgeGrabState : State
 
     public override void EnterState()
     {
+        Vector3 oldVelocity = characterController.currentVelocity;
         characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
-        characterController.animationsManager.setAnimationToHangingIdle();
+        if (oldVelocity.magnitude == 0)
+        {
+            characterController.animationsManager.setAnimationToLedgePrepareHoldFromStanding();
+        }
+        else
+        {
+            characterController.animationsManager.setAnimationToLedgePrepareHoldFromRun();
+        }
         characterController.GetWallData();
 
         WallData wallData = characterController.wallData;

@@ -17,6 +17,7 @@ public class FallingState : MovementState
     public override void EnterState()
     {
         fallingHeight = characterController.transform.position.y;
+        hasReleasedLedge = false;
         RaycastHit result;
         Physics.Raycast(
             characterController.transform.position,
@@ -44,11 +45,6 @@ public class FallingState : MovementState
             ForceMode.Force
         );
         verticalSpeed = characterController.rigidbody.velocity.y;
-    }
-
-    public override void FrameUpdate()
-    {
-        base.Move(characterController.currentVelocity);
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (
             !hasReleasedLedge
@@ -58,6 +54,12 @@ public class FallingState : MovementState
         {
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
+    }
+
+    public override void FrameUpdate()
+    {
+        base.Move(characterController.currentVelocity);
+
         float currentPosition = characterController.transform.position.y;
         float currentFallHeight = fallingHeight - currentPosition;
         if (currentFallHeight > characterController.minHeightToChangeAnimToFall) { }
