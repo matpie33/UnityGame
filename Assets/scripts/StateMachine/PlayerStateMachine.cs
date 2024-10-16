@@ -34,7 +34,7 @@ public class PlayerStateMachine : StateMachine
     private void FixedUpdate()
     {
         if (
-            characterController.rigidbody.velocity.y < -0.5
+            characterController.rigidbody.linearVelocity.y < -0.5
             && !characterController.groundLandingDetector.IsHittingGround()
         )
         {

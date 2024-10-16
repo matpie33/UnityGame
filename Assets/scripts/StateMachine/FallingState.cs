@@ -44,7 +44,7 @@ public class FallingState : MovementState
             Vector3.up * -1 * characterController.verticalDrag,
             ForceMode.Force
         );
-        verticalSpeed = characterController.rigidbody.velocity.y;
+        verticalSpeed = characterController.rigidbody.linearVelocity.y;
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (
             !hasReleasedLedge

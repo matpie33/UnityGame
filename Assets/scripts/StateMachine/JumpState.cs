@@ -34,7 +34,7 @@ public class JumpState : MovementState
 
     public override void PhysicsUpdate()
     {
-        if (characterController.rigidbody.velocity.y < -0.5)
+        if (characterController.rigidbody.linearVelocity.y < -0.5)
         {
             stateMachine.ChangeState(stateMachine.fallingState);
             return;
