@@ -62,12 +62,6 @@ public class PlayerStateMachine : StateMachine
             case TriggerType.CLIMBING_FINISHED:
                 ChangeState(runState);
                 break;
-            case TriggerType.SHIMMY_DONE:
-                if (currentState.Equals(shimmyState))
-                {
-                    ChangeState(ledgeGrabState);
-                }
-                break;
         }
     }
 

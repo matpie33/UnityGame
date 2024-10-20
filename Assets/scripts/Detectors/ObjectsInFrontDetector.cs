@@ -81,7 +81,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
         RaycastHit grabLevelHit = CastRayVertical(
             minHeightToGrab,
-            true,
+            false,
             maxDistanceToWallStep,
             forwardOffsetFromPlayerGrabLevel
         );
@@ -121,8 +121,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedObject = grabLevelHit.collider.gameObject;
             verticalCollisionPosition = grabLevelHit.point;
             horizontalCollisionPosition = grabLevelHit.point;
-            directionFromPlayerToWall =
-                Quaternion.AngleAxis(90, transform.right) * grabLevelHit.normal;
+            directionFromPlayerToWall = -feetLevelHit.normal;
         }
         if (feetLevelHit.collider != null && headLevelHit.collider != null)
         {

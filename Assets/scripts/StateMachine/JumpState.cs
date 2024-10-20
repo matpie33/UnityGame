@@ -28,6 +28,35 @@ public class JumpState : MovementState
         {
             if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD))
             {
+                Vector3 oldVelocity = characterController.currentVelocity;
+                if (oldVelocity.magnitude == 0)
+                {
+                    characterController.animationsManager.setAnimationToLedgePrepareHoldFromStanding();
+                }
+                else
+                {
+                    characterController.animationsManager.setAnimationToLedgePrepareHoldFromRun();
+                }
+                characterController.GetWallData();
+
+                WallData wallData = characterController.wallData;
+                characterController.transform.rotation = Quaternion.LookRotation(
+                    wallData.directionFromPlayerToWall,
+                    Vector3.up
+                );
+                Vector3 point = new Vector3(
+                    wallData.horizontalCollisionPoint.x,
+                    wallData.verticalCollisionPoint.y,
+                    wallData.horizontalCollisionPoint.z
+                );
+                characterController.transform.position =
+                    point
+                    - Vector3.up
+                        * (
+                            2 * characterController.capsuleCollider.bounds.extents.y
+                            + characterController.upOffset
+                        )
+                    + characterController.transform.forward * characterController.forwardOffset;
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
             else if (

@@ -8,7 +8,6 @@ public class ShimmyState : State
     private CharacterController characterController;
     private LedgeDirection ledgeDirection;
     private PlayerStateMachine stateMachine;
-    private bool movingStarted = false;
 
     public ShimmyState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
@@ -18,7 +17,6 @@ public class ShimmyState : State
 
     public override void EnterState()
     {
-        movingStarted = false;
         characterController.rigidbody.isKinematic = true;
         switch (ledgeDirection)
         {
@@ -37,13 +35,19 @@ public class ShimmyState : State
             characterController.ledgeContinuationDetector;
         bool isSpaceForGrab = ledgeContinuationDetector.CheckIfThereIsSpaceForGrab(ledgeDirection);
 
-        if (!isSpaceForGrab)
+        if (
+            !(PlayerInputs.left.Pressed() && ledgeDirection.Equals(LedgeDirection.LEFT))
+            && !(PlayerInputs.right.Pressed() && ledgeDirection.Equals(LedgeDirection.RIGHT))
+        )
         {
+            characterController.animationsManager.setAnimationToHangingIdle();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
             return;
         }
-        if (!movingStarted)
+
+        if (!isSpaceForGrab)
         {
+            stateMachine.ChangeState(stateMachine.ledgeGrabState);
             return;
         }
 
@@ -92,37 +96,5 @@ public class ShimmyState : State
     internal void Direction(LedgeDirection direction)
     {
         ledgeDirection = direction;
-    }
-
-    internal void ShimmyMovingStart()
-    {
-        movingStarted = true;
-    }
-
-    internal void ShimmyContinue(LedgeDirection ledgeDirection)
-    {
-        LedgeContinuationDetector ledgeContinuationDetector =
-            characterController.ledgeContinuationDetector;
-
-        bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
-        bool isSpaceForGrab = ledgeContinuationDetector.CheckIfThereIsSpaceForGrab(ledgeDirection);
-        this.ledgeDirection = ledgeDirection;
-        if (ledgeContinues && isSpaceForGrab)
-        {
-            EnterState();
-        }
-        else
-        {
-            if (ledgeContinuationDetector.CheckIfCanRotateAroundLedge(ledgeDirection))
-            {
-                RotateAroundLedge(ledgeDirection);
-            }
-            else
-            {
-                characterController.stateMachine.ChangeState(
-                    characterController.stateMachine.ledgeGrabState
-                );
-            }
-        }
     }
 }

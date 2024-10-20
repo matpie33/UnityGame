@@ -69,11 +69,6 @@ public class AnimationEventHandler : MonoBehaviour
         playerState.isPickingObject = false;
     }
 
-    public void ShimmyStart()
-    {
-        characterController.stateMachine.shimmyState.ShimmyMovingStart();
-    }
-
     public void PullLeverStarts()
     {
         characterController.playerState.objectToInteractWith.Interact(null);

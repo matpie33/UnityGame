@@ -235,16 +235,6 @@ public class CharacterController : Observer
         }
     }
 
-    internal void ShimmyDone()
-    {
-        stateMachine.OnTriggerType(TriggerType.SHIMMY_DONE);
-    }
-
-    internal void ShimmyContinue(LedgeDirection ledgeDirection)
-    {
-        stateMachine.shimmyState.ShimmyContinue(ledgeDirection);
-    }
-
     internal void IncreaseMaxHealth(int healthIncrease)
     {
         GetComponent<ObjectWithHealth>().healthState.IncreaseMaxHealth(healthIncrease);

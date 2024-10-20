@@ -78,12 +78,12 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLeftShimmy()
     {
-        animator.Play(anim(AnimationName.left_shimmy));
+        animator.CrossFade(anim(AnimationName.left_shimmy), 0.2f);
     }
 
     public void setAnimationToRightShimmy()
     {
-        animator.CrossFade(anim(AnimationName.right_shimmy), 0.1f);
+        animator.CrossFade(anim(AnimationName.right_shimmy), 0.2f);
     }
 
     public void setAnimationToLedgePrepareHoldFromRun()

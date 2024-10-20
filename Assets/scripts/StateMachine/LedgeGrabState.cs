@@ -15,37 +15,8 @@ public class LedgeGrabState : State
 
     public override void EnterState()
     {
-        Vector3 oldVelocity = characterController.currentVelocity;
         characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
-        if (oldVelocity.magnitude == 0)
-        {
-            characterController.animationsManager.setAnimationToLedgePrepareHoldFromStanding();
-        }
-        else
-        {
-            characterController.animationsManager.setAnimationToLedgePrepareHoldFromRun();
-        }
-        characterController.GetWallData();
-
-        WallData wallData = characterController.wallData;
-        characterController.transform.rotation = Quaternion.LookRotation(
-            wallData.directionFromPlayerToWall,
-            Vector3.up
-        );
-        Vector3 point = new Vector3(
-            wallData.horizontalCollisionPoint.x,
-            wallData.verticalCollisionPoint.y,
-            wallData.horizontalCollisionPoint.z
-        );
-        characterController.transform.position =
-            point
-            - Vector3.up
-                * (
-                    2 * characterController.capsuleCollider.bounds.extents.y
-                    + characterController.upOffset
-                )
-            + characterController.transform.forward * characterController.forwardOffset;
     }
 
     public override void ExitState()
