@@ -27,10 +27,16 @@ public class ObjectsInFrontDetector : MonoBehaviour
     private float forwardOffsetFromPlayer;
 
     [SerializeField]
+    private float forwardOffsetFromPlayerGrabLevel;
+
+    [SerializeField]
     private float minHeightToStep;
 
     [SerializeField]
     private float minHeightToClimb;
+
+    [SerializeField]
+    private float minHeightToGrab;
 
     [SerializeField]
     private float maxDistanceToWallStep;
@@ -63,6 +69,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
     {
         //TODO make it possible to pass max distance to CastRayHorizontal, maybe merge these 2 methods
         RaycastHit feetLevelHit = CastRayHorizontal(0, false);
+        RaycastHit headLevelHit = CastRayHorizontal(minHeightToClimb, false);
 
         float angle = Vector3.Angle(Vector3.up, feetLevelHit.normal);
         if (angle > 0 && angle < maxSlopeAngle)
@@ -72,13 +79,15 @@ public class ObjectsInFrontDetector : MonoBehaviour
             return;
         }
 
-        RaycastHit grabLevelCheckLow = CastRayHorizontal(minHeightToClimb, false);
-        RaycastHit grabLevelCheckHigher = CastRayHorizontal(
-            minHeightToClimb + offsetYForFindingLedge,
-            false
+        RaycastHit grabLevelHit = CastRayVertical(
+            minHeightToGrab,
+            true,
+            maxDistanceToWallStep,
+            forwardOffsetFromPlayerGrabLevel
         );
-        RaycastHit stepLevelHit = CastRay(minHeightToStep, false, maxDistanceToWallStep);
-        RaycastHit climbLevelHit = CastRay(minHeightToClimb, false, maxDistanceToWallClimb);
+
+        RaycastHit stepLevelHit = CastRayVertical(minHeightToStep, false, maxDistanceToWallStep);
+        RaycastHit climbLevelHit = CastRayVertical(minHeightToClimb, false, maxDistanceToWallClimb);
 
         if (
             feetLevelHit.collider == null
@@ -105,14 +114,19 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedObject = climbLevelHit.collider.gameObject;
             verticalCollisionPosition = climbLevelHit.point;
         }
-        if (grabLevelCheckLow.collider != null && grabLevelCheckHigher.collider == null)
+        if (grabLevelHit.collider != null)
         {
             detectedWallType = WallType.ABOVE_HEAD;
             obstacleFoundInFrontOfCamera = true;
-            detectedObject = grabLevelCheckLow.collider.gameObject;
-            verticalCollisionPosition = grabLevelCheckLow.point;
-            horizontalCollisionPosition = grabLevelCheckLow.point;
-            directionFromPlayerToWall = -grabLevelCheckLow.normal;
+            detectedObject = grabLevelHit.collider.gameObject;
+            verticalCollisionPosition = grabLevelHit.point;
+            horizontalCollisionPosition = grabLevelHit.point;
+            directionFromPlayerToWall =
+                Quaternion.AngleAxis(90, transform.right) * grabLevelHit.normal;
+        }
+        if (feetLevelHit.collider != null && headLevelHit.collider != null)
+        {
+            obstacleFoundInFrontOfCamera = true;
         }
 
         RaycastHit raycastHitBehind;
@@ -150,17 +164,22 @@ public class ObjectsInFrontDetector : MonoBehaviour
         return raycastHit;
     }
 
-    private RaycastHit CastRay(float height, bool debug, float maxDistance)
+    private RaycastHit CastRayVertical(
+        float height,
+        bool debug,
+        float maxDistance,
+        float forwardOffset = 0
+    )
     {
         RaycastHit result;
-        Vector3 feetLevelPosition =
+        Vector3 originPosition =
             transform.position
-            + transform.forward * forwardOffsetFromPlayer
+            + transform.forward * (forwardOffset == 0 ? forwardOffsetFromPlayer : forwardOffset)
             + transform.up * height;
-        Physics.Raycast(feetLevelPosition, Vector3.up * -1, out result, maxDistance);
+        Physics.Raycast(originPosition, Vector3.up * -1, out result, maxDistance);
         if (debug)
         {
-            Debug.DrawRay(feetLevelPosition, Vector3.up * -1);
+            Debug.DrawRay(originPosition, Vector3.up * -1);
         }
         return result;
     }

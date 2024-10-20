@@ -7,6 +7,7 @@ public abstract class MovementState : State
     protected CharacterController characterController;
     private CameraController cameraController;
     protected PlayerStateMachine stateMachine;
+    private Vector3 vectorNormalToGround = Vector3.zero;
 
     protected float targetSpeed;
     public Vector3 newVelocity { get; protected set; }
@@ -98,18 +99,9 @@ public abstract class MovementState : State
             newSpeed = Mathf.Lerp(newSpeed, targetSpeed, Time.deltaTime * moveSharpness);
         }
 
-        RaycastHit result;
-        Physics.Raycast(characterController.transform.position, Vector3.up * -1, out result, .2f);
-        Vector3 vectorNormalToGround = Vector3.zero;
-        float slerpTime = 0.2f;
-        if (result.collider != null)
-        {
-            vectorNormalToGround = result.normal;
-            slerpTime = .5f;
-        }
-
         newVelocity = _moveInputVector * newSpeed;
         newVelocity = Vector3.ProjectOnPlane(newVelocity, vectorNormalToGround);
+        float slerpTime = 0.2f;
         if (targetSpeed != 0)
         {
             characterController.transform.forward = Vector3.Slerp(
@@ -132,6 +124,17 @@ public abstract class MovementState : State
         }
         characterController.currentVelocity = newVelocity;
         Move(newVelocity);
+    }
+
+    public override void PhysicsUpdate()
+    {
+        RaycastHit result;
+        Physics.Raycast(characterController.transform.position, Vector3.up * -1, out result, .2f);
+
+        if (result.collider != null)
+        {
+            vectorNormalToGround = result.normal;
+        }
     }
 
     protected void Move(Vector3 newVelocity)

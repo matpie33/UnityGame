@@ -140,7 +140,6 @@ public class CharacterController : Observer
 
     public void ClimbingFinished()
     {
-        transform.position = wallData.verticalCollisionPoint;
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 
@@ -272,6 +271,15 @@ public class CharacterController : Observer
             int healthDecrease = (int)Math.Round(difference * hpDecrease);
 
             objectWithHealth.DecreaseHealth(healthDecrease);
+        }
+    }
+
+    private void Update()
+    {
+        if (UnityEngine.Input.GetKeyDown(KeyCode.H))
+        {
+            Debug.Break();
+            animationsManager.setAnimationToLedgeClimbing();
         }
     }
 }
