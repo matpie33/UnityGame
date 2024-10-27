@@ -264,6 +264,25 @@ public class CharacterController : Observer
         }
     }
 
+    public void SetPlayerPositionToWallHolding()
+    {
+        GetWallData();
+
+        transform.rotation = Quaternion.LookRotation(
+            wallData.directionFromPlayerToWall,
+            Vector3.up
+        );
+        Vector3 point = new Vector3(
+            wallData.horizontalCollisionPoint.x,
+            wallData.verticalCollisionPoint.y,
+            wallData.horizontalCollisionPoint.z
+        );
+        transform.position =
+            point
+            - Vector3.up * (2 * capsuleCollider.bounds.extents.y + upOffset)
+            + transform.forward * forwardOffset;
+    }
+
     private void Update()
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.H))

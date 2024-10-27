@@ -93,6 +93,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLedgePrepareHoldFromStanding()
     {
+        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.ledge_prepare_hold_from_standing), 0.1f);
     }
 
@@ -125,7 +126,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLandingFromStand()
     {
-        animator.CrossFade(anim(AnimationName.landing_from_stand), 0.1f);
+        animator.Play(anim(AnimationName.landing_from_stand));
     }
 
     public void setAnimationToFallingFromStanding()
@@ -145,8 +146,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLedgeClimbing()
     {
-        animator.applyRootMotion = true;
-        animator.CrossFade(anim(AnimationName.climbing), 0.1f);
+        animator.Play(anim(AnimationName.climbing));
     }
 
     public void setAnimationToHangingIdle()
