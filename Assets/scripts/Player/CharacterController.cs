@@ -53,8 +53,6 @@ public class CharacterController : Observer
 
     public LedgeContinuationDetector ledgeContinuationDetector { get; private set; }
 
-    public GroundLandingDetector groundLandingDetector { get; private set; }
-
     public PlayerBackpack playerBackpack { get; private set; }
 
     private EventQueue eventQueue;
@@ -93,7 +91,6 @@ public class CharacterController : Observer
         animationsManager = new PlayerAnimationsManager(GetComponent<Animator>());
         capsuleCollider = GetComponent<CapsuleCollider>();
         ledgeContinuationDetector = GetComponent<LedgeContinuationDetector>();
-        groundLandingDetector = GetComponentInChildren<GroundLandingDetector>();
 
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
@@ -231,6 +228,9 @@ public class CharacterController : Observer
                 break;
             case EventType.PLAYER_COLLIDED:
                 stateMachine.OnTriggerType(TriggerType.PLAYER_COLLIDED);
+                break;
+            case EventType.GROUND_DETECTED:
+                stateMachine.OnTriggerType(TriggerType.GROUND_DETECTED);
                 break;
         }
     }

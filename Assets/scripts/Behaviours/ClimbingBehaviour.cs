@@ -19,7 +19,5 @@ public class ClimbingBehaviour : StateMachineBehaviour
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         animator.applyRootMotion = true;
-        CharacterController characterController = FindAnyObjectByType<CharacterController>();
-        characterController.SetPlayerPositionToWallHolding();
     }
 }

@@ -21,7 +21,6 @@ public class LedgeGrabState : State
 
     public override void ExitState()
     {
-        characterController.animationsManager.disableRootMotion();
         characterController.rigidbody.isKinematic = false;
     }
 
@@ -30,6 +29,7 @@ public class LedgeGrabState : State
         if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))
         {
             characterController.rigidbody.isKinematic = false;
+            characterController.animationsManager.disableRootMotion();
             stateMachine.ChangeState(stateMachine.fallingState);
             stateMachine.fallingState.hasReleasedLedge = true;
         }

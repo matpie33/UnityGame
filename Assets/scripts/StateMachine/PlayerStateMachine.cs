@@ -35,7 +35,7 @@ public class PlayerStateMachine : StateMachine
     {
         if (
             characterController.rigidbody.linearVelocity.y < -0.5
-            && !characterController.groundLandingDetector.IsHittingGround()
+            && !characterController.objectsInFrontDetector.isCollidingWithGround
         )
         {
             ChangeState(fallingState);

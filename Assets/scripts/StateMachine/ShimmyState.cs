@@ -52,14 +52,7 @@ public class ShimmyState : State
         }
 
         bool ledgeContinues = ledgeContinuationDetector.CheckIfLedgeContinues(ledgeDirection);
-        if (ledgeContinues)
-        {
-            characterController.transform.Translate(
-                (int)ledgeDirection * characterController.transform.right * Time.deltaTime * 1.5f,
-                Space.World
-            );
-        }
-        else
+        if (!ledgeContinues)
         {
             if (ledgeContinuationDetector.CheckIfCanRotateAroundLedge(ledgeDirection))
             {

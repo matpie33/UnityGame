@@ -41,7 +41,7 @@ public class JumpState : MovementState
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
             else if (
-                characterController.groundLandingDetector.IsHittingGround()
+                characterController.objectsInFrontDetector.isCollidingWithGround
                 && objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS)
             )
             {
@@ -77,6 +77,7 @@ public class JumpState : MovementState
             case TriggerType.PLAYER_COLLIDED:
                 characterController.currentVelocity = Vector3.up * -1 * Time.deltaTime;
                 stateMachine.ChangeState(stateMachine.fallingState);
+                Debug.Break();
                 break;
         }
     }

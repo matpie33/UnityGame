@@ -152,7 +152,6 @@ public class PlayerAnimationsManager
     public void setAnimationToHangingIdle()
     {
         animator.updateMode = AnimatorUpdateMode.Normal;
-        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.hanging_idle), 0.1f);
     }
 

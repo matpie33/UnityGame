@@ -53,11 +53,20 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private float maxSlopeAngle;
 
+    [SerializeField]
+    private float groundCheckerForwardOffset;
+
     public bool obstacleFoundInFrontOfCamera { get; private set; }
+
+    private EventQueue eventQueue;
+
+    public bool isCollidingWithGround;
 
     private void Start()
     {
         detectedWallType = WallType.NO_WALL;
+        eventQueue = FindAnyObjectByType<EventQueue>();
+        isCollidingWithGround = false;
     }
 
     private void FixedUpdate()
@@ -69,7 +78,13 @@ public class ObjectsInFrontDetector : MonoBehaviour
     {
         //TODO make it possible to pass max distance to CastRayHorizontal, maybe merge these 2 methods
         RaycastHit feetLevelHit = CastRayHorizontal(0, false);
-        RaycastHit headLevelHit = CastRayHorizontal(minHeightToClimb, false);
+        RaycastHit headLevelHit = CastRayHorizontal(minHeightToClimb, true);
+
+        WallType currentWallType = WallType.NOT_REACHABLE;
+        if (feetLevelHit.collider != null)
+        {
+            detectedObject = feetLevelHit.collider.gameObject;
+        }
 
         float angle = Vector3.Angle(Vector3.up, feetLevelHit.normal);
         if (angle > 0 && angle < maxSlopeAngle)
@@ -86,8 +101,20 @@ public class ObjectsInFrontDetector : MonoBehaviour
             forwardOffsetFromPlayerGrabLevel
         );
 
+        RaycastHit groundHit = CastRayVertical(0, false, .1f, groundCheckerForwardOffset);
+
         RaycastHit stepLevelHit = CastRayVertical(minHeightToStep, false, maxDistanceToWallStep);
         RaycastHit climbLevelHit = CastRayVertical(minHeightToClimb, false, maxDistanceToWallClimb);
+
+        if (groundHit.collider != null && !isCollidingWithGround)
+        {
+            eventQueue.SubmitEvent(new EventDTO(EventType.GROUND_DETECTED, null));
+            isCollidingWithGround = true;
+        }
+        if (groundHit.collider == null)
+        {
+            isCollidingWithGround = false;
+        }
 
         if (
             feetLevelHit.collider == null
@@ -96,27 +123,31 @@ public class ObjectsInFrontDetector : MonoBehaviour
         )
         {
             obstacleFoundInFrontOfCamera = false;
-            detectedWallType = WallType.NO_WALL;
+            currentWallType = WallType.NO_WALL;
         }
 
         if (feetLevelHit.collider != null && stepLevelHit.collider != null)
         {
-            detectedWallType = WallType.BELOW_HIPS;
+            currentWallType = WallType.BELOW_HIPS;
             obstacleFoundInFrontOfCamera = true;
             detectedObject = stepLevelHit.collider.gameObject;
             verticalCollisionPosition = stepLevelHit.point;
         }
 
-        if (feetLevelHit.collider != null && climbLevelHit.collider != null)
+        if (
+            feetLevelHit.collider != null
+            && climbLevelHit.collider != null
+            && headLevelHit.collider == null
+        )
         {
-            detectedWallType = WallType.ABOVE_HIPS;
+            currentWallType = WallType.ABOVE_HIPS;
             obstacleFoundInFrontOfCamera = true;
             detectedObject = climbLevelHit.collider.gameObject;
             verticalCollisionPosition = climbLevelHit.point;
         }
         if (grabLevelHit.collider != null)
         {
-            detectedWallType = WallType.ABOVE_HEAD;
+            currentWallType = WallType.ABOVE_HEAD;
             obstacleFoundInFrontOfCamera = true;
             detectedObject = grabLevelHit.collider.gameObject;
             verticalCollisionPosition = grabLevelHit.point;
@@ -144,6 +175,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         {
             obstacleBehindPlayerDetected = false;
         }
+        detectedWallType = currentWallType;
     }
 
     private RaycastHit CastRayHorizontal(float height, Boolean debug)

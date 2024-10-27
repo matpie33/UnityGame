@@ -85,7 +85,9 @@ public class FallingState : MovementState
             case TriggerType.GROUND_DETECTED:
                 fallingHeight = fallingHeight - characterController.transform.position.y;
                 stateMachine.ChangeState(stateMachine.runState);
-                if (characterController.currentVelocity.magnitude > 0)
+                Vector3 velo = characterController.currentVelocity;
+                Vector3 forwardVelocity = new Vector3(velo.x, 0, velo.z);
+                if (forwardVelocity.magnitude > 0)
                 {
                     characterController.animationsManager.setAnimationToLandingFromRun();
                 }
