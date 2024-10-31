@@ -36,8 +36,7 @@ public class PlayerAnimationsManager
         sliding,
         landing_from_run,
         landing_from_stand,
-        ledge_prepare_hold_from_run,
-        ledge_prepare_hold_from_standing
+        ledge_prepare_hold
     }
 
     public PlayerAnimationsManager(Animator animator)
@@ -86,15 +85,10 @@ public class PlayerAnimationsManager
         animator.CrossFade(anim(AnimationName.right_shimmy), 0.2f);
     }
 
-    public void setAnimationToLedgePrepareHoldFromRun()
-    {
-        animator.CrossFade(anim(AnimationName.ledge_prepare_hold_from_run), 0.1f);
-    }
-
-    public void setAnimationToLedgePrepareHoldFromStanding()
+    public void setAnimationToLedgePrepareHold()
     {
         animator.applyRootMotion = true;
-        animator.CrossFade(anim(AnimationName.ledge_prepare_hold_from_standing), 0.1f);
+        animator.CrossFade(anim(AnimationName.ledge_prepare_hold), 0.1f);
     }
 
     public void setAttackSpeed(float speed)

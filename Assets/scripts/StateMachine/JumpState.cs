@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class JumpState : MovementState
@@ -28,15 +27,7 @@ public class JumpState : MovementState
         {
             if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD))
             {
-                Vector3 oldVelocity = characterController.currentVelocity;
-                if (oldVelocity.magnitude == 0)
-                {
-                    characterController.animationsManager.setAnimationToLedgePrepareHoldFromStanding();
-                }
-                else
-                {
-                    characterController.animationsManager.setAnimationToLedgePrepareHoldFromRun();
-                }
+                characterController.animationsManager.setAnimationToLedgePrepareHold();
                 characterController.SetPlayerPositionToWallHolding();
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
@@ -60,7 +51,7 @@ public class JumpState : MovementState
 
     public override void PhysicsUpdate()
     {
-        if (characterController.rigidbody.linearVelocity.y < -0.5)
+        if (characterController.rigidbody.linearVelocity.y < 0)
         {
             stateMachine.ChangeState(stateMachine.fallingState);
             return;
@@ -77,7 +68,6 @@ public class JumpState : MovementState
             case TriggerType.PLAYER_COLLIDED:
                 characterController.currentVelocity = Vector3.up * -1 * Time.deltaTime;
                 stateMachine.ChangeState(stateMachine.fallingState);
-                Debug.Break();
                 break;
         }
     }

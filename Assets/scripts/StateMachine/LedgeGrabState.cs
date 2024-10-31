@@ -30,8 +30,11 @@ public class LedgeGrabState : State
         {
             characterController.rigidbody.isKinematic = false;
             characterController.animationsManager.disableRootMotion();
+            characterController.animationsManager.setAnimationToFallingFromStanding();
             stateMachine.ChangeState(stateMachine.fallingState);
-            stateMachine.fallingState.hasReleasedLedge = true;
+            stateMachine.fallingState.releasedLedge = characterController
+                .objectsInFrontDetector
+                .detectedObject;
         }
         else if (ActionKeys.IsKeyPressed(ActionKeys.CLIMB_LEDGE))
         {

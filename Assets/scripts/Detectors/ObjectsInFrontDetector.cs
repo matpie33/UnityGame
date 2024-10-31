@@ -78,7 +78,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
     {
         //TODO make it possible to pass max distance to CastRayHorizontal, maybe merge these 2 methods
         RaycastHit feetLevelHit = CastRayHorizontal(0, false);
-        RaycastHit headLevelHit = CastRayHorizontal(minHeightToClimb, true);
+        RaycastHit headLevelHit = CastRayHorizontal(minHeightToClimb, false);
 
         WallType currentWallType = WallType.NOT_REACHABLE;
         if (feetLevelHit.collider != null)

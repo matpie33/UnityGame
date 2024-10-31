@@ -173,11 +173,6 @@ public class CharacterController : Observer
         playerState.isAttacking = true;
     }
 
-    public void GroundDetected()
-    {
-        stateMachine.OnTriggerType(TriggerType.GROUND_DETECTED);
-    }
-
     public void changeHeight(bool toStanding)
     {
         if (toStanding)
@@ -287,7 +282,6 @@ public class CharacterController : Observer
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.H))
         {
-            Debug.Break();
             animationsManager.setAnimationToLedgeClimbing();
         }
     }

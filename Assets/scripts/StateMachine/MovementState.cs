@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public abstract class MovementState : State
@@ -139,7 +138,11 @@ public abstract class MovementState : State
 
     protected void Move(Vector3 newVelocity)
     {
-        characterController.transform.Translate(newVelocity * Time.deltaTime, Space.World);
+        characterController.rigidbody.linearVelocity = new Vector3(
+            newVelocity.x,
+            characterController.rigidbody.linearVelocity.y,
+            newVelocity.z
+        );
     }
 
     public abstract float getTargetSpeed();

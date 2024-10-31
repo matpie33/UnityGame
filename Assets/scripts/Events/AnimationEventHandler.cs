@@ -20,11 +20,6 @@ public class AnimationEventHandler : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
-    public void StepUpTeleport()
-    {
-        characterController.animationsManager.PlayMovingAnimation();
-    }
-
     public void JumpStart()
     {
         characterController.stateMachine.ChangeState(characterController.stateMachine.jumpState);

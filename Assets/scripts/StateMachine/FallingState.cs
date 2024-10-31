@@ -5,11 +5,9 @@ using UnityEngine.AI;
 
 public class FallingState : MovementState
 {
-    public bool hasReleasedLedge { get; set; }
-
-    private float verticalSpeed;
-
     private float fallingHeight;
+
+    public GameObject releasedLedge { get; set; }
 
     public FallingState(CharacterController characterController, PlayerStateMachine stateMachine)
         : base(characterController, stateMachine) { }
@@ -17,41 +15,20 @@ public class FallingState : MovementState
     public override void EnterState()
     {
         fallingHeight = characterController.transform.position.y;
-        hasReleasedLedge = false;
-        RaycastHit result;
-        Physics.Raycast(
-            characterController.transform.position,
-            Vector3.up * -1,
-            out result,
-            characterController.minHeightToChangeAnimToFall
-        );
-        if (result.collider == null)
-        {
-            if (characterController.currentVelocity.magnitude == 0)
-            {
-                characterController.animationsManager.setAnimationToFallingFromStanding();
-            }
-            else
-            {
-                characterController.animationsManager.setAnimationToFallingFromRunning();
-            }
-        }
+        releasedLedge = null;
     }
 
     public override void PhysicsUpdate()
     {
-        characterController.rigidbody.AddForce(
-            Vector3.up * -1 * characterController.verticalDrag,
-            ForceMode.Force
-        );
-        verticalSpeed = characterController.rigidbody.linearVelocity.y;
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (
-            !hasReleasedLedge
-            && objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
+            objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
             && IsDetectedObjectAWall()
+            && releasedLedge != characterController.objectsInFrontDetector.detectedObject
         )
         {
+            characterController.animationsManager.setAnimationToLedgePrepareHold();
+            characterController.SetPlayerPositionToWallHolding();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
     }
@@ -65,12 +42,6 @@ public class FallingState : MovementState
     {
         return characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
             == null;
-    }
-
-    public override void ExitState()
-    {
-        characterController.animationsManager.setAnimationToMoving();
-        hasReleasedLedge = false;
     }
 
     public override float getTargetSpeed()
@@ -100,9 +71,6 @@ public class FallingState : MovementState
 
             case TriggerType.PLAYER_COLLIDED:
                 characterController.currentVelocity = Vector3.up * -1 * Time.deltaTime;
-                break;
-            case TriggerType.RELEASED_LEDGE:
-                hasReleasedLedge = true;
                 break;
         }
     }
