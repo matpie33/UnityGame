@@ -39,6 +39,7 @@ public class PlayerStateMachine : StateMachine
         )
         {
             ChangeState(fallingState);
+            characterController.animationsManager.setAnimationToFallingFromRunning();
         }
         currentState.PhysicsUpdate();
     }
