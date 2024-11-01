@@ -49,17 +49,15 @@ public class UIUpdater : Observer
     {
         Canvas healthBar = Instantiate(healthBarPrefab);
         float halfHeight = objectWithHealth.GetComponent<Collider>().bounds.extents.y;
-        Transform healthBarTransform = healthBar.transform;
         TextMeshProUGUI hpTextField = findHpTextInObject(healthBar.gameObject);
         HealthState healthState = objectWithHealth.healthState;
         hpTextField.text = healthState.value + "/" + healthState.maxHealth;
-        Vector3 position = healthBarTransform.position;
-        position.y = 2 * halfHeight;
-        healthBarTransform.position = position;
         Image image = findHealthBarForegroundInObject(healthBar.gameObject);
         image.fillAmount = 1;
 
         healthBar.transform.SetParent(objectWithHealth.transform, false);
+        healthBar.transform.rotation = new Quaternion();
+        healthBar.transform.localPosition = new Vector3(0, 2 * halfHeight + .2f, 0);
     }
 
     private Image findHealthBarForegroundInObject(GameObject gameObject)

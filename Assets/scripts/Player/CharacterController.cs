@@ -159,12 +159,6 @@ public class CharacterController : Observer
         playerState.isAttacking = false;
     }
 
-    public void attackAnimationFinish()
-    {
-        playerState.isAttacking = false;
-        stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
-    }
-
     public void attackAnimationStart()
     {
         playerState.isAttacking = true;

@@ -105,7 +105,9 @@ public class Enemy : MonoBehaviour
     {
         if (distance < minimumDistanceToChase)
         {
-            navMeshAgent.SetDestination(targetPosition);
+            navMeshAgent.SetDestination(
+                targetPosition - gameObject.transform.position.normalized * 1.5f
+            );
 
             if (distance < minimumDistanceToAttack)
             {
