@@ -15662,7 +15662,7 @@ Transform:
   m_GameObject: {fileID: 281421073}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.5804021, z: -0, w: 0.8143301}
-  m_LocalPosition: {x: -295.68896, y: 0.46406212, z: 245.66641}
+  m_LocalPosition: {x: -305.63812, y: -0.261, z: 237.44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -34599,8 +34599,7 @@ MonoBehaviour:
   minHeightToChangeAnimToFall: 0.5
   forwardOffset: -0.15
   upOffset: -0.23
-  <verticalDrag>k__BackingField: 25
-  <jumpForce>k__BackingField: 20
+  <jumpForce>k__BackingField: 15
   <canClimbUpWallChecker>k__BackingField: {fileID: 794670600}
   <canStandFromCrouchChecker>k__BackingField: {fileID: 1768972020}
   <canWalkDownLedgeChecker>k__BackingField: {fileID: 2818759}
@@ -34812,7 +34811,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
   m_Controller: {fileID: 9100000, guid: 37be50d7b03ab0f489bc551fab8224b0, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -80779,7 +80778,7 @@ Transform:
   m_GameObject: {fileID: 1768972016}
   serializedVersion: 2
   m_LocalRotation: {x: 0.005523672, y: -0.00000008940697, z: 0.00000028405339, w: 0.99998474}
-  m_LocalPosition: {x: 0, y: 1.116, z: -0.000999999}
+  m_LocalPosition: {x: -1.718, y: 1.842, z: -2.063}
   m_LocalScale: {x: 0.60225, y: 1.3698018, z: 0.20773648}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -82182,7 +82181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4433555312444388634, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 2.64
       objectReference: {fileID: 0}
     - target: {fileID: -4183885870762888810, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       propertyPath: m_StaticEditorFlags

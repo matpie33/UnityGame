@@ -21,9 +21,6 @@ public class CharacterController : Observer
     public float upOffset;
 
     [field: SerializeField]
-    public float verticalDrag { get; private set; }
-
-    [field: SerializeField]
     public float jumpForce { get; private set; }
 
     public float initialHeight { get; private set; }

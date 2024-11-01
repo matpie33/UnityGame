@@ -122,7 +122,6 @@ public abstract class MovementState : State
             characterController.animationsManager.setRunningSpeedParameter(-newSpeed);
         }
         characterController.currentVelocity = newVelocity;
-        Move(newVelocity);
     }
 
     public override void PhysicsUpdate()
@@ -134,6 +133,7 @@ public abstract class MovementState : State
         {
             vectorNormalToGround = result.normal;
         }
+        Move(newVelocity);
     }
 
     protected void Move(Vector3 newVelocity)
