@@ -22,10 +22,10 @@ public class CameraFocusOnObject : Observer
                 cam.transform.LookAt(interactable.transform.position);
                 break;
             case EventType.LEVER_OPENED:
-                GameObject gate = (GameObject)eventDTO.eventData;
-                Vector3 lookAtPosition = gate.transform.position;
-                cam.transform.position = lookAtPosition + gate.transform.right * 15;
-                cam.transform.LookAt(lookAtPosition);
+                LeverOpenedEventDTO eventData = (LeverOpenedEventDTO)eventDTO.eventData;
+                GameObject gate = eventData.gate;
+                cam.transform.position = eventData.cameraPositionToSet;
+                cam.transform.LookAt(gate.transform.position);
                 break;
         }
     }

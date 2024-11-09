@@ -28,7 +28,9 @@ public class Gate : Observer
         switch (eventDTO.eventType)
         {
             case EventType.LEVER_OPENED:
-                if (eventDTO.eventData.Equals(gameObject))
+                LeverOpenedEventDTO eventData = (LeverOpenedEventDTO)eventDTO.eventData;
+                GameObject gate = eventData.gate;
+                if (gate.Equals(gameObject))
                 {
                     animator.enabled = true;
                     animator.Play("Base.open");

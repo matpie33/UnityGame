@@ -11,6 +11,9 @@ public class Lever : Pullable
 
     private EventQueue eventQueue;
 
+    [SerializeField]
+    private Vector3 cameraPosition;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -24,6 +27,11 @@ public class Lever : Pullable
 
     public void SubmitEvent()
     {
-        eventQueue.SubmitEvent(new EventDTO(EventType.LEVER_OPENED, gateToOpen));
+        eventQueue.SubmitEvent(
+            new EventDTO(
+                EventType.LEVER_OPENED,
+                new LeverOpenedEventDTO(gateToOpen, cameraPosition)
+            )
+        );
     }
 }
