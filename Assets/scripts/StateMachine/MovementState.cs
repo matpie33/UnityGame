@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 public abstract class MovementState : State
@@ -13,6 +14,7 @@ public abstract class MovementState : State
     private float newSpeed;
 
     private float moveSharpness = 10;
+    protected Boolean playerMoving = false;
 
     public MovementState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
@@ -74,6 +76,14 @@ public abstract class MovementState : State
         _moveInputVector = _cameraPlanarRotation * _moveInputVector;
 
         targetSpeed = _moveInputVector == Vector3.zero ? 0 : getTargetSpeed();
+        if (targetSpeed == 0)
+        {
+            playerMoving = false;
+        }
+        else
+        {
+            playerMoving = true;
+        }
         if (PlayerInputs.MoveAxisForwardRaw == -1)
         {
             targetSpeed = 1.3f;
@@ -127,7 +137,12 @@ public abstract class MovementState : State
     public override void PhysicsUpdate()
     {
         RaycastHit result;
-        Physics.Raycast(characterController.transform.position, Vector3.up * -1, out result, .2f);
+        Physics.Raycast(
+            characterController.transform.position,
+            characterController.transform.up * -1,
+            out result,
+            .2f
+        );
 
         if (result.collider != null)
         {
@@ -140,7 +155,7 @@ public abstract class MovementState : State
     {
         characterController.rigidbody.linearVelocity = new Vector3(
             newVelocity.x,
-            characterController.rigidbody.linearVelocity.y,
+            playerMoving ? characterController.rigidbody.linearVelocity.y : 0,
             newVelocity.z
         );
     }

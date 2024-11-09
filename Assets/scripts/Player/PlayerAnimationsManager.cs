@@ -42,7 +42,7 @@ public class PlayerAnimationsManager
     public PlayerAnimationsManager(Animator animator)
     {
         this.animator = animator;
-        animator.applyRootMotion = true;
+        animator.applyRootMotion = false;
     }
 
     public void SetAnimationToSliding()
@@ -72,17 +72,18 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLeftShimmy()
     {
+        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.left_shimmy));
     }
 
     public void setAnimationToRightShimmy()
     {
+        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.right_shimmy));
     }
 
     public void setAnimationToLedgePrepareHold()
     {
-        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.ledge_prepare_hold), 0.1f);
     }
 
@@ -103,7 +104,6 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLandingFromRun()
     {
-        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.landing_from_run), 0.1f);
     }
 
@@ -119,23 +119,23 @@ public class PlayerAnimationsManager
 
     public void setAnimationToFallingFromRunning()
     {
-        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.falling_from_run), 0.1f);
     }
 
     public void setAnimationToRunningJump()
     {
-        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.running_jump), 0.1f);
     }
 
     public void setAnimationToLedgeClimbing()
     {
+        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.climbing));
     }
 
     public void setAnimationToLedgeGrabIdle()
     {
+        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.ledge_grab_idle), 0.1f);
     }
 
@@ -151,7 +151,6 @@ public class PlayerAnimationsManager
 
     internal void setAnimationToMoving()
     {
-        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.moving), .3f);
     }
 
@@ -202,5 +201,10 @@ public class PlayerAnimationsManager
     internal void PlayMiddleWallClimb()
     {
         animator.Play(anim(AnimationName.middle_wall_climb));
+    }
+
+    internal void DisableRootMotion()
+    {
+        animator.applyRootMotion = false;
     }
 }

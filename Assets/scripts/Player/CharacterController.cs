@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class CharacterController : Observer
 {
+    [SerializeField]
+    public Boolean debugPlayerStates;
+
     public WallData wallData { get; private set; }
     public PlayerAnimationsManager animationsManager { get; private set; }
     public CapsuleCollider capsuleCollider { get; private set; }

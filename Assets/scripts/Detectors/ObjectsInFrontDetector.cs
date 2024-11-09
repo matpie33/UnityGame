@@ -210,10 +210,10 @@ public class ObjectsInFrontDetector : MonoBehaviour
             transform.position
             + transform.forward * (forwardOffset == 0 ? forwardOffsetFromPlayer : forwardOffset)
             + transform.up * height;
-        Physics.Raycast(originPosition, Vector3.up * -1, out result, maxDistance);
+        Physics.Raycast(originPosition, transform.up * -1, out result, maxDistance);
         if (debug)
         {
-            Debug.DrawRay(originPosition, Vector3.up * -1);
+            Debug.DrawRay(originPosition, transform.up * -1);
         }
         return result;
     }

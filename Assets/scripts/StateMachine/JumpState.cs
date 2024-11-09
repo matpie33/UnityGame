@@ -12,6 +12,7 @@ public class JumpState : MovementState
             Vector3.up * characterController.jumpForce,
             ForceMode.Impulse
         );
+        playerMoving = true;
     }
 
     public override float getTargetSpeed()

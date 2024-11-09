@@ -26,6 +26,7 @@ public class PlayerStateMachine : StateMachine
         fallingState = new FallingState(characterController, this);
         shimmyState = new ShimmyState(characterController, this);
         doingAnimationState = new DoingAnimationState();
+        Physics.gravity = new Vector3(0, -10.0F, 0);
 
         currentState = runState;
         currentState.EnterState();
@@ -77,5 +78,9 @@ public class PlayerStateMachine : StateMachine
     private void Update()
     {
         base.BaseUpdate();
+        if (characterController.debugPlayerStates)
+        {
+            Debug.Log(currentState);
+        }
     }
 }

@@ -16,6 +16,7 @@ public class FallingState : MovementState
     {
         fallingHeight = characterController.transform.position.y;
         releasedLedge = null;
+        playerMoving = true;
     }
 
     public override void PhysicsUpdate()
