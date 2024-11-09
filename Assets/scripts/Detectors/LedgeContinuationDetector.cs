@@ -12,6 +12,12 @@ public class LedgeContinuationDetector : MonoBehaviour
     [SerializeField]
     private GameObject rightHand;
 
+    [SerializeField]
+    private float rightOffset;
+
+    [SerializeField]
+    private float upOffset;
+
     private CharacterController characterController;
 
     private void Start()
@@ -66,9 +72,9 @@ public class LedgeContinuationDetector : MonoBehaviour
 
     private Vector3 getHorizontalCheckPoint(bool isLeftSide)
     {
-        return (isLeftSide ? leftHand : rightHand).transform.position
-            + (isLeftSide ? -1 : 1) * 0.05f * characterController.transform.right
-            - Vector3.up * 0.1f
+        return transform.position
+            + (isLeftSide ? -1 : 1) * rightOffset * characterController.transform.right
+            + Vector3.up * upOffset
             - characterController.transform.forward * 0.2f;
     }
 

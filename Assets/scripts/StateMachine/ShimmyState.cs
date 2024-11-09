@@ -33,20 +33,13 @@ public class ShimmyState : State
     {
         LedgeContinuationDetector ledgeContinuationDetector =
             characterController.ledgeContinuationDetector;
-        bool isSpaceForGrab = ledgeContinuationDetector.CheckIfThereIsSpaceForGrab(ledgeDirection);
 
         if (
             !(PlayerInputs.left.Pressed() && ledgeDirection.Equals(LedgeDirection.LEFT))
             && !(PlayerInputs.right.Pressed() && ledgeDirection.Equals(LedgeDirection.RIGHT))
         )
         {
-            characterController.animationsManager.setAnimationToHangingIdle();
-            stateMachine.ChangeState(stateMachine.ledgeGrabState);
-            return;
-        }
-
-        if (!isSpaceForGrab)
-        {
+            characterController.animationsManager.setAnimationToLedgeGrabIdle();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
             return;
         }
@@ -60,6 +53,7 @@ public class ShimmyState : State
             }
             else
             {
+                characterController.animationsManager.setAnimationToLedgeGrabIdle();
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
         }

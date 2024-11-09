@@ -56,6 +56,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private float groundCheckerForwardOffset;
 
+    [SerializeField]
+    private float maxDistanceToGrabVertically;
+
     public bool obstacleFoundInFrontOfCamera { get; private set; }
 
     private EventQueue eventQueue;
@@ -97,7 +100,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         RaycastHit grabLevelHit = CastRayVertical(
             minHeightToGrab,
             false,
-            maxDistanceToWallStep,
+            maxDistanceToGrabVertically,
             forwardOffsetFromPlayerGrabLevel
         );
 
@@ -151,7 +154,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             obstacleFoundInFrontOfCamera = true;
             detectedObject = grabLevelHit.collider.gameObject;
             verticalCollisionPosition = grabLevelHit.point;
-            horizontalCollisionPosition = grabLevelHit.point;
+            horizontalCollisionPosition = feetLevelHit.point;
             directionFromPlayerToWall = -feetLevelHit.normal;
         }
         if (feetLevelHit.collider != null && headLevelHit.collider != null)

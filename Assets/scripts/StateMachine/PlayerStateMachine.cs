@@ -39,7 +39,15 @@ public class PlayerStateMachine : StateMachine
         )
         {
             ChangeState(fallingState);
-            characterController.animationsManager.setAnimationToFallingFromRunning();
+            Vector3 velocity = characterController.currentVelocity;
+            if (velocity.x != 0 || velocity.z != 0)
+            {
+                characterController.animationsManager.setAnimationToFallingFromRunning();
+            }
+            else
+            {
+                characterController.animationsManager.setAnimationToFallingFromStanding();
+            }
         }
         currentState.PhysicsUpdate();
     }

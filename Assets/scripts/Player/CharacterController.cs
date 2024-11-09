@@ -263,10 +263,11 @@ public class CharacterController : Observer
             wallData.verticalCollisionPoint.y,
             wallData.horizontalCollisionPoint.z
         );
-        transform.position =
+        Vector3 destination =
             point
             - Vector3.up * (2 * capsuleCollider.bounds.extents.y + upOffset)
             + transform.forward * forwardOffset;
+        transform.position = destination;
     }
 
     private void Update()

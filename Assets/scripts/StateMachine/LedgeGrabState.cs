@@ -29,7 +29,6 @@ public class LedgeGrabState : State
         if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))
         {
             characterController.rigidbody.isKinematic = false;
-            characterController.animationsManager.disableRootMotion();
             characterController.animationsManager.setAnimationToFallingFromStanding();
             stateMachine.ChangeState(stateMachine.fallingState);
             stateMachine.fallingState.releasedLedge = characterController

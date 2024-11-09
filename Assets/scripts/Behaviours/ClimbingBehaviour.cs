@@ -18,6 +18,5 @@ public class ClimbingBehaviour : StateMachineBehaviour
     )
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
-        animator.applyRootMotion = true;
     }
 }

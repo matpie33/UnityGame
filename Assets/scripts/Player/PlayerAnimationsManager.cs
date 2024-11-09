@@ -23,7 +23,7 @@ public class PlayerAnimationsManager
         Pickup,
         climb_middle_ledge,
         step_up,
-        hanging_idle,
+        ledge_grab_idle,
         pull_lever,
         left_shimmy,
         right_shimmy,
@@ -42,7 +42,7 @@ public class PlayerAnimationsManager
     public PlayerAnimationsManager(Animator animator)
     {
         this.animator = animator;
-        animator.applyRootMotion = false;
+        animator.applyRootMotion = true;
     }
 
     public void SetAnimationToSliding()
@@ -57,32 +57,27 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLedgeRotateLeft()
     {
-        animator.updateMode = AnimatorUpdateMode.Fixed;
-        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_left));
     }
 
     public void setAnimationToLedgeRotateRight()
     {
-        animator.updateMode = AnimatorUpdateMode.Fixed;
-        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_right));
     }
 
     public void setAnimationToWalkDownLedge()
     {
-        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.walk_down_ledge), 0.1f);
     }
 
     public void setAnimationToLeftShimmy()
     {
-        animator.CrossFade(anim(AnimationName.left_shimmy), 0.2f);
+        animator.Play(anim(AnimationName.left_shimmy));
     }
 
     public void setAnimationToRightShimmy()
     {
-        animator.CrossFade(anim(AnimationName.right_shimmy), 0.2f);
+        animator.Play(anim(AnimationName.right_shimmy));
     }
 
     public void setAnimationToLedgePrepareHold()
@@ -96,25 +91,19 @@ public class PlayerAnimationsManager
         animator.SetFloat("AttackSpeed", speed);
     }
 
-    public void disableRootMotion()
-    {
-        animator.applyRootMotion = false;
-    }
-
     public void setAnimationToStepUp()
     {
-        animator.applyRootMotion = false;
         animator.Play(AnimationName.step_up.ToString());
     }
 
     public void setAnimationToClimbMiddleLedge()
     {
-        animator.applyRootMotion = true;
         animator.Play(AnimationName.climb_middle_ledge.ToString());
     }
 
     public void setAnimationToLandingFromRun()
     {
+        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.landing_from_run), 0.1f);
     }
 
@@ -130,11 +119,13 @@ public class PlayerAnimationsManager
 
     public void setAnimationToFallingFromRunning()
     {
+        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.falling_from_run), 0.1f);
     }
 
     public void setAnimationToRunningJump()
     {
+        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.running_jump), 0.1f);
     }
 
@@ -143,10 +134,9 @@ public class PlayerAnimationsManager
         animator.Play(anim(AnimationName.climbing));
     }
 
-    public void setAnimationToHangingIdle()
+    public void setAnimationToLedgeGrabIdle()
     {
-        animator.updateMode = AnimatorUpdateMode.Normal;
-        animator.CrossFade(anim(AnimationName.hanging_idle), 0.1f);
+        animator.CrossFade(anim(AnimationName.ledge_grab_idle), 0.1f);
     }
 
     public void setAnimationToStandingJump()
@@ -161,6 +151,7 @@ public class PlayerAnimationsManager
 
     internal void setAnimationToMoving()
     {
+        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.moving), .3f);
     }
 
@@ -210,7 +201,6 @@ public class PlayerAnimationsManager
 
     internal void PlayMiddleWallClimb()
     {
-        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.middle_wall_climb));
     }
 }
