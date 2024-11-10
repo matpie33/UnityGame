@@ -47351,10 +47351,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b960b34bb52a00240a7340ed63335d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldownAfterCombo: 0.3
+  timeToResetCombo: 0.2
   attacksList:
   - {fileID: 11400000, guid: a12df6cb824080d4c937c8fc71634287, type: 2}
-  - {fileID: 11400000, guid: 0b82850a4de65794b9c873982b85d000, type: 2}
   - {fileID: 11400000, guid: 1e5bff51381f62d409f80e8205f127da, type: 2}
+  - {fileID: 11400000, guid: 0b82850a4de65794b9c873982b85d000, type: 2}
 --- !u!136 &677224138
 CapsuleCollider:
   m_ObjectHideFlags: 0

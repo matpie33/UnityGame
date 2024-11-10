@@ -151,6 +151,13 @@ public abstract class MovementState : State
         Move(newVelocity);
     }
 
+    public override void ExitState()
+    {
+        base.ExitState();
+        newVelocity = Vector3.zero;
+        Move(newVelocity);
+    }
+
     protected void Move(Vector3 newVelocity)
     {
         characterController.rigidbody.linearVelocity = new Vector3(
