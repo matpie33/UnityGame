@@ -37,6 +37,7 @@ public class PlayerStateMachine : StateMachine
         if (
             characterController.rigidbody.linearVelocity.y < -0.5
             && !characterController.objectsInFrontDetector.isCollidingWithGround
+            && currentState != doingAnimationState
         )
         {
             ChangeState(fallingState);

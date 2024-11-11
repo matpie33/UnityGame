@@ -36,7 +36,9 @@ public class PlayerAnimationsManager
         sliding,
         landing_from_run,
         landing_from_stand,
-        ledge_prepare_hold
+        ledge_prepare_hold,
+        dodge_right,
+        dodge_left
     }
 
     public PlayerAnimationsManager(Animator animator)
@@ -48,6 +50,18 @@ public class PlayerAnimationsManager
     public void SetAnimationToSliding()
     {
         animator.CrossFade(anim(AnimationName.sliding), 0.1f);
+    }
+
+    public void SetAnimationToDodgeRight()
+    {
+        animator.applyRootMotion = true;
+        animator.CrossFade(anim(AnimationName.dodge_right), 0.1f);
+    }
+
+    public void SetAnimationToDodgeLeft()
+    {
+        animator.applyRootMotion = true;
+        animator.CrossFade(anim(AnimationName.dodge_left), 0.1f);
     }
 
     public void SetAnimationToOpenDoor()

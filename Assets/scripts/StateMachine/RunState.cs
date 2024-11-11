@@ -12,6 +12,7 @@ public class RunState : MovementState
     public override void EnterState()
     {
         characterController.rigidbody.isKinematic = false;
+        characterController.animationsManager.DisableRootMotion();
     }
 
     public override void FrameUpdate()
@@ -29,6 +30,16 @@ public class RunState : MovementState
         else if (ActionKeys.IsKeyPressed(ActionKeys.CROUCH))
         {
             stateMachine.ChangeState(stateMachine.crouchState);
+        }
+        else if (ActionKeys.IsKeyPressed(ActionKeys.DODGE_RIGHT))
+        {
+            stateMachine.ChangeState(stateMachine.doingAnimationState);
+            characterController.animationsManager.SetAnimationToDodgeRight();
+        }
+        else if (ActionKeys.IsKeyPressed(ActionKeys.DODGE_LEFT))
+        {
+            stateMachine.ChangeState(stateMachine.doingAnimationState);
+            characterController.animationsManager.SetAnimationToDodgeLeft();
         }
     }
 
