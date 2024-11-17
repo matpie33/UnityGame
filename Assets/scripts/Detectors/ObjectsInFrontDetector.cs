@@ -104,7 +104,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             forwardOffsetFromPlayerGrabLevel
         );
 
-        RaycastHit groundHit = CastRayVertical(0, false, .1f, groundCheckerForwardOffset);
+        RaycastHit groundHit = CastRayVertical(0.1f, false, .2f, groundCheckerForwardOffset);
 
         RaycastHit stepLevelHit = CastRayVertical(minHeightToStep, false, maxDistanceToWallStep);
         RaycastHit climbLevelHit = CastRayVertical(minHeightToClimb, false, maxDistanceToWallClimb);

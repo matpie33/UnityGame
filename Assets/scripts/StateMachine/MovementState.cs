@@ -14,7 +14,7 @@ public abstract class MovementState : State
     private float newSpeed;
 
     private float moveSharpness = 10;
-    protected Boolean playerMoving = false;
+    protected Boolean playerMoving = true;
 
     public MovementState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
@@ -29,8 +29,23 @@ public abstract class MovementState : State
             == null;
     }
 
-    public override void FrameUpdate()
+    public override void FrameUpdate() { }
+
+    public override void PhysicsUpdate()
     {
+        RaycastHit result;
+        Physics.Raycast(
+            characterController.transform.position,
+            characterController.transform.up * -1,
+            out result,
+            1f
+        );
+
+        if (result.collider != null)
+        {
+            vectorNormalToGround = result.normal;
+        }
+
         if (this.GetType() != typeof(CrouchState) && ActionKeys.IsKeyPressed(ActionKeys.JUMP))
         {
             ObjectsInFrontDetector objectsInFrontDetector =
@@ -132,22 +147,7 @@ public abstract class MovementState : State
             characterController.animationsManager.setRunningSpeedParameter(-newSpeed);
         }
         characterController.currentVelocity = newVelocity;
-    }
 
-    public override void PhysicsUpdate()
-    {
-        RaycastHit result;
-        Physics.Raycast(
-            characterController.transform.position,
-            characterController.transform.up * -1,
-            out result,
-            .2f
-        );
-
-        if (result.collider != null)
-        {
-            vectorNormalToGround = result.normal;
-        }
         Move(newVelocity);
     }
 
@@ -160,11 +160,14 @@ public abstract class MovementState : State
 
     protected void Move(Vector3 newVelocity)
     {
-        characterController.rigidbody.linearVelocity = new Vector3(
-            newVelocity.x,
-            playerMoving ? characterController.rigidbody.linearVelocity.y : 0,
-            newVelocity.z
-        );
+        if (characterController.objectsInFrontDetector.isCollidingWithGround)
+        {
+            characterController.rigidbody.linearVelocity = new Vector3(
+                newVelocity.x,
+                characterController.rigidbody.linearVelocity.y,
+                newVelocity.z
+            );
+        }
     }
 
     public abstract float getTargetSpeed();

@@ -35,7 +35,7 @@ public class FallingState : MovementState
 
     public override void FrameUpdate()
     {
-        base.Move(characterController.currentVelocity);
+        base.Move(characterController.currentVelocity.normalized);
     }
 
     private bool IsDetectedObjectAWall()
@@ -46,7 +46,7 @@ public class FallingState : MovementState
 
     public override float getTargetSpeed()
     {
-        return 3;
+        return 0;
     }
 
     public override void OnTrigger(TriggerType triggerType)
@@ -54,7 +54,9 @@ public class FallingState : MovementState
         switch (triggerType)
         {
             case TriggerType.GROUND_DETECTED:
-                fallingHeight = fallingHeight - characterController.transform.position.y;
+                fallingHeight =
+                    characterController.stateMachine.fallingStartingPositionY
+                    - characterController.transform.position.y;
                 stateMachine.ChangeState(stateMachine.runState);
                 Vector3 velo = characterController.currentVelocity;
                 Vector3 forwardVelocity = new Vector3(velo.x, 0, velo.z);

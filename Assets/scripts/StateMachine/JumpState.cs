@@ -1,10 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-public class JumpState : MovementState
+public class JumpState : State
 {
+    private CharacterController characterController;
+    private PlayerStateMachine stateMachine;
+
     public JumpState(CharacterController characterController, PlayerStateMachine stateMachine)
-        : base(characterController, stateMachine) { }
+    {
+        this.stateMachine = stateMachine;
+        this.characterController = characterController;
+    }
 
     public override void EnterState()
     {
@@ -12,17 +18,21 @@ public class JumpState : MovementState
             Vector3.up * characterController.jumpForce,
             ForceMode.Impulse
         );
-        playerMoving = true;
-    }
-
-    public override float getTargetSpeed()
-    {
-        return 3f;
     }
 
     public override void FrameUpdate()
     {
-        base.Move(characterController.currentVelocity);
+        characterController.rigidbody.linearVelocity = new Vector3(
+            characterController.currentVelocity.x,
+            characterController.rigidbody.linearVelocity.y,
+            characterController.currentVelocity.z
+        );
+        characterController.currentVelocity = Vector3.Lerp(
+            characterController.currentVelocity,
+            Vector3.zero,
+            Time.deltaTime * characterController.horizontalSpeedDecreaseTime
+        );
+
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (IsDetectedObjectAWall())
         {

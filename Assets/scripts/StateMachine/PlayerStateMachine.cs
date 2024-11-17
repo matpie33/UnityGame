@@ -12,6 +12,10 @@ public class PlayerStateMachine : StateMachine
 
     private CharacterController characterController;
 
+    private float fallingTime = 0;
+
+    public float fallingStartingPositionY { get; private set; }
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -26,7 +30,6 @@ public class PlayerStateMachine : StateMachine
         fallingState = new FallingState(characterController, this);
         shimmyState = new ShimmyState(characterController, this);
         doingAnimationState = new DoingAnimationState();
-        Physics.gravity = new Vector3(0, -10.0F, 0);
 
         currentState = runState;
         currentState.EnterState();
@@ -35,9 +38,9 @@ public class PlayerStateMachine : StateMachine
     private void FixedUpdate()
     {
         if (
-            characterController.rigidbody.linearVelocity.y < -0.5
-            && !characterController.objectsInFrontDetector.isCollidingWithGround
+            fallingTime > .5f
             && currentState != doingAnimationState
+            && characterController.rigidbody.linearVelocity.y < -1f
         )
         {
             ChangeState(fallingState);
@@ -78,6 +81,20 @@ public class PlayerStateMachine : StateMachine
 
     private void Update()
     {
+        if (!characterController.objectsInFrontDetector.isCollidingWithGround)
+        {
+            if (fallingTime == 0)
+            {
+                fallingStartingPositionY = characterController.transform.position.y;
+            }
+
+            fallingTime += Time.deltaTime;
+        }
+        else
+        {
+            fallingTime = 0;
+        }
+
         base.BaseUpdate();
         if (characterController.debugPlayerStates)
         {

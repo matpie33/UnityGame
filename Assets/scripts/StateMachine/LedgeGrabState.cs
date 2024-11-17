@@ -40,6 +40,9 @@ public class LedgeGrabState : State
             if (!characterController.canClimbUpWallChecker.isColliding)
             {
                 characterController.animationsManager.setAnimationToLedgeClimbing();
+                characterController.stateMachine.ChangeState(
+                    characterController.stateMachine.doingAnimationState
+                );
             }
         }
         else if (PlayerInputs.left.PressedDown())

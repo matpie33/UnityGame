@@ -9,6 +9,9 @@ public class CharacterController : Observer
     [SerializeField]
     public Boolean debugPlayerStates;
 
+    [SerializeField]
+    public float horizontalSpeedDecreaseTime;
+
     public WallData wallData { get; private set; }
     public PlayerAnimationsManager animationsManager { get; private set; }
     public CapsuleCollider capsuleCollider { get; private set; }
@@ -75,7 +78,7 @@ public class CharacterController : Observer
     private int minHeightToDecreaseHp;
 
     [SerializeField]
-    private int hpDecrease;
+    private int hpDecreaseFromFallingPerOneUnit;
 
     private void Awake()
     {
@@ -104,6 +107,7 @@ public class CharacterController : Observer
         stateMachine = GetComponent<PlayerStateMachine>();
         uiUpdater.InitializeStatsPanel(GetStats());
         uiUpdater.UpdatePlayerHealth(objectWithHealth.healthState);
+        Physics.gravity = new Vector3(0, -20.0F, 0);
     }
 
     public Stats GetStats()
@@ -247,7 +251,7 @@ public class CharacterController : Observer
         float difference = fallingHeight - minHeightToDecreaseHp;
         if (difference > 0)
         {
-            int healthDecrease = (int)Math.Round(difference * hpDecrease);
+            int healthDecrease = (int)Math.Round(difference * hpDecreaseFromFallingPerOneUnit);
 
             objectWithHealth.DecreaseHealth(healthDecrease);
         }
