@@ -189,7 +189,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
             playerPosition + transform.up * height,
             transform.forward,
             out raycastHit,
-            maxDistanceToWallHorizontal
+            maxDistanceToWallHorizontal,
+            ~0,
+            QueryTriggerInteraction.Ignore
         );
         if (debug)
         {
@@ -210,7 +212,14 @@ public class ObjectsInFrontDetector : MonoBehaviour
             transform.position
             + transform.forward * (forwardOffset == 0 ? forwardOffsetFromPlayer : forwardOffset)
             + transform.up * height;
-        Physics.Raycast(originPosition, transform.up * -1, out result, maxDistance);
+        Physics.Raycast(
+            originPosition,
+            transform.up * -1,
+            out result,
+            maxDistance,
+            ~0,
+            QueryTriggerInteraction.Ignore
+        );
         if (debug)
         {
             Debug.DrawRay(originPosition, transform.up * -1);

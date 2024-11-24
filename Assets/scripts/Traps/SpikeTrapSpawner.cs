@@ -30,7 +30,7 @@ public class SpikeTrapSpawner : MonoBehaviour
                 GameObject copiedObject = Instantiate(gameObject, gameObject.transform.parent);
 
                 Vector3 tileSize = gameObject.transform
-                    .Find("tile")
+                    .Find("tiles")
                     .GetComponent<BoxCollider>()
                     .bounds.extents;
                 copiedObject.transform.Translate(

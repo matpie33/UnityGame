@@ -10,19 +10,24 @@ public class SpikeTrigger : MonoBehaviour
         spikeAnimator = spikeToTrigger.transform.Find("spike").GetComponent<Animator>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.CompareTag(Tags.PLAYER))
+        if (other.CompareTag(Tags.PLAYER))
         {
             spikeAnimator.Play("SpikeUp");
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision.collider.CompareTag(Tags.PLAYER))
+        if (other.CompareTag(Tags.PLAYER))
         {
-            spikeAnimator.Play("SpikeDown");
+            Invoke(nameof(SpikeDown), .01f);
         }
+    }
+
+    private void SpikeDown()
+    {
+        spikeAnimator.Play("SpikeDown");
     }
 }

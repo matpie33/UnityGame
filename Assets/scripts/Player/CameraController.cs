@@ -122,7 +122,8 @@ public class CameraController : Observer
             -camera.transform.forward,
             out hit,
             targetDistance,
-            obstructionLayers
+            obstructionLayers,
+            QueryTriggerInteraction.Ignore
         );
 
         if (didHit && hit.collider.gameObject != gameObject)
