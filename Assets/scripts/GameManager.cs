@@ -45,6 +45,19 @@ public class GameManager : Observer
 
         statsToValuesConverter = new StatsToValuesConverter();
         characterController = FindAnyObjectByType<CharacterController>();
+        InitializeTraps();
+    }
+
+    private void InitializeTraps()
+    {
+        foreach (
+            SpikeTrapSpawner s in FindObjectsByType<SpikeTrapSpawner>(
+                FindObjectsSortMode.InstanceID
+            )
+        )
+        {
+            s.Initialize();
+        }
     }
 
     void Update()
