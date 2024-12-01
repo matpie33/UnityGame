@@ -59,6 +59,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private float maxDistanceToGrabVertically;
 
+    [SerializeField]
+    private float feetLevelOffset;
+
     public bool obstacleFoundInFrontOfCamera { get; private set; }
 
     private EventQueue eventQueue;
@@ -79,8 +82,15 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     private void DetectWallsInForwardDirection()
     {
+        RaycastHit groundHit = CastRayVertical(0.1f, false, .2f, groundCheckerForwardOffset);
+        if (groundHit.collider != null && !isCollidingWithGround)
+        {
+            eventQueue.SubmitEvent(new EventDTO(EventType.GROUND_DETECTED, null));
+            isCollidingWithGround = true;
+        }
+
         //TODO make it possible to pass max distance to CastRayHorizontal, maybe merge these 2 methods
-        RaycastHit feetLevelHit = CastRayHorizontal(0, false);
+        RaycastHit feetLevelHit = CastRayHorizontal(0, false, feetLevelOffset);
         RaycastHit headLevelHit = CastRayHorizontal(minHeightToClimb, false);
 
         WallType currentWallType = WallType.NOT_REACHABLE;
@@ -104,16 +114,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
             forwardOffsetFromPlayerGrabLevel
         );
 
-        RaycastHit groundHit = CastRayVertical(0.1f, false, .2f, groundCheckerForwardOffset);
-
         RaycastHit stepLevelHit = CastRayVertical(minHeightToStep, false, maxDistanceToWallStep);
         RaycastHit climbLevelHit = CastRayVertical(minHeightToClimb, false, maxDistanceToWallClimb);
 
-        if (groundHit.collider != null && !isCollidingWithGround)
-        {
-            eventQueue.SubmitEvent(new EventDTO(EventType.GROUND_DETECTED, null));
-            isCollidingWithGround = true;
-        }
         if (groundHit.collider == null)
         {
             isCollidingWithGround = false;
@@ -181,12 +184,12 @@ public class ObjectsInFrontDetector : MonoBehaviour
         detectedWallType = currentWallType;
     }
 
-    private RaycastHit CastRayHorizontal(float height, Boolean debug)
+    private RaycastHit CastRayHorizontal(float height, Boolean debug, float forwardOffset = 0)
     {
         RaycastHit raycastHit;
         Vector3 playerPosition = transform.position;
         Physics.Raycast(
-            playerPosition + transform.up * height,
+            playerPosition + transform.up * height + transform.forward * forwardOffset,
             transform.forward,
             out raycastHit,
             maxDistanceToWallHorizontal,
@@ -195,7 +198,10 @@ public class ObjectsInFrontDetector : MonoBehaviour
         );
         if (debug)
         {
-            Debug.DrawRay(playerPosition + transform.up * height, transform.forward);
+            Debug.DrawRay(
+                playerPosition + transform.up * height + transform.forward * forwardOffset,
+                transform.forward
+            );
         }
         return raycastHit;
     }
@@ -222,7 +228,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         );
         if (debug)
         {
-            Debug.DrawRay(originPosition, transform.up * -1);
+            Debug.DrawRay(originPosition, transform.up * -1, Color.red);
         }
         return result;
     }
