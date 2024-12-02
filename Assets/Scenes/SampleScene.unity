@@ -19633,7 +19633,7 @@ Transform:
   m_GameObject: {fileID: 281421073}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.99885136, z: -0, w: -0.047916647}
-  m_LocalPosition: {x: -116.02, y: 37.108, z: 325.47}
+  m_LocalPosition: {x: -100.321, y: 43.7, z: 290.247}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -28008,6 +28008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 0
 --- !u!65 &406048258
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44745,7 +44746,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.287
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.z
@@ -67451,6 +67452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 0
 --- !u!65 &954201225
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -73145,7 +73147,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029834361}
   serializedVersion: 4
-  m_Mass: 20
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -73247,7 +73249,7 @@ Transform:
   m_GameObject: {fileID: 1029834361}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -101.305, y: 43.93, z: 319.98718}
+  m_LocalPosition: {x: -100.202, y: 45.21, z: 319.98718}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73265,6 +73267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 3
 --- !u!4 &1030158099
 Transform:
   m_ObjectHideFlags: 0
@@ -76284,7 +76287,7 @@ Transform:
   m_GameObject: {fileID: 1073110331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -101.27361, y: 45.92, z: 293.27106}
+  m_LocalPosition: {x: -101.27361, y: 46.88, z: 293.484}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -76302,6 +76305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 3
 --- !u!1 &1075005860
 GameObject:
   m_ObjectHideFlags: 0
@@ -80394,6 +80398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 0
 --- !u!65 &1137145068
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -99399,6 +99404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 0
 --- !u!65 &1377576801
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -140305,6 +140311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 0
 --- !u!4 &1890782516
 Transform:
   m_ObjectHideFlags: 0
