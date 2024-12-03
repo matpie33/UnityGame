@@ -18,6 +18,7 @@ public class JumpState : State
             Vector3.up * characterController.jumpForce,
             ForceMode.Impulse
         );
+        characterController.UnparentFromRotatingObject();
     }
 
     public override void FrameUpdate()

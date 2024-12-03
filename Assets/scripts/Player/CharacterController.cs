@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class CharacterController : Observer
 {
+    public bool IsPlayerParented;
+
     [SerializeField]
     public Boolean debugPlayerStates;
 
@@ -79,6 +81,9 @@ public class CharacterController : Observer
 
     [SerializeField]
     private int hpDecreaseFromFallingPerOneUnit;
+
+    [SerializeField]
+    private Vector3 offsetForLedgeGrabbing;
 
     private void Awake()
     {
@@ -224,6 +229,8 @@ public class CharacterController : Observer
                 break;
             case EventType.GROUND_DETECTED:
                 stateMachine.OnTriggerType(TriggerType.GROUND_DETECTED);
+                ParentToRotatingObject();
+                UnparentIfNotRotatingObject();
                 break;
         }
     }
@@ -266,15 +273,48 @@ public class CharacterController : Observer
             Vector3.up
         );
         Vector3 point = new Vector3(
-            wallData.horizontalCollisionPoint.x,
-            wallData.verticalCollisionPoint.y,
-            wallData.horizontalCollisionPoint.z
+            wallData.verticalCollisionPoint.x + offsetForLedgeGrabbing.x,
+            wallData.verticalCollisionPoint.y + offsetForLedgeGrabbing.y,
+            wallData.verticalCollisionPoint.z + offsetForLedgeGrabbing.z
         );
         Vector3 destination =
             point
             - Vector3.up * (2 * capsuleCollider.bounds.extents.y + upOffset)
             + transform.forward * forwardOffset;
-        transform.position = destination;
+        stateMachine.ledgeGrabState.currentPlayerPosition = destination;
+    }
+
+    public void ParentToRotatingObject()
+    {
+        if (
+            !IsPlayerParented
+            && Utils.DoesParentHaveTag(objectsInFrontDetector.detectedObject, Tags.ROTATING)
+        )
+        {
+            transform.parent.parent = objectsInFrontDetector.detectedObject.transform.parent;
+            IsPlayerParented = true;
+        }
+    }
+
+    public void UnparentIfNotRotatingObject()
+    {
+        if (
+            IsPlayerParented
+            && !Utils.DoesParentHaveTag(objectsInFrontDetector.detectedObject, Tags.ROTATING)
+        )
+        {
+            transform.parent.parent = null;
+            IsPlayerParented = false;
+        }
+    }
+
+    public void UnparentFromRotatingObject()
+    {
+        if (IsPlayerParented)
+        {
+            transform.parent.parent = null;
+            IsPlayerParented = false;
+        }
     }
 
     private void Update()

@@ -6,6 +6,7 @@ public class LedgeGrabState : State
 {
     private CharacterController characterController;
     private PlayerStateMachine stateMachine;
+    public Vector3 currentPlayerPosition;
 
     public LedgeGrabState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
@@ -17,6 +18,8 @@ public class LedgeGrabState : State
     {
         characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
+        characterController.transform.position = currentPlayerPosition;
+        characterController.ParentToRotatingObject();
     }
 
     public override void ExitState()

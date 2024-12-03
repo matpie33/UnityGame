@@ -8,6 +8,7 @@ public class ShimmyState : State
     private CharacterController characterController;
     private LedgeDirection ledgeDirection;
     private PlayerStateMachine stateMachine;
+    private Vector3 currentPlayerPosition;
 
     public ShimmyState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
@@ -27,6 +28,11 @@ public class ShimmyState : State
                 characterController.animationsManager.setAnimationToRightShimmy();
                 break;
         }
+    }
+
+    public override void ExitState()
+    {
+        stateMachine.ledgeGrabState.currentPlayerPosition = currentPlayerPosition;
     }
 
     public override void FrameUpdate()
@@ -57,6 +63,7 @@ public class ShimmyState : State
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
         }
+        currentPlayerPosition = characterController.transform.position;
     }
 
     private void RotateAroundLedge(LedgeDirection direction)

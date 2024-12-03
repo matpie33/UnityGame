@@ -17,6 +17,7 @@ public class FallingState : MovementState
         fallingHeight = characterController.transform.position.y;
         releasedLedge = null;
         playerMoving = true;
+        characterController.UnparentFromRotatingObject();
     }
 
     public override void PhysicsUpdate()
@@ -29,6 +30,7 @@ public class FallingState : MovementState
         )
         {
             characterController.animationsManager.setAnimationToLedgePrepareHold();
+            characterController.SetPlayerPositionToWallHolding();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
     }

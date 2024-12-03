@@ -85,6 +85,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         RaycastHit groundHit = CastRayVertical(0.1f, false, .2f, groundCheckerForwardOffset);
         if (groundHit.collider != null && !isCollidingWithGround)
         {
+            detectedObject = groundHit.collider.gameObject;
             eventQueue.SubmitEvent(new EventDTO(EventType.GROUND_DETECTED, null));
             isCollidingWithGround = true;
         }
