@@ -272,11 +272,11 @@ public class CharacterController : Observer
             wallData.directionFromPlayerToWall,
             Vector3.up
         );
-        Vector3 point = new Vector3(
-            wallData.verticalCollisionPoint.x + offsetForLedgeGrabbing.x,
-            wallData.verticalCollisionPoint.y + offsetForLedgeGrabbing.y,
-            wallData.verticalCollisionPoint.z + offsetForLedgeGrabbing.z
-        );
+        Vector3 point =
+            wallData.verticalCollisionPoint
+            + transform.forward * offsetForLedgeGrabbing.z
+            + transform.right * offsetForLedgeGrabbing.x
+            + transform.up * offsetForLedgeGrabbing.y;
         Vector3 destination =
             point
             - Vector3.up * (2 * capsuleCollider.bounds.extents.y + upOffset)
@@ -291,7 +291,7 @@ public class CharacterController : Observer
             && Utils.DoesParentHaveTag(objectsInFrontDetector.detectedObject, Tags.ROTATING)
         )
         {
-            transform.parent.parent = objectsInFrontDetector.detectedObject.transform.parent;
+            transform.parent = objectsInFrontDetector.detectedObject.transform.parent;
             IsPlayerParented = true;
         }
     }
@@ -303,7 +303,7 @@ public class CharacterController : Observer
             && !Utils.DoesParentHaveTag(objectsInFrontDetector.detectedObject, Tags.ROTATING)
         )
         {
-            transform.parent.parent = null;
+            transform.parent = null;
             IsPlayerParented = false;
         }
     }
@@ -312,7 +312,7 @@ public class CharacterController : Observer
     {
         if (IsPlayerParented)
         {
-            transform.parent.parent = null;
+            transform.parent = null;
             IsPlayerParented = false;
         }
     }

@@ -158,8 +158,11 @@ public class ObjectsInFrontDetector : MonoBehaviour
             obstacleFoundInFrontOfCamera = true;
             detectedObject = grabLevelHit.collider.gameObject;
             verticalCollisionPosition = grabLevelHit.point;
-            horizontalCollisionPosition = feetLevelHit.point;
-            directionFromPlayerToWall = -feetLevelHit.normal;
+            Vector3 extremePoint = grabLevelHit.collider.ClosestPoint(transform.position);
+            Vector3 directionFromPlayerToWall = extremePoint - transform.position;
+            directionFromPlayerToWall.y = 0;
+            horizontalCollisionPosition = extremePoint;
+            this.directionFromPlayerToWall = directionFromPlayerToWall;
         }
         if (feetLevelHit.collider != null && headLevelHit.collider != null)
         {

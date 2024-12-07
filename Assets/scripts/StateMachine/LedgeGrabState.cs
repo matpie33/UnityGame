@@ -18,8 +18,8 @@ public class LedgeGrabState : State
     {
         characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
-        characterController.transform.position = currentPlayerPosition;
         characterController.ParentToRotatingObject();
+        characterController.transform.position = currentPlayerPosition;
     }
 
     public override void ExitState()
