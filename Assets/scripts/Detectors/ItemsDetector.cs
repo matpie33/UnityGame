@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectDetector : MonoBehaviour
+public class ItemsDetector : MonoBehaviour
 {
     public bool objectInFrontDetected;
     private EventQueue eventQueue;

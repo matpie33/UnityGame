@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Observer
 {
@@ -62,6 +63,10 @@ public class GameManager : Observer
 
     void Update()
     {
+        if (UnityEngine.Input.GetKeyDown(ActionKeys.RELOAD_SCENE))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         objectsToDelete.Clear();
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
