@@ -28,6 +28,9 @@ public class UIUpdater : Observer
 
     private List<ObjectWithHealth> objectsWithHealth = new List<ObjectWithHealth>();
 
+    [SerializeField]
+    private GameObject checkpointSaveText;
+
     private void Awake()
     {
         playerUI = GetComponent<PlayerUI>();
@@ -35,7 +38,12 @@ public class UIUpdater : Observer
         statsAddingDTO = new StatsAddingDTO();
         characterController = FindAnyObjectByType<CharacterController>();
         addStatsIcon.SetActive(false);
-        objectsWithHealth = FindObjectsByType<ObjectWithHealth>(FindObjectsSortMode.None).ToList();
+        checkpointSaveText.SetActive(false);
+    }
+
+    private void Start()
+    {
+        objectsWithHealth = FindAnyObjectByType<GameManager>().objectsWithHealth;
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
             if (!objectWithHealth.skipHealthBar)
@@ -265,11 +273,16 @@ public class UIUpdater : Observer
                 ObjectWithHealth objectToReset = (ObjectWithHealth)eventDTO.eventData;
                 SetHealthForObject(objectToReset);
                 break;
-            case EventType.ENEMY_KILLED:
-                GameObject enemy = (GameObject)eventDTO.eventData;
-                objectsWithHealth.Remove(enemy.GetComponent<ObjectWithHealth>());
+            case EventType.CHECKPOINT_ENTERED:
+                checkpointSaveText.SetActive(true);
+                Invoke(nameof(HideCheckpointText), 3);
                 break;
         }
+    }
+
+    private void HideCheckpointText()
+    {
+        checkpointSaveText.SetActive(false);
     }
 
     private void SetHealthForObject(ObjectWithHealth objectWithHealth)

@@ -4,9 +4,16 @@ using UnityEditor;
 using UnityEngine;
 using Component = UnityEngine.Component;
 
-public class CopyComponents : EditorWindow
+[InitializeOnLoad]
+public class EditorUtilites : EditorWindow
 {
     static Component[] copiedComponents;
+
+    static EditorUtilites()
+    {
+        EditorApplication.playModeStateChanged -= CreateUuids;
+        EditorApplication.playModeStateChanged += CreateUuids;
+    }
 
     [MenuItem("GameObject/Copy all components")]
     static void Copy()
@@ -21,7 +28,6 @@ public class CopyComponents : EditorWindow
         {
             return;
         }
-        Debug.Log("paste called");
         foreach (GameObject targetGameObject in Selection.gameObjects)
         {
             if (!targetGameObject)
@@ -35,5 +41,20 @@ public class CopyComponents : EditorWindow
             }
         }
         copiedComponents = null;
+    }
+
+    static void CreateUuids(PlayModeStateChange playModeStateChange)
+    {
+        if (playModeStateChange.Equals(PlayModeStateChange.ExitingEditMode))
+        {
+            foreach (
+                ObjectWithHealth o in FindObjectsByType<ObjectWithHealth>(
+                    FindObjectsSortMode.InstanceID
+                )
+            )
+            {
+                o.SetUuid(System.Guid.NewGuid().ToString());
+            }
+        }
     }
 }

@@ -14,6 +14,11 @@ public class HealthState
         this.maxHealth = maxHealth;
     }
 
+    public void SetHealth(int health)
+    {
+        this.value = health;
+    }
+
     public void DecreaseHealth(int value)
     {
         if (this.value > 0)

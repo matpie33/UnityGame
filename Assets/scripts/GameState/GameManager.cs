@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,6 +19,13 @@ public class GameManager : Observer
 
     private EventQueue eventQueue;
 
+    private static GameStateManager gameStateManager = new GameStateManager();
+
+    private void OnApplicationQuit()
+    {
+        gameStateManager = new GameStateManager();
+    }
+
     public override void OnEvent(EventDTO eventDTO)
     {
         switch (eventDTO.eventType)
@@ -26,6 +34,13 @@ public class GameManager : Observer
                 DoGameOver();
                 break;
         }
+    }
+
+    public Vector3 LastCheckpointPosition()
+    {
+        return gameStateManager.checkpointData != null
+            ? gameStateManager.checkpointData.position
+            : Vector3.zero;
     }
 
     private void DoGameOver()
@@ -37,16 +52,47 @@ public class GameManager : Observer
     private void Awake()
     {
         objectsWithHealth = FindObjectsByType<ObjectWithHealth>(FindObjectsSortMode.None).ToList();
+        eventQueue = FindAnyObjectByType<EventQueue>();
+    }
+
+    private void ReloadScene()
+    {
+        ISet<string> killedEnemies = gameStateManager.GetKilledEnemiesUUids();
+        List<ObjectWithHealth> objectsToDelete = new List<ObjectWithHealth>();
+        foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
+        {
+            if (killedEnemies.Contains(objectWithHealth.GetUUid()))
+            {
+                Destroy(objectWithHealth.gameObject);
+                objectsToDelete.Add(objectWithHealth);
+            }
+        }
+        foreach (ObjectWithHealth o in objectsToDelete)
+        {
+            objectsWithHealth.Remove(o);
+        }
+        if (gameStateManager.checkpointData != null)
+        {
+            characterController.transform.position = gameStateManager.checkpointData.position;
+            characterController
+                .GetComponent<ObjectWithHealth>()
+                .healthState.SetHealth(gameStateManager.checkpointData.playerHealth);
+        }
     }
 
     private void Start()
     {
-        eventQueue = FindAnyObjectByType<EventQueue>();
         gameOverText.SetActive(false);
 
         statsToValuesConverter = new StatsToValuesConverter();
         characterController = FindAnyObjectByType<CharacterController>();
         InitializeTraps();
+        ReloadScene();
+    }
+
+    public void ReloadFromCheckpoint()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void InitializeTraps()
@@ -65,7 +111,7 @@ public class GameManager : Observer
     {
         if (UnityEngine.Input.GetKeyDown(ActionKeys.RELOAD_SCENE))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            ReloadFromCheckpoint();
         }
         objectsToDelete.Clear();
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
@@ -92,6 +138,7 @@ public class GameManager : Observer
                     eventQueue.SubmitEvent(
                         new EventDTO(EventType.ENEMY_KILLED, objectWithHealth.gameObject)
                     );
+                    gameStateManager.AddKilledEnemy(objectWithHealth);
                     if (objectWithHealth.GetComponentInParent<QuestObject>())
                     {
                         objectWithHealth.gameObject.SetActive(false);
@@ -145,5 +192,11 @@ public class GameManager : Observer
                 )
             );
         }
+    }
+
+    internal void SaveCheckpoint(GameObject checkpoint)
+    {
+        int playerHealth = characterController.GetComponent<ObjectWithHealth>().healthState.value;
+        gameStateManager.SaveCheckpoint(checkpoint, playerHealth);
     }
 }

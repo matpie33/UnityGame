@@ -22,6 +22,9 @@ public class ObjectWithHealth : Observer
     [field: SerializeField]
     public Stats stats { get; private set; }
 
+    [SerializeField]
+    private string uuid;
+
     private void Awake()
     {
         healthState = new HealthState(maxHealth);
@@ -50,6 +53,19 @@ public class ObjectWithHealth : Observer
                 ObjectWithHealth objectWithHealth = (ObjectWithHealth)eventDTO.eventData;
                 objectWithHealth.ResetHealth();
                 break;
+        }
+    }
+
+    public String GetUUid()
+    {
+        return uuid;
+    }
+
+    public void SetUuid(String value)
+    {
+        if (this.uuid.Length == 0)
+        {
+            this.uuid = value;
         }
     }
 }
