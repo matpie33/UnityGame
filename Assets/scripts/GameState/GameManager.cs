@@ -82,6 +82,7 @@ public class GameManager : Observer
 
     private void Start()
     {
+        Time.timeScale = 1;
         gameOverText.SetActive(false);
 
         statsToValuesConverter = new StatsToValuesConverter();
