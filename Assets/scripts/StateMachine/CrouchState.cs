@@ -29,6 +29,7 @@ public class CrouchState : MovementState
             && !characterController.canStandFromCrouchChecker.isColliding
         )
         {
+            characterController.animationsManager.setAnimationToMoving();
             stateMachine.ChangeState(stateMachine.runState);
         }
     }

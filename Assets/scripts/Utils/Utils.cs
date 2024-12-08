@@ -1,15 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Utils
 {
-    public static bool DoesParentHaveTag(GameObject gameObject, string tag)
+    public static bool DoesParentHaveComponent(GameObject gameObject, Type component)
     {
         if (gameObject.transform.parent == null)
         {
             return false;
         }
-        return gameObject.transform.parent.gameObject.CompareTag(tag);
+        return gameObject.transform.parent.gameObject.GetComponent(component) != null;
     }
 }

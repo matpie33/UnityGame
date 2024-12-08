@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CharacterController : Observer
 {
-    public bool IsPlayerParented;
+    public bool IsPlayerParented = false;
 
     [SerializeField]
     public Boolean debugPlayerStates;
@@ -288,7 +288,10 @@ public class CharacterController : Observer
     {
         if (
             !IsPlayerParented
-            && Utils.DoesParentHaveTag(objectsInFrontDetector.detectedObject, Tags.ROTATING)
+            && Utils.DoesParentHaveComponent(
+                objectsInFrontDetector.detectedObject,
+                typeof(RotatingObject)
+            )
         )
         {
             transform.parent = objectsInFrontDetector.detectedObject.transform.parent;
@@ -300,7 +303,10 @@ public class CharacterController : Observer
     {
         if (
             IsPlayerParented
-            && !Utils.DoesParentHaveTag(objectsInFrontDetector.detectedObject, Tags.ROTATING)
+            && !Utils.DoesParentHaveComponent(
+                objectsInFrontDetector.detectedObject,
+                typeof(RotatingObject)
+            )
         )
         {
             transform.parent = null;

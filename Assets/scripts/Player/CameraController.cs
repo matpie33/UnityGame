@@ -134,7 +134,10 @@ public class CameraController : Observer
         {
             modifiedDistance = Mathf.Infinity;
         }
+    }
 
+    private void LateUpdate()
+    {
         float zoom = -PlayerInputs.MouseScrollInput * zoomSpeed;
         float mouseX = PlayerInputs.MouseXInput;
         float mouseY = -PlayerInputs.MouseYInput;
