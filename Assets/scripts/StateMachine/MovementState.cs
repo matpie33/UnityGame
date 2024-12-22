@@ -60,6 +60,14 @@ public abstract class MovementState : State
                 stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
                 return;
             }
+            else if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
+            {
+                stateMachine.ChangeState(stateMachine.doingAnimationState);
+                characterController.rigidbody.isKinematic = true;
+                characterController.capsuleCollider.enabled = false;
+                characterController.animationsManager.PlayMiddleWallClimb();
+                return;
+            }
 
             if (newVelocity.magnitude == 0)
             {

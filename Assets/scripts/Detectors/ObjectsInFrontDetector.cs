@@ -152,7 +152,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedObject = climbLevelHit.collider.gameObject;
             verticalCollisionPosition = climbLevelHit.point;
         }
-        if (grabLevelHit.collider != null)
+        if (grabLevelHit.collider != null && climbLevelHit.collider == null)
         {
             currentWallType = WallType.ABOVE_HEAD;
             obstacleFoundInFrontOfCamera = true;
@@ -174,7 +174,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
             transform.position,
             -transform.forward,
             out raycastHitBehind,
-            maxDistanceToWallHorizontal
+            maxDistanceToWallHorizontal,
+            ~0,
+            QueryTriggerInteraction.Ignore
         );
 
         if (raycastHitBehind.collider != null)

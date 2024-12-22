@@ -8,11 +8,17 @@ public class TriggerDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        isColliding = true;
+        if (!other.isTrigger)
+        {
+            isColliding = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        isColliding = false;
+        if (!other.isTrigger)
+        {
+            isColliding = false;
+        }
     }
 }

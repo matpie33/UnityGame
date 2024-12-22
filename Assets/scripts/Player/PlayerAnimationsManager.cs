@@ -214,6 +214,7 @@ public class PlayerAnimationsManager
 
     internal void PlayMiddleWallClimb()
     {
+        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.middle_wall_climb));
     }
 

@@ -29,6 +29,11 @@ public class LedgeGrabState : State
 
     public override void FrameUpdate()
     {
+        if (!characterController.IsPlayerParented)
+        {
+            characterController.SetPlayerPositionToWallHolding();
+            characterController.transform.position = currentPlayerPosition;
+        }
         if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))
         {
             characterController.rigidbody.isKinematic = false;

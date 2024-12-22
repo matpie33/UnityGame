@@ -43,14 +43,6 @@ public class JumpState : State
                 characterController.SetPlayerPositionToWallHolding();
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
-            else if (
-                characterController.objectsInFrontDetector.isCollidingWithGround
-                && objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS)
-            )
-            {
-                stateMachine.ChangeState(stateMachine.doingAnimationState);
-                characterController.animationsManager.PlayMiddleWallClimb();
-            }
         }
     }
 
