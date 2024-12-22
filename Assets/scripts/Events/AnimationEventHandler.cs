@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.Playables;
 using UnityEngine.UIElements;
 
@@ -14,6 +15,9 @@ public class AnimationEventHandler : MonoBehaviour
 
     [SerializeField]
     private GameObject rightHandObject;
+
+    [SerializeField]
+    private GameObject rigTarget;
 
     private void Start()
     {
@@ -46,14 +50,21 @@ public class AnimationEventHandler : MonoBehaviour
         characterController.playerState.objectToInteractWith.Interact(this);
     }
 
-    public void PickingObjectsAttachToHand()
+    public void PickinObjectsAttachToHand()
     {
         Pickable pickableObject = (Pickable)characterController.playerState.objectToInteractWith;
-        characterController.playerBackpack.addObject(pickableObject);
 
         pickableObject.GetComponent<Collider>().enabled = false;
         pickableObject.transform.SetParent(rightHandObject.transform);
         pickableObject.transform.localPosition = new Vector3(0, 0, 0);
+    }
+
+    public void PickingObjectsSetRigTarget()
+    {
+        Pickable pickableObject = (Pickable)characterController.playerState.objectToInteractWith;
+        characterController.playerBackpack.addObject(pickableObject);
+
+        rigTarget.transform.position = pickableObject.gameObject.transform.position;
     }
 
     public void PickingObjectsDestroyObject()

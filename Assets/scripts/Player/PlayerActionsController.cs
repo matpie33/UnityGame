@@ -7,9 +7,6 @@ public class PlayerActionsController : MonoBehaviour
     private CharacterController characterController;
     private EventQueue eventQueue;
 
-    [SerializeField]
-    private GameObject rightHandTarget;
-
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -48,7 +45,6 @@ public class PlayerActionsController : MonoBehaviour
                 animationsManager.setAnimationToPickup();
                 stateMachine.ChangeState(stateMachine.doingAnimationState);
                 playerState.isPickingObject = true;
-                rightHandTarget.transform.position = objectToInteractWith.transform.position;
             }
             else if (objectToInteractWith.GetType() == typeof(LockedDoor))
             {
@@ -60,7 +56,6 @@ public class PlayerActionsController : MonoBehaviour
                 }
                 animationsManager.SetAnimationToOpenDoor();
                 stateMachine.ChangeState(stateMachine.doingAnimationState);
-                rightHandTarget.transform.position = door.lockTransform.position;
 
                 door.isOpened = true;
             }
