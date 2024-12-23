@@ -32,8 +32,10 @@ public class AnimationEventHandler : MonoBehaviour
     public void DoorOpeningSpawnKey()
     {
         LockedDoor door = (LockedDoor)characterController.playerState.objectToInteractWith;
-        characterController.playerBackpack.RemoveObject(door.requiredKey);
-        key = Instantiate(door.requiredKey.model);
+        characterController.playerBackpack.RemoveObject(
+            door.requiredKey.GetComponent<PickableDefinition>()
+        );
+        key = Instantiate(door.requiredKey);
         key.transform.parent = keyTargetPosition.transform;
         key.transform.localPosition = Vector3.zero;
         key.transform.localRotation = Quaternion.Euler(9, -52, -81);
@@ -70,7 +72,7 @@ public class AnimationEventHandler : MonoBehaviour
     public void PickingObjectsDestroyObject()
     {
         PlayerState playerState = characterController.playerState;
-        Destroy(playerState.objectToInteractWith.gameObject);
+        playerState.objectToInteractWith.gameObject.SetActive(false);
         playerState.objectToInteractWith = null;
         playerState.isPickingObject = false;
     }

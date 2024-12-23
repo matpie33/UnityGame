@@ -5,10 +5,15 @@ using UnityEngine;
 public class RotatingObject : MonoBehaviour
 {
     [SerializeField]
-    private float rotationSpeed;
+    public float rotationSpeed;
+
+    public Vector3 rotationDirection = new Vector3(0, 0, 1);
+
+    public bool ignoreTimescale;
 
     private void Update()
     {
-        transform.Rotate(new Vector3(0, 0, rotationSpeed * Time.deltaTime));
+        float value = rotationSpeed * (ignoreTimescale ? 0.5f : Time.deltaTime);
+        transform.Rotate(rotationDirection * value);
     }
 }

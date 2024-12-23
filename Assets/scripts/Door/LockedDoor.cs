@@ -6,7 +6,7 @@ using UnityEngine;
 public class LockedDoor : Interactable
 {
     [field: SerializeField]
-    public PickableDefinition requiredKey { get; private set; }
+    public GameObject requiredKey { get; private set; }
 
     [field: SerializeField]
     public Transform lockTransform { get; private set; }

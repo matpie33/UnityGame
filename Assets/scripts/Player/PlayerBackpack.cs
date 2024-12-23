@@ -17,9 +17,11 @@ public class PlayerBackpack
         return pickedObjects;
     }
 
-    public bool HasObject(PickableDefinition definition)
+    public bool HasObject(GameObject gameObject)
     {
-        return pickedObjects.Where(obj => obj.definition.Equals(definition)).Any();
+        return pickedObjects
+            .Where(obj => obj.definition.Equals(gameObject.GetComponent<PickableDefinition>()))
+            .Any();
     }
 
     public void RemoveObject(PickableDefinition definition)

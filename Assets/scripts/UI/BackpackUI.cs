@@ -46,6 +46,13 @@ public class BackpackUI : MonoBehaviour
     private CameraController cameraController;
     private GameObject player;
 
+    [SerializeField]
+    private float cameraSlerpValue;
+
+    private bool rotateCamera;
+
+    private Quaternion targetCameraRotation;
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -91,6 +98,7 @@ public class BackpackUI : MonoBehaviour
         Destroy(nextObject);
         blurringBackground.SetActive(false);
         backpackPanel.SetActive(false);
+        rotateCamera = false;
     }
 
     public void Show()
@@ -99,10 +107,8 @@ public class BackpackUI : MonoBehaviour
         cameraController.enabled = false;
         blurringBackground.SetActive(true);
         backpackPanel.SetActive(true);
-        Vector3 cameraPosition = cameraObject.transform.position;
-        cameraPosition.y = 0.3f;
-        cameraObject.transform.position = cameraPosition;
-        cameraObject.transform.rotation = Quaternion.Euler(
+        rotateCamera = true;
+        targetCameraRotation = Quaternion.Euler(
             0,
             cameraObject.transform.rotation.eulerAngles.y,
             0
@@ -112,12 +118,11 @@ public class BackpackUI : MonoBehaviour
     private void DisplayObjects()
     {
         PickableDefinition definition = currentlySelectedObject.definition;
-        GameObject model = definition.model;
-        currentObject = Instantiate(model);
-        currentObject.AddComponent<RotatingObject>();
-        currentObject.transform.parent = currentObjectPlaceholder.transform;
-        currentObject.transform.localPosition = Vector3.zero;
-        currentObject.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        currentObject = InstantiateFromDefintion(
+            currentlySelectedObject.gameObject,
+            currentObjectPlaceholder
+        );
+        currentObject.GetComponent<RotatingObject>().enabled = true;
 
         string description = definition.description;
 
@@ -126,14 +131,28 @@ public class BackpackUI : MonoBehaviour
         AddPreviousObjectOptionally();
     }
 
+    private GameObject InstantiateFromDefintion(GameObject model, GameObject parent)
+    {
+        GameObject clone = Instantiate(model);
+        clone.transform.localScale = Vector3.one * 0.25f;
+        clone.SetActive(true);
+        RotatingObject rotatingObject = clone.AddComponent<RotatingObject>();
+        rotatingObject.rotationSpeed = 1;
+        rotatingObject.ignoreTimescale = true;
+        rotatingObject.rotationDirection = new Vector3(0, 1, 0);
+        rotatingObject.enabled = false; 
+        clone.transform.parent = parent.transform;
+        clone.transform.localPosition = Vector3.zero;
+        clone.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        return clone;
+    }
+
     private void AddNextObjectOptionally()
     {
         if (IsNotLastItem())
         {
-            PickableDefinition definition = objectsInBackpack[currentObjectIndex + 1].definition;
-            nextObject = Instantiate(definition.model);
-            nextObject.transform.parent = nextObjectPlaceholder.transform;
-            nextObject.transform.localPosition = Vector3.zero;
+            Pickable pickable = objectsInBackpack[currentObjectIndex + 1];
+            nextObject = InstantiateFromDefintion(pickable.gameObject, nextObjectPlaceholder);
         }
     }
 
@@ -141,12 +160,11 @@ public class BackpackUI : MonoBehaviour
     {
         if (IsNotFirstItem())
         {
-            PickableDefinition previousDefinition = objectsInBackpack[
-                currentObjectIndex - 1
-            ].definition;
-            previousObject = Instantiate(previousDefinition.model);
-            previousObject.transform.parent = previousObjectPlaceholder.transform;
-            previousObject.transform.localPosition = Vector3.zero;
+            Pickable pickable = objectsInBackpack[currentObjectIndex - 1];
+            previousObject = InstantiateFromDefintion(
+                pickable.gameObject,
+                previousObjectPlaceholder
+            );
         }
     }
 
@@ -200,7 +218,7 @@ public class BackpackUI : MonoBehaviour
                 }
 
                 currentObject = nextOrPrevious;
-                currentObject.AddComponent<RotatingObject>();
+                currentObject.GetComponent<RotatingObject>().enabled = true;
                 moveLeft = false;
                 moveRight = false;
             }
@@ -222,6 +240,14 @@ public class BackpackUI : MonoBehaviour
         {
             MoveRight();
         }
+        if (rotateCamera)
+        {
+            cameraObject.transform.rotation = Quaternion.Lerp(
+                cameraObject.transform.rotation,
+                targetCameraRotation,
+                cameraSlerpValue
+            );
+        }
     }
 
     private void MoveLeft()
@@ -233,7 +259,7 @@ public class BackpackUI : MonoBehaviour
             descriptionTextField.text = description;
             Destroy(nextObject);
             RotatingObject rotationScript = currentObject.GetComponent<RotatingObject>();
-            Destroy(rotationScript);
+            rotationScript.enabled = false;
             moveLeft = true;
         }
     }
@@ -247,7 +273,7 @@ public class BackpackUI : MonoBehaviour
             descriptionTextField.text = description;
             Destroy(previousObject);
             RotatingObject rotatingScript = currentObject.GetComponent<RotatingObject>();
-            Destroy(rotatingScript);
+            rotatingScript.enabled = false;
             moveRight = true;
         }
     }

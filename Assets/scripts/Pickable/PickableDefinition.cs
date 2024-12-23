@@ -8,9 +8,6 @@ public class PickableDefinition : ScriptableObject
     [field: SerializeField]
     public string description { get; private set; }
 
-    [field: SerializeField]
-    public GameObject model { get; private set; }
-
     public override string ToString()
     {
         return description;
