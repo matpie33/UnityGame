@@ -134,7 +134,7 @@ public class BackpackUI : MonoBehaviour
     private GameObject InstantiateFromDefintion(GameObject model, GameObject parent)
     {
         GameObject clone = Instantiate(model);
-        clone.transform.localScale = Vector3.one * 0.25f;
+        clone.transform.localScale = Vector3.one * 1f;
         clone.SetActive(true);
         RotatingObject rotatingObject = clone.AddComponent<RotatingObject>();
         rotatingObject.rotationSpeed = 1;

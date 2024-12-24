@@ -7,7 +7,7 @@ public class Utils
 {
     public static bool DoesParentHaveComponent(GameObject gameObject, Type component)
     {
-        if (gameObject.transform.parent == null)
+        if (gameObject != null && gameObject.transform.parent == null)
         {
             return false;
         }

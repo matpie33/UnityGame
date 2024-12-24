@@ -42,7 +42,8 @@ public class FallingState : MovementState
 
     private bool IsDetectedObjectAWall()
     {
-        return characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
+        return characterController.objectsInFrontDetector.detectedObject != null &&
+            characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
             == null;
     }
 

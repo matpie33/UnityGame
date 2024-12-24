@@ -23,6 +23,11 @@ public class ShootingTrap : MonoBehaviour
         StartCoroutine(SpawnTrap());
     }
 
+    private void OnDrawGizmos() {
+        float size = .2f;
+        Gizmos.DrawSphere(transform.position, size);
+    }
+
     private IEnumerator SpawnTrap()
     {
         yield return new WaitForSeconds(initialDelay);
