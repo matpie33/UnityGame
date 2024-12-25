@@ -54,7 +54,6 @@ public abstract class MovementState : State
             if (detectedWallType.Equals(WallType.BELOW_HIPS) && IsDetectedObjectAWall())
             {
                 Vector3 verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
-                characterController.SetLegAndHipTarget(verticalCollisionPoint);
                 characterController.animationsManager.setAnimationToStepUp();
                 characterController.rigidbody.isKinematic = true;
                 stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
@@ -69,7 +68,7 @@ public abstract class MovementState : State
                 return;
             }
 
-            if (newVelocity.magnitude == 0)
+            if (newVelocity.magnitude < 0.01f)
             {
                 characterController.animationsManager.setAnimationToStandingJump();
             }
@@ -106,8 +105,7 @@ public abstract class MovementState : State
         }
 
         if (
-            characterController.obstacleDetector.obstacleInFrontDetected
-            && !characterController.objectsInFrontDetector.isOnSlope
+            characterController.objectsInFrontDetector.obstacleFoundInFrontOfCamera
             && PlayerInputs.MoveAxisForwardRaw != -1
         )
         {
@@ -115,7 +113,6 @@ public abstract class MovementState : State
         }
         else if (
             characterController.objectsInFrontDetector.obstacleBehindPlayerDetected
-            && !characterController.objectsInFrontDetector.isOnSlope
             && PlayerInputs.MoveAxisForwardRaw == -1
         )
         {

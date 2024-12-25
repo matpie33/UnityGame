@@ -115,6 +115,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToStepUp()
     {
+        animator.applyRootMotion = true;
         animator.Play(AnimationName.step_up.ToString());
     }
 

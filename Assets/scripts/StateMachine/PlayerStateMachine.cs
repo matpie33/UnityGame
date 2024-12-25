@@ -38,14 +38,14 @@ public class PlayerStateMachine : StateMachine
     private void FixedUpdate()
     {
         if (
-            fallingTime > .5f
+            !characterController.objectsInFrontDetector.isCollidingWithGround
             && currentState != doingAnimationState
             && characterController.rigidbody.linearVelocity.y < -1f
         )
         {
             ChangeState(fallingState);
             Vector3 velocity = characterController.currentVelocity;
-            if (velocity.x != 0 || velocity.z != 0)
+            if (Mathf.Abs(velocity.x) > 0.01f || (Mathf.Abs(velocity.z) > 0.01f))
             {
                 characterController.animationsManager.setAnimationToFallingFromRunning();
             }

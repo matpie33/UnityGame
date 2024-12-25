@@ -42,9 +42,9 @@ public class FallingState : MovementState
 
     private bool IsDetectedObjectAWall()
     {
-        return characterController.objectsInFrontDetector.detectedObject != null &&
-            characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
-            == null;
+        return characterController.objectsInFrontDetector.detectedObject != null
+            && characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
+                == null;
     }
 
     public override float getTargetSpeed()
@@ -63,7 +63,7 @@ public class FallingState : MovementState
                 stateMachine.ChangeState(stateMachine.runState);
                 Vector3 velo = characterController.currentVelocity;
                 Vector3 forwardVelocity = new Vector3(velo.x, 0, velo.z);
-                if (forwardVelocity.magnitude > 0)
+                if (forwardVelocity.magnitude > 0.01f)
                 {
                     characterController.animationsManager.setAnimationToLandingFromRun();
                 }
