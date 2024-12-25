@@ -68,6 +68,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public bool isCollidingWithGround;
 
+    public bool isOnSlope;
+
     private void Start()
     {
         detectedWallType = WallType.NO_WALL;
@@ -105,8 +107,10 @@ public class ObjectsInFrontDetector : MonoBehaviour
         {
             detectedWallType = WallType.NO_WALL;
             obstacleFoundInFrontOfCamera = false;
+            isOnSlope = true;
             return;
         }
+        isOnSlope = false;
 
         RaycastHit grabLevelHit = CastRayVertical(
             minHeightToGrab,
@@ -179,7 +183,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             QueryTriggerInteraction.Ignore
         );
 
-        if (raycastHitBehind.collider != null)
+        if (raycastHitBehind.collider != null && raycastHitBehind.normal.y == 0)
         {
             obstacleBehindPlayerDetected = true;
         }

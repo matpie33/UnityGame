@@ -80,13 +80,6 @@ public abstract class MovementState : State
             }
             return;
         }
-        if (
-            characterController.objectsInFrontDetector.obstacleFoundInFrontOfCamera
-            && PlayerInputs.MoveAxisForwardRaw != -1
-        )
-        {
-            newSpeed = Mathf.Lerp(newSpeed, 0, Time.deltaTime * moveSharpness);
-        }
 
         Vector3 _moveInputVector = new Vector3(
             PlayerInputs.MoveAxisRightRaw,
@@ -113,7 +106,8 @@ public abstract class MovementState : State
         }
 
         if (
-            characterController.objectsInFrontDetector.obstacleFoundInFrontOfCamera
+            characterController.obstacleDetector.obstacleInFrontDetected
+            && !characterController.objectsInFrontDetector.isOnSlope
             && PlayerInputs.MoveAxisForwardRaw != -1
         )
         {
@@ -121,6 +115,7 @@ public abstract class MovementState : State
         }
         else if (
             characterController.objectsInFrontDetector.obstacleBehindPlayerDetected
+            && !characterController.objectsInFrontDetector.isOnSlope
             && PlayerInputs.MoveAxisForwardRaw == -1
         )
         {

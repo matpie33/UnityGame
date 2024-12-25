@@ -19,6 +19,7 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode OPEN_BACKPACK = KeyCode.Escape;
     public const KeyCode DODGE_RIGHT = KeyCode.R;
     public const KeyCode DODGE_LEFT = KeyCode.Q;
+    public const KeyCode PUSH_OBJECT = KeyCode.E;
 
     public const KeyCode FORWARD_KEY = KeyCode.W;
     public const KeyCode BACKWARD_KEY = KeyCode.S;

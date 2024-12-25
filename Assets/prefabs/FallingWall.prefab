@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6296129673337399129}
   - component: {fileID: 5826652086589188637}
   - component: {fileID: 9159938102364093241}
-  - component: {fileID: 71069684276318336}
+  - component: {fileID: 1017014693399732555}
   m_Layer: 0
   m_Name: WallTrigger
   m_TagString: Untagged
@@ -63,7 +63,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &71069684276318336
+--- !u!114 &1017014693399732555
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,11 +72,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1424122956802083953}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8eed3cdda264cdd45b7fb73d4c0ffd64, type: 3}
+  m_Script: {fileID: 11500000, guid: 288eae14d65da20458921c1940b11a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   wallToTrigger: {fileID: 7643742475459068891}
-  force: 200
+  force: 0
 --- !u!1 &7741450235902185689
 GameObject:
   m_ObjectHideFlags: 0

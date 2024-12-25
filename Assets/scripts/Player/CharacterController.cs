@@ -85,12 +85,15 @@ public class CharacterController : Observer
     [SerializeField]
     private Vector3 offsetForLedgeGrabbing;
 
+    public ObstacleDetector obstacleDetector { get; private set; }
+
     private void Awake()
     {
         wallData = new WallData();
         playerBackpack = new PlayerBackpack();
         levelData = new LevelData();
 
+        obstacleDetector = GetComponentInChildren<ObstacleDetector>();
         eventQueue = FindAnyObjectByType<EventQueue>();
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
 
