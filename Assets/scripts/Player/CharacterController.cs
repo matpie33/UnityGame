@@ -202,6 +202,9 @@ public class CharacterController : Observer
     {
         switch (eventDTO.eventType)
         {
+            case EventType.STARTED_FALLING:
+                stateMachine.StartedFalling();
+                break;
             case EventType.OBJECT_NOW_IN_RANGE:
                 GameObject eventData = (GameObject)eventDTO.eventData;
                 if (eventData.GetComponent<Interactable>() != null)

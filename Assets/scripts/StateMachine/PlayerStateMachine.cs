@@ -12,8 +12,6 @@ public class PlayerStateMachine : StateMachine
 
     private CharacterController characterController;
 
-    private float fallingTime = 0;
-
     public float fallingStartingPositionY { get; private set; }
 
     private void Awake()
@@ -81,24 +79,15 @@ public class PlayerStateMachine : StateMachine
 
     private void Update()
     {
-        if (!characterController.objectsInFrontDetector.isCollidingWithGround)
-        {
-            if (fallingTime == 0)
-            {
-                fallingStartingPositionY = characterController.transform.position.y;
-            }
-
-            fallingTime += Time.deltaTime;
-        }
-        else
-        {
-            fallingTime = 0;
-        }
-
         base.BaseUpdate();
         if (characterController.debugPlayerStates)
         {
             Debug.Log(currentState);
         }
+    }
+
+    internal void StartedFalling()
+    {
+        fallingStartingPositionY = transform.position.y;
     }
 }

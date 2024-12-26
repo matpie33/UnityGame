@@ -234,6 +234,10 @@ public class ObjectsInFrontDetector : MonoBehaviour
             groundHit.collider == null || groundHit.distance > 2 * groundDetectorMaxDistanceToGround
         )
         {
+            if (isCollidingWithGround)
+            {
+                eventQueue.SubmitEvent(new EventDTO(EventType.STARTED_FALLING, null));
+            }
             isCollidingWithGround = false;
         }
     }
