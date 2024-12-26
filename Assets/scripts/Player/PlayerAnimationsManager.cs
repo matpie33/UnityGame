@@ -78,6 +78,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLedgeRotateLeft()
     {
+        animator.applyRootMotion = true;
         animator.Play(anim(AnimationName.ledge_rotate_left));
     }
 
@@ -105,6 +106,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLedgePrepareHold()
     {
+        animator.applyRootMotion = true;
         animator.CrossFade(anim(AnimationName.ledge_prepare_hold), 0.1f);
     }
 
@@ -157,7 +159,6 @@ public class PlayerAnimationsManager
 
     public void setAnimationToLedgeGrabIdle()
     {
-        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.ledge_grab_idle), 0.1f);
     }
 

@@ -40,7 +40,6 @@ public class JumpState : State
             if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD))
             {
                 characterController.animationsManager.setAnimationToLedgePrepareHold();
-                characterController.SetPlayerPositionToWallHolding();
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
         }

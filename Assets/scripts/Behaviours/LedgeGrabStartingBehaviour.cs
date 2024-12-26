@@ -9,6 +9,6 @@ public class LedgeGrabStartingBehaviour : StateMachineBehaviour
     )
     {
         CharacterController charController = FindAnyObjectByType<CharacterController>();
-        charController.SetPlayerPositionToWallHolding();
+        charController.RotatePlayerTowardsWall();
     }
 }

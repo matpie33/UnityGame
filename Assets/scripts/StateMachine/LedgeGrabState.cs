@@ -20,8 +20,13 @@ public class LedgeGrabState : State
         characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
         characterController.ParentToRotatingObject();
-        ledge = characterController.objectsInFrontDetector.detectedObject;
-        characterController.transform.position = currentPlayerPosition;
+        if (ledge == null)
+        {
+            ledge = characterController.objectsInFrontDetector.detectedObject;
+        }
+        characterController.transform.LookAt(
+            ledge.GetComponent<Collider>().ClosestPoint(characterController.transform.position)
+        );
     }
 
     public override void ExitState()
@@ -31,15 +36,10 @@ public class LedgeGrabState : State
 
     public override void FrameUpdate()
     {
-        if (ledge == null) {
+        if (ledge == null)
+        {
             stateMachine.ChangeState(stateMachine.fallingState);
             return;
-            
-        }
-        if (!characterController.IsPlayerParented)
-        {
-            characterController.SetPlayerPositionToWallHolding();
-            characterController.transform.position = currentPlayerPosition;
         }
         if (ActionKeys.IsKeyPressed(ActionKeys.LEDGE_RELEASE))
         {
@@ -49,15 +49,18 @@ public class LedgeGrabState : State
             stateMachine.fallingState.releasedLedge = characterController
                 .objectsInFrontDetector
                 .detectedObject;
+            ledge = null;
         }
         else if (ActionKeys.IsKeyPressed(ActionKeys.CLIMB_LEDGE))
         {
             if (!characterController.canClimbUpWallChecker.isColliding)
             {
                 characterController.animationsManager.setAnimationToLedgeClimbing();
+                characterController.capsuleCollider.enabled = false;
                 characterController.stateMachine.ChangeState(
                     characterController.stateMachine.doingAnimationState
                 );
+                ledge = null;
             }
         }
         else if (PlayerInputs.left.PressedDown())

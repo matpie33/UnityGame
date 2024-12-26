@@ -149,6 +149,7 @@ public class CharacterController : Observer
 
     public void ClimbingFinished()
     {
+        capsuleCollider.enabled = true;
         stateMachine.OnTriggerType(TriggerType.ANIMATION_FINISHED);
     }
 
@@ -270,7 +271,7 @@ public class CharacterController : Observer
         }
     }
 
-    public void SetPlayerPositionToWallHolding()
+    public void RotatePlayerTowardsWall()
     {
         GetWallData();
 
@@ -278,16 +279,6 @@ public class CharacterController : Observer
             wallData.directionFromPlayerToWall,
             Vector3.up
         );
-        Vector3 point =
-            wallData.verticalCollisionPoint
-            + transform.forward * offsetForLedgeGrabbing.z
-            + transform.right * offsetForLedgeGrabbing.x
-            + transform.up * offsetForLedgeGrabbing.y;
-        Vector3 destination =
-            point
-            - Vector3.up * (2 * capsuleCollider.bounds.extents.y + upOffset)
-            + transform.forward * forwardOffset;
-        stateMachine.ledgeGrabState.currentPlayerPosition = destination;
     }
 
     public void ParentToRotatingObject()
@@ -333,7 +324,7 @@ public class CharacterController : Observer
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.H))
         {
-            animationsManager.setAnimationToLedgeClimbing();
+            animationsManager.setAnimationToLedgeRotateLeft();
         }
     }
 }

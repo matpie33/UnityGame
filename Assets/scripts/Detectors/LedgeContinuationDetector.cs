@@ -44,8 +44,16 @@ public class LedgeContinuationDetector : MonoBehaviour
 
         Vector3 origin = getHorizontalCheckPoint(isLeftSide);
         Vector3 direction = characterController.transform.forward;
-
-        bool horizontalCheckHit = Physics.Raycast(origin, direction, 1f);
+        RaycastHit hit;
+        bool horizontalCheckHit = Physics.Raycast(
+            origin,
+            direction,
+            out hit,
+            1f,
+            ~0,
+            QueryTriggerInteraction.Ignore
+        );
+        Debug.DrawRay(origin, direction, Color.green);
 
         return horizontalCheckHit;
     }
@@ -67,7 +75,7 @@ public class LedgeContinuationDetector : MonoBehaviour
             + (isLeftSide ? -1 : 1) * characterController.transform.right * 0.8f;
 
         Vector3 direction = directionEndPoint - origin;
-        return !Physics.Raycast(origin, direction, 2f);
+        return !Physics.Raycast(origin, direction, 2f, ~0, QueryTriggerInteraction.Ignore);
     }
 
     private Vector3 getHorizontalCheckPoint(bool isLeftSide)

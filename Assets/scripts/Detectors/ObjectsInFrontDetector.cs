@@ -92,6 +92,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         )
         {
             detectedWallType = WallType.ABOVE_HEAD;
+            detectedObject = objectsInFrontVerticalDetector.collider.gameObject;
             verticalCollisionPosition = objectsInFrontVerticalDetector.point;
             Vector3 extremePoint = objectsInFrontVerticalDetector.collider.ClosestPoint(
                 transform.position
@@ -121,6 +122,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             else
             {
                 obstacleFoundInFrontOfCamera = true;
+                detectedObject = objectsInFrontVerticalDetector.collider.gameObject;
             }
 
             if (

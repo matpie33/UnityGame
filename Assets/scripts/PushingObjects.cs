@@ -9,9 +9,8 @@ public class PushingObjects : MonoBehaviour
     [SerializeField]
     private float pushForce;
 
-    private Vector3 deltaPosition;
-
     private GameObject pushedObject;
+    private const float ROTATION_SPEED = 1.3f;
 
     void Start()
     {
@@ -29,67 +28,59 @@ public class PushingObjects : MonoBehaviour
         {
             inPushState = !inPushState;
 
+            Rigidbody rb = objectInFront.GetComponent<Rigidbody>();
             if (inPushState)
             {
-                Rigidbody rb = objectInFront.GetComponent<Rigidbody>();
-                rb.AddForce(transform.forward * pushForce, ForceMode.Force);
-                deltaPosition = transform.position - objectInFront.transform.position;
+                rb.isKinematic = false;
                 characterController.animationsManager.SetAnimationToPush();
                 characterController.stateMachine.ChangeState(
                     characterController.stateMachine.doingAnimationState
                 );
+                rb.AddForce(transform.forward * pushForce, ForceMode.Force);
                 pushedObject = objectInFront;
+                transform.localScale = Vector3.one;
+                characterController.transform.parent = pushedObject.transform;
+                characterController.animationsManager.DisableRootMotion();
+                characterController.rigidbody.isKinematic = true;
             }
             else
             {
-                characterController.stateMachine.ChangeState(
-                    characterController.stateMachine.runState
-                );
-                characterController.animationsManager.setAnimationToMoving();
-                pushedObject = null;
+                StopPushing();
             }
         }
         if (inPushState)
         {
             Rigidbody rb = pushedObject.GetComponent<Rigidbody>();
-            if (rb.angularDamping != 0)
+            if (ActionKeys.IsKeyHold(ActionKeys.LEFT_KEY))
             {
-                rb.AddForce(
-                    transform.forward * pushForce * rb.angularDamping / 50,
-                    ForceMode.Force
-                );
+                pushedObject.transform.Rotate(new Vector3(0, ROTATION_SPEED, 0));
+                rb.linearVelocity = Vector3.zero;
+                rb.AddForce(transform.forward * pushForce, ForceMode.Force);
             }
-            transform.position = pushedObject.transform.position + deltaPosition;
+            if (ActionKeys.IsKeyHold(ActionKeys.RIGHT_KEY))
+            {
+                pushedObject.transform.Rotate(new Vector3(0, -ROTATION_SPEED, 0));
+                rb.linearVelocity = Vector3.zero;
+                rb.AddForce(transform.forward * pushForce, ForceMode.Force);
+            }
+
             if (rb.linearVelocity.y < -0.1f)
             {
-                inPushState = false;
-                characterController.stateMachine.ChangeState(
-                    characterController.stateMachine.runState
-                );
-                characterController.animationsManager.setAnimationToMoving();
+                StopPushing();
             }
         }
     }
 
-    private void FixedUpdate()
+    public void StopPushing()
     {
-        RaycastHit result;
+        GameObject objectInFront = characterController.obstacleDetector.obstacle;
+        Rigidbody rb = objectInFront.GetComponent<Rigidbody>();
+        characterController.transform.parent = null;
+        characterController.stateMachine.ChangeState(characterController.stateMachine.runState);
+        inPushState = false;
+        rb.isKinematic = true;
 
-        Physics.Raycast(
-            characterController.transform.position,
-            characterController.transform.up * -1,
-            out result,
-            1f
-        );
-
-        if (result.collider != null)
-        {
-            Vector3 vectorNormalToGround = result.normal;
-            transform.forward = Vector3.Slerp(
-                transform.forward,
-                Vector3.ProjectOnPlane(transform.forward, vectorNormalToGround),
-                0.05f
-            );
-        }
+        characterController.animationsManager.setAnimationToMoving();
+        pushedObject = null;
     }
 }

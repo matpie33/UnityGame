@@ -63,7 +63,6 @@ public class ShimmyState : State
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
         }
-        currentPlayerPosition = characterController.transform.position;
     }
 
     private void RotateAroundLedge(LedgeDirection direction)
