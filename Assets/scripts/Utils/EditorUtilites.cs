@@ -47,11 +47,7 @@ public class EditorUtilites : EditorWindow
     {
         if (playModeStateChange.Equals(PlayModeStateChange.ExitingEditMode))
         {
-            foreach (
-                ObjectWithHealth o in FindObjectsByType<ObjectWithHealth>(
-                    FindObjectsSortMode.InstanceID
-                )
-            )
+            foreach (BaseObject o in FindObjectsByType<BaseObject>(FindObjectsSortMode.InstanceID))
             {
                 o.SetUuid(System.Guid.NewGuid().ToString());
             }

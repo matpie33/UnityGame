@@ -7,10 +7,15 @@ public class Gate : Observer
     private EventQueue eventQueue;
     private Animator animator;
 
-    private void Start()
+    private void Awake()
     {
         eventQueue = FindAnyObjectByType<EventQueue>();
         animator = GetComponent<Animator>();
+    }
+
+    public void DoOpen()
+    {
+        animator.Play("Base.fence_gate_opened");
     }
 
     public void SubmitGateOpenedEvent()

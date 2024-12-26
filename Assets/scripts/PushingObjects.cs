@@ -22,6 +22,7 @@ public class PushingObjects : MonoBehaviour
         GameObject objectInFront = characterController.obstacleDetector.obstacle;
         if (
             characterController.obstacleDetector.obstacleInFrontDetected
+            && objectInFront != null
             && objectInFront.CompareTag(Tags.PUSHABLE)
             && ActionKeys.IsKeyPressed(ActionKeys.PUSH_OBJECT)
         )

@@ -4,10 +4,12 @@ using UnityEngine;
 public class GroundBreakingTrigger : MonoBehaviour
 {
     private GroundBreakingExecutor groundBreakingExecutor;
+    private Animator animator;
 
     private void Start()
     {
         groundBreakingExecutor = GetComponentInParent<GroundBreakingExecutor>();
+        animator = GetComponent<Animator>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -21,6 +23,7 @@ public class GroundBreakingTrigger : MonoBehaviour
     private void BreakGround()
     {
         groundBreakingExecutor.Execute();
-        Destroy(gameObject);
+        gameObject.GetComponent<MeshRenderer>().enabled = false;
+        animator.Play("Base Layer.BreakingGround");
     }
 }

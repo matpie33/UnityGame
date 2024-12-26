@@ -19,7 +19,7 @@ public class GameManager : Observer
 
     private EventQueue eventQueue;
 
-    private static GameStateManager gameStateManager = new GameStateManager();
+    public static GameStateManager gameStateManager = new GameStateManager();
 
     private void OnApplicationQuit()
     {
@@ -57,6 +57,7 @@ public class GameManager : Observer
 
     private void ReloadScene()
     {
+        gameStateManager.ClearNotSavedKilledEnemies();
         ISet<string> killedEnemies = gameStateManager.GetKilledEnemiesUUids();
         List<ObjectWithHealth> objectsToDelete = new List<ObjectWithHealth>();
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
@@ -77,6 +78,27 @@ public class GameManager : Observer
             characterController
                 .GetComponent<ObjectWithHealth>()
                 .healthState.SetHealth(gameStateManager.checkpointData.playerHealth);
+            foreach (string gateUUID in gameStateManager.openedGates)
+            {
+                foreach (Gate gate in FindObjectsByType<Gate>(FindObjectsSortMode.InstanceID))
+                {
+                    if (gate.GetUUid().Equals(gateUUID))
+                    {
+                        gate.DoOpen();
+                    }
+                }
+            }
+
+            foreach (string leverUUID in gameStateManager.openedLevers)
+            {
+                foreach (Lever lever in FindObjectsByType<Lever>(FindObjectsSortMode.InstanceID))
+                {
+                    if (lever.GetUUid().Equals(leverUUID))
+                    {
+                        lever.canBeInteracted = false;
+                    }
+                }
+            }
         }
     }
 
@@ -195,7 +217,7 @@ public class GameManager : Observer
         }
     }
 
-    internal void SaveCheckpoint(GameObject checkpoint)
+    internal void SaveCheckpoint(Checkpoint checkpoint)
     {
         int playerHealth = characterController.GetComponent<ObjectWithHealth>().healthState.value;
         gameStateManager.SaveCheckpoint(checkpoint, playerHealth);
