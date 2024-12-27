@@ -7,7 +7,7 @@ public class Utils
     {
         if (gameObject != null && gameObject.transform.parent == null)
         {
-            return false; //rr
+            return false;
         }
         return gameObject.transform.parent.gameObject.GetComponent(component) != null;
     }
