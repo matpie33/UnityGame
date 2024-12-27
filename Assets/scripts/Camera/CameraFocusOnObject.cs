@@ -16,15 +16,15 @@ public class CameraFocusOnObject : Observer
         switch (eventDTO.eventType)
         {
             case EventType.LEVER_OPENING:
-                GameObject interactable = (GameObject)eventDTO.eventData;
-                GetComponent<Camera>().transform.position =
-                    interactable.transform.position + interactable.transform.right * 5;
-                cam.transform.LookAt(interactable.transform.position);
+                ObjectWithPositionDTO objectWithPosition = (ObjectWithPositionDTO)
+                    eventDTO.eventData;
+                cam.transform.position = objectWithPosition.position;
+                cam.transform.rotation = objectWithPosition.rotation;
                 break;
             case EventType.LEVER_OPENED:
-                LeverOpenedEventDTO eventData = (LeverOpenedEventDTO)eventDTO.eventData;
-                GameObject gate = eventData.gate;
-                cam.transform.position = eventData.cameraPositionToSet;
+                ObjectWithPositionDTO eventData = (ObjectWithPositionDTO)eventDTO.eventData;
+                GameObject gate = eventData.gameObject;
+                cam.transform.position = eventData.position;
                 cam.transform.LookAt(gate.transform.position);
                 break;
         }

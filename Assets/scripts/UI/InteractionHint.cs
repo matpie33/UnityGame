@@ -24,7 +24,6 @@ public class InteractionHint : Observer
                 {
                     return;
                 }
-                textField.enabled = true;
 
                 if (eventObject.GetComponent<LockedDoor>() != null)
                 {
@@ -42,29 +41,34 @@ public class InteractionHint : Observer
                     {
                         textField.text = "Locked door";
                     }
+                    textField.enabled = true;
                 }
                 else if (eventObject.GetComponent<Pickable>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pickup. ";
+                    textField.enabled = true;
                 }
                 else if (eventObject.GetComponent<Pullable>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pull. ";
+                    textField.enabled = true;
                 }
                 else if (eventObject.GetComponent<GenericNpc>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to talk. ";
-                }
-                else
-                {
-                    textField.enabled = false;
+                    textField.enabled = true;
                 }
 
                 break;
 
             case EventType.OBJECT_OUT_OF_RANGE:
             case EventType.INTERACTION_DONE:
-                textField.enabled = false;
+                GameObject eveObj = (GameObject)eventDTO.eventData;
+                Interactable inter = eveObj.GetComponent<Interactable>();
+                if (inter != null)
+                {
+                    textField.enabled = false;
+                }
                 break;
             case EventType.BACKPACK_OPEN_CLOSE_EVENT:
                 bool isOpened = (bool)eventDTO.eventData;

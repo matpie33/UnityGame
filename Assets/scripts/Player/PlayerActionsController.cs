@@ -36,9 +36,20 @@ public class PlayerActionsController : MonoBehaviour
             {
                 animationsManager.setAnimationToPullLever();
                 stateMachine.ChangeState(stateMachine.doingAnimationState);
-                eventQueue.SubmitEvent(
-                    new EventDTO(EventType.LEVER_OPENING, objectToInteractWith.gameObject)
+                GameObject cameraPositionObject = (
+                    (Lever)objectToInteractWith
+                ).lookAtLeverCameraPosition;
+                ObjectWithPositionDTO objectWithPositionDTO = new ObjectWithPositionDTO(
+                    objectToInteractWith.gameObject,
+                    cameraPositionObject.transform.position,
+                    cameraPositionObject.transform.rotation
                 );
+                eventQueue.SubmitEvent(
+                    new EventDTO(EventType.LEVER_OPENING, objectWithPositionDTO)
+                );
+                AnimationEventHandler animationEventHandler =
+                    characterController.GetComponent<AnimationEventHandler>();
+                animationEventHandler.SetRightHandTargetPosition((Lever)objectToInteractWith);
             }
             else if (objectToInteractWith.GetType() == typeof(Pickable))
             {
@@ -63,7 +74,9 @@ public class PlayerActionsController : MonoBehaviour
             {
                 objectToInteractWith.Interact(gameObject);
             }
-            eventQueue.SubmitEvent(new EventDTO(EventType.INTERACTION_DONE, null));
+            eventQueue.SubmitEvent(
+                new EventDTO(EventType.INTERACTION_DONE, objectToInteractWith.gameObject)
+            );
             objectToInteractWith.canBeInteracted = false;
         }
     }

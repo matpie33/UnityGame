@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
-public class AnimationEventHandler : MonoBehaviour
+public class AnimationEventHandler : Observer
 {
     private CharacterController characterController;
     private GameObject key;
@@ -17,11 +18,38 @@ public class AnimationEventHandler : MonoBehaviour
     private GameObject rightHandObject;
 
     [SerializeField]
-    private GameObject rigTarget;
+    [FormerlySerializedAs("rigTarget")]
+    private GameObject leftHandTarget;
+
+    [SerializeField]
+    private GameObject rightHandTarget;
+
+    private GameObject rightHandTargetObject;
+
+    [SerializeField]
+    private TwoBoneIKConstraint rightHandRig;
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+    }
+
+    private void Update()
+    {
+        if (rightHandTargetObject != null)
+        {
+            rightHandTarget.transform.position = rightHandTargetObject.transform.position;
+        }
+    }
+
+    public void ClearRightHandRigWeight()
+    {
+        rightHandRig.weight = 0;
+    }
+
+    public void SetRightHandTargetPosition(Lever lever)
+    {
+        rightHandTargetObject = lever.transform.parent.Find("Armature/Bone/Target").gameObject;
     }
 
     public void JumpStart()
@@ -66,7 +94,7 @@ public class AnimationEventHandler : MonoBehaviour
         Pickable pickableObject = (Pickable)characterController.playerState.objectToInteractWith;
         characterController.playerBackpack.addObject(pickableObject);
 
-        rigTarget.transform.position = pickableObject.gameObject.transform.position;
+        leftHandTarget.transform.position = pickableObject.gameObject.transform.position;
     }
 
     public void PickingObjectsDestroyObject()
@@ -79,6 +107,15 @@ public class AnimationEventHandler : MonoBehaviour
 
     public void PullLeverStarts()
     {
-        characterController.playerState.objectToInteractWith.Interact(null);
+        Lever lever = (Lever)characterController.playerState.objectToInteractWith;
+        lever.Interact(gameObject);
+    }
+
+    public override void OnEvent(EventDTO eventDTO)
+    {
+        if (eventDTO.eventType.Equals(EventType.GATE_OPENED))
+        {
+            ClearRightHandRigWeight();
+        }
     }
 }

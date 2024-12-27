@@ -13,8 +13,11 @@ AnimatorStateMachine:
     m_State: {fileID: -1895212734430974323}
     m_Position: {x: 320, y: -30, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 2926360982183272375}
-    m_Position: {x: 325, y: 75, z: 0}
+    m_State: {fileID: 4432389604024451715}
+    m_Position: {x: 350, y: -110, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 6042900091006069849}
+    m_Position: {x: 357.15894, y: 92.84476, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -24,19 +27,7 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 2926360982183272375}
---- !u!114 &-2766108947379362816
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 892df7c589d359f469621cbe1ea0dcd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_DefaultState: {fileID: 6042900091006069849}
 --- !u!1102 &-1895212734430974323
 AnimatorState:
   serializedVersion: 6
@@ -48,9 +39,9 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: 3747270264254612089}
+  - {fileID: 7596885480524040569}
   m_StateMachineBehaviours:
-  - {fileID: -2766108947379362816}
+  - {fileID: 223158938269595168}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -59,7 +50,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 6412948b20303804f9cb2c8988e29253, type: 2}
+  m_Motion: {fileID: 8265486857847987601, guid: 8009d8ef422b10e4ab38f587fb84a287, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -87,7 +78,45 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!1102 &2926360982183272375
+--- !u!114 &223158938269595168
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1997c2b6fc483241b0b3edd2cd888ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1102 &4432389604024451715
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Opened
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 840478605312398801, guid: 8009d8ef422b10e4ab38f587fb84a287, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &6042900091006069849
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
@@ -107,13 +136,13 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b1f2c9117e897a449a2c914c8787bc99, type: 2}
+  m_Motion: {fileID: 5565616859470769111, guid: 8009d8ef422b10e4ab38f587fb84a287, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1101 &3747270264254612089
+--- !u!1101 &7596885480524040569
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,14 +151,14 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions: []
   m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: 2926360982183272375}
+  m_DstState: {fileID: 4432389604024451715}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.57142854
+  m_ExitTime: 0.68421054
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0

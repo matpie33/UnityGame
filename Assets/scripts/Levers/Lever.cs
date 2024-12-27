@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Lever : Pullable
 {
@@ -12,20 +13,24 @@ public class Lever : Pullable
     private EventQueue eventQueue;
 
     [SerializeField]
-    private Vector3 cameraPosition;
+    [FormerlySerializedAs("cameraPosition")]
+    private GameObject lookAtGateCameraPosition;
+
+    [field: SerializeField]
+    public GameObject lookAtLeverCameraPosition { get; private set; }
 
     private Checkpoint checkpoint;
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInParent<Animator>();
         eventQueue = FindAnyObjectByType<EventQueue>();
         checkpoint = FindAnyObjectByType<Checkpoint>();
     }
 
     public override void Interact(Object data)
     {
-        Invoke(nameof(SubmitEvent), 0.5f);
+        PlayAnimation();
     }
 
     private void SaveCheckpoint()
@@ -39,6 +44,19 @@ public class Lever : Pullable
         Destroy(newCheckpoint);
     }
 
+    public void SubmitEvent()
+    {
+        eventQueue.SubmitEvent(
+            new EventDTO(
+                EventType.LEVER_OPENED,
+                new ObjectWithPositionDTO(
+                    gateToOpen.gameObject,
+                    lookAtGateCameraPosition.transform.position
+                )
+            )
+        );
+    }
+
     public override void OnEvent(EventDTO eventDTO)
     {
         if (
@@ -50,13 +68,8 @@ public class Lever : Pullable
         }
     }
 
-    public void SubmitEvent()
+    public void PlayAnimation()
     {
-        eventQueue.SubmitEvent(
-            new EventDTO(
-                EventType.LEVER_OPENED,
-                new LeverOpenedEventDTO(gateToOpen.gameObject, cameraPosition)
-            )
-        );
+        animator.Play("Base Layer.open");
     }
 }

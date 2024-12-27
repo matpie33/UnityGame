@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.UI;
 
 public class CharacterController : Observer
@@ -215,7 +216,8 @@ public class CharacterController : Observer
                 }
                 break;
             case EventType.OBJECT_OUT_OF_RANGE:
-                if (!playerState.isPickingObject)
+                GameObject gameObject = (GameObject)eventDTO.eventData;
+                if (!playerState.isPickingObject && gameObject.GetComponent<Interactable>() != null)
                 {
                     playerState.objectToInteractWith = null;
                 }
@@ -317,14 +319,6 @@ public class CharacterController : Observer
         {
             transform.parent = null;
             IsPlayerParented = false;
-        }
-    }
-
-    private void Update()
-    {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.H))
-        {
-            animationsManager.setAnimationToLedgeRotateLeft();
         }
     }
 }

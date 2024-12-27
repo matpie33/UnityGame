@@ -20,7 +20,7 @@ public class ItemsDetector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_OUT_OF_RANGE, null));
+        eventQueue.SubmitEvent(new EventDTO(EventType.OBJECT_OUT_OF_RANGE, other.gameObject));
         objectInFrontDetected = false;
     }
 }
