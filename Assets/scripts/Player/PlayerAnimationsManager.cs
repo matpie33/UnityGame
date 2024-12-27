@@ -39,7 +39,9 @@ public class PlayerAnimationsManager
         ledge_prepare_hold,
         dodge_right,
         dodge_left,
-        push
+        push,
+        walk,
+        idle
     }
 
     public PlayerAnimationsManager(Animator animator)
@@ -48,9 +50,20 @@ public class PlayerAnimationsManager
         animator.applyRootMotion = false;
     }
 
+    public void SetAnimationToIdle()
+    {
+        animator.CrossFade(anim(AnimationName.idle), 0.1f);
+    }
+
     public void SetAnimationToSliding()
     {
         animator.CrossFade(anim(AnimationName.sliding), 0.1f);
+    }
+
+    public void SetAnimationToWalk()
+    {
+        animator.applyRootMotion = false;
+        animator.CrossFade(anim(AnimationName.walk), 0.1f);
     }
 
     public void SetAnimationToDodgeRight()

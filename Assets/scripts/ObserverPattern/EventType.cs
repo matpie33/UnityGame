@@ -6,6 +6,7 @@ public enum EventType
     [InspectorName(null)]
     NULL,
     PLAYER_DIED,
+    MOVEMENT_TOWARDS_TARGET_DONE,
     ENEMY_IN_RANGE,
     OBJECT_NOW_IN_RANGE,
     OBJECT_OUT_OF_RANGE,

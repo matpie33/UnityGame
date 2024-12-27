@@ -10,6 +10,9 @@ public class CharacterController : Observer
     public bool IsPlayerParented = false;
 
     [SerializeField]
+    private GameObject destination;
+
+    [SerializeField]
     public Boolean debugPlayerStates;
 
     [SerializeField]

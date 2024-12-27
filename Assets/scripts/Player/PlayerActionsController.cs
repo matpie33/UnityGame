@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class PlayerActionsController : MonoBehaviour
+public class PlayerActionsController : Observer
 {
     private CharacterController characterController;
     private EventQueue eventQueue;
@@ -11,6 +11,33 @@ public class PlayerActionsController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         eventQueue = FindAnyObjectByType<EventQueue>();
+    }
+
+    public override void OnEvent(EventDTO eventDTO)
+    {
+        if (eventDTO.eventType.Equals(EventType.MOVEMENT_TOWARDS_TARGET_DONE))
+        {
+            if (eventDTO.eventData != null && eventDTO.eventData.GetType() == typeof(Lever))
+            {
+                PlayerAnimationsManager animationsManager = characterController.animationsManager;
+                PlayerStateMachine stateMachine = characterController.stateMachine;
+                animationsManager.setAnimationToPullLever();
+                stateMachine.ChangeState(stateMachine.doingAnimationState);
+                Lever lever = (Lever)eventDTO.eventData;
+                GameObject cameraPositionObject = lever.lookAtLeverCameraPosition;
+                ObjectWithPositionDTO objectWithPositionDTO = new ObjectWithPositionDTO(
+                    lever.gameObject,
+                    cameraPositionObject.transform.position,
+                    cameraPositionObject.transform.rotation
+                );
+                AnimationEventHandler animationEventHandler =
+                    characterController.GetComponent<AnimationEventHandler>();
+                animationEventHandler.SetRightHandTargetPosition(lever);
+                eventQueue.SubmitEvent(
+                    new EventDTO(EventType.LEVER_OPENING, objectWithPositionDTO)
+                );
+            }
+        }
     }
 
     void Update()
@@ -34,22 +61,20 @@ public class PlayerActionsController : MonoBehaviour
 
             if (objectToInteractWith.GetType() == typeof(Lever))
             {
-                animationsManager.setAnimationToPullLever();
-                stateMachine.ChangeState(stateMachine.doingAnimationState);
-                GameObject cameraPositionObject = (
-                    (Lever)objectToInteractWith
-                ).lookAtLeverCameraPosition;
-                ObjectWithPositionDTO objectWithPositionDTO = new ObjectWithPositionDTO(
-                    objectToInteractWith.gameObject,
-                    cameraPositionObject.transform.position,
-                    cameraPositionObject.transform.rotation
+                Vector3 objectPositionFlat = new Vector3(
+                    objectToInteractWith.transform.position.x,
+                    transform.position.y,
+                    objectToInteractWith.transform.position.z
                 );
-                eventQueue.SubmitEvent(
-                    new EventDTO(EventType.LEVER_OPENING, objectWithPositionDTO)
-                );
-                AnimationEventHandler animationEventHandler =
-                    characterController.GetComponent<AnimationEventHandler>();
-                animationEventHandler.SetRightHandTargetPosition((Lever)objectToInteractWith);
+                Vector3 targetPosition =
+                    objectPositionFlat
+                    - Vector3.Scale(
+                        objectToInteractWith.GetComponent<Collider>().bounds.extents * 5
+                            + GetComponent<Collider>().bounds.extents,
+                        objectToInteractWith.transform.right
+                    );
+                GetComponent<PlayerMovementController>()
+                    .SetMoveToDestination(targetPosition, objectPositionFlat, objectToInteractWith);
             }
             else if (objectToInteractWith.GetType() == typeof(Pickable))
             {
