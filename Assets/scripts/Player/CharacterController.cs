@@ -324,4 +324,6 @@ public class CharacterController : Observer
             IsPlayerParented = false;
         }
     }
+
+    private void Update() { }
 }
