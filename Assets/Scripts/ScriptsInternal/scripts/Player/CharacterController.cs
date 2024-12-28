@@ -33,6 +33,8 @@ public class CharacterController : Observer
 
     public float initialHeight { get; private set; }
 
+    private Vector3 initialColliderCenter;
+
     public new Rigidbody rigidbody { get; private set; }
 
     public Vector3 currentVelocity { get; set; }
@@ -105,6 +107,7 @@ public class CharacterController : Observer
 
         playerState = new PlayerState();
         initialHeight = capsuleCollider.height;
+        initialColliderCenter = capsuleCollider.center;
 
         uiUpdater = FindAnyObjectByType<UIUpdater>();
         objectWithHealth = GetComponent<ObjectWithHealth>();
@@ -185,11 +188,11 @@ public class CharacterController : Observer
         if (toStanding)
         {
             capsuleCollider.height = initialHeight;
-            capsuleCollider.center = new Vector3(0, 0.9f, 0);
+            capsuleCollider.center = initialColliderCenter;
         }
         else
         {
-            capsuleCollider.height = 1.4f;
+            capsuleCollider.height = 1.3f;
             capsuleCollider.center = new Vector3(0, 0.6f, 0);
         }
     }
@@ -319,10 +322,5 @@ public class CharacterController : Observer
             transform.parent = null;
             IsPlayerParented = false;
         }
-    }
-
-    private void Update()
-    {
-        Debug.Log("update");
     }
 }

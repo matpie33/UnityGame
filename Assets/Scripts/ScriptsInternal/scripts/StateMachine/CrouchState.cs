@@ -8,6 +8,7 @@
     public override void EnterState()
     {
         characterController.cameraController.adjustCameraForCrouch();
+        characterController.objectsInFrontDetector.SetIsCrouching(true);
         characterController.animationsManager.setAnimationToCrouch();
         characterController.changeHeight(false);
     }
@@ -15,6 +16,7 @@
     public override void ExitState()
     {
         characterController.cameraController.adjustCameraForStanding();
+        characterController.objectsInFrontDetector.SetIsCrouching(false);
         characterController.changeHeight(true);
     }
 

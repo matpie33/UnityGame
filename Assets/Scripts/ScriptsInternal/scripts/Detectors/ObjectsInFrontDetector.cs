@@ -24,6 +24,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
     public bool isCollidingWithGround;
 
     [SerializeField]
+    private float heightAdjustmentForCrouch;
+
+    [SerializeField]
     private float verticalDetectorHeight;
 
     [SerializeField]
@@ -62,6 +65,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private float slopeMinDistanceToDetector;
 
+    private bool adjustHeightForCrouch;
+
     private void Start()
     {
         detectedWallType = WallType.NO_WALL;
@@ -75,6 +80,11 @@ public class ObjectsInFrontDetector : MonoBehaviour
         DetectGround();
         DetectObjectsBehind();
         DetectObjectsInFrontAndLedges();
+    }
+
+    public void SetIsCrouching(bool crouching)
+    {
+        adjustHeightForCrouch = crouching;
     }
 
     private void DetectLedges(RaycastHit objectsInFrontVerticalDetector)
@@ -145,17 +155,22 @@ public class ObjectsInFrontDetector : MonoBehaviour
         }
     }
 
+    private float CrouchingAdjustment()
+    {
+        return (adjustHeightForCrouch ? heightAdjustmentForCrouch : 0);
+    }
+
     private void DetectObjectsInFrontAndLedges()
     {
         RaycastHit objectsInFrontVerticalDetector = CastRayVertical(
-            verticalDetectorHeight,
+            verticalDetectorHeight - CrouchingAdjustment(),
             true,
-            verticalDetectorMaxDistance,
+            verticalDetectorMaxDistance - CrouchingAdjustment(),
             forwardOffsetVerticalDetector
         );
 
         RaycastHit objectsInFrontHorizontalDetector = CastRayHorizontal(
-            horizontalDetectorHeight,
+            horizontalDetectorHeight - CrouchingAdjustment(),
             horizontalDetectorMaxDistance,
             false,
             forwardOffsetHorizontalDetector,
@@ -174,7 +189,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
     private void DetectObjectsBehind()
     {
         RaycastHit objectsBehindHorizontalDetector = CastRayHorizontal(
-            horizontalDetectorHeight,
+            horizontalDetectorHeight - CrouchingAdjustment(),
             horizontalDetectorMaxDistance,
             false,
             -forwardOffsetHorizontalDetector,
@@ -182,9 +197,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
         );
 
         RaycastHit objectsBehindVerticalDetector = CastRayVertical(
-            verticalDetectorHeight,
+            verticalDetectorHeight - CrouchingAdjustment(),
             false,
-            verticalDetectorMaxDistance,
+            verticalDetectorMaxDistance - CrouchingAdjustment(),
             -forwardOffsetVerticalDetector
         );
 

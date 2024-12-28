@@ -23,7 +23,9 @@ public class LedgeGrabState : State
             ledge = characterController.objectsInFrontDetector.detectedObject;
         }
         characterController.transform.LookAt(
-            ledge.GetComponent<Collider>().ClosestPoint(characterController.transform.position)
+            ledge
+                .GetComponent<Collider>()
+                .ClosestPointOnBounds(characterController.transform.position)
         );
     }
 
