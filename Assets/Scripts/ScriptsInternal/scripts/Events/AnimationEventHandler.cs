@@ -25,6 +25,9 @@ public class AnimationEventHandler : Observer
     [SerializeField]
     private TwoBoneIKConstraint rightHandRig;
 
+    [SerializeField]
+    private float properStepHeight;
+
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -36,6 +39,13 @@ public class AnimationEventHandler : Observer
         {
             rightHandTarget.transform.position = rightHandTargetObject.transform.position;
         }
+    }
+
+    public void AdjustHeight()
+    {
+        transform.Translate(
+            transform.up * 2 * (characterController.currentWallHeight - properStepHeight)
+        );
     }
 
     public void ClearRightHandRigWeight()

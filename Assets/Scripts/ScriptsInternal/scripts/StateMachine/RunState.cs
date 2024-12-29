@@ -9,7 +9,7 @@
     public override void EnterState()
     {
         characterController.rigidbody.isKinematic = false;
-        characterController.animationsManager.DisableRootMotion();
+        characterController.DisableRootMotionDelayed();
     }
 
     public override void FrameUpdate()

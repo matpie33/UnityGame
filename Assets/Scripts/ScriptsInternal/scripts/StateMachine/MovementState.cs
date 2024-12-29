@@ -54,6 +54,11 @@ public abstract class MovementState : State
             if (detectedWallType.Equals(WallType.BELOW_HIPS) && IsDetectedObjectAWall())
             {
                 Vector3 verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
+
+                characterController.currentWallHeight = objectsInFrontDetector.detectedObject
+                    .GetComponent<Collider>()
+                    .bounds.extents.y;
+                characterController.GetComponent<Collider>().enabled = false;
                 characterController.animationsManager.setAnimationToStepUp();
                 characterController.rigidbody.isKinematic = true;
                 stateMachine.ChangeState(new ClimbState(characterController, stateMachine));

@@ -19,6 +19,8 @@ public class CharacterController : Observer
     public CapsuleCollider capsuleCollider { get; private set; }
     public CameraController cameraController { get; private set; }
 
+    public float currentWallHeight { get; set; }
+
     [field: SerializeField]
     public float minHeightToChangeAnimToFall;
 
@@ -322,5 +324,15 @@ public class CharacterController : Observer
             transform.parent = null;
             IsPlayerParented = false;
         }
+    }
+
+    private void DisableRootMotion()
+    {
+        animationsManager.DisableRootMotion();
+    }
+
+    internal void DisableRootMotionDelayed()
+    {
+        Invoke(nameof(DisableRootMotion), 0.5f);
     }
 }
