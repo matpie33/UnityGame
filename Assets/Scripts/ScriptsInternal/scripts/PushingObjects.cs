@@ -16,71 +16,74 @@ public class PushingObjects : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
-    void Update()
+    private void Update()
     {
-        GameObject objectInFront = characterController.obstacleDetector.obstacle;
+        if (inPushState && ActionKeys.IsKeyPressed(ActionKeys.PUSH_OBJECT))
+        {
+            inPushState = false;
+            StopPushing();
+            return;
+        }
+        GameObject objectInFront = characterController.objectsInFrontDetector.detectedObject;
         if (
-            characterController.obstacleDetector.obstacleInFrontDetected
+            characterController.objectsInFrontDetector.obstacleFoundInFrontOfCamera
             && objectInFront != null
             && objectInFront.CompareTag(Tags.PUSHABLE)
             && ActionKeys.IsKeyPressed(ActionKeys.PUSH_OBJECT)
+            && !inPushState
         )
         {
-            inPushState = !inPushState;
+            characterController.stateMachine.ChangeState(
+                characterController.stateMachine.doingAnimationState
+            );
 
-            Rigidbody rb = objectInFront.GetComponent<Rigidbody>();
-            if (inPushState)
-            {
-                rb.isKinematic = false;
-                characterController.animationsManager.SetAnimationToPush();
-                characterController.stateMachine.ChangeState(
-                    characterController.stateMachine.doingAnimationState
-                );
-                rb.AddForce(transform.forward * pushForce, ForceMode.Force);
-                pushedObject = objectInFront;
-                transform.localScale = Vector3.one;
-                characterController.transform.parent = pushedObject.transform;
-                characterController.animationsManager.DisableRootMotion();
-                characterController.rigidbody.isKinematic = true;
-            }
-            else
-            {
-                StopPushing();
-            }
+            pushedObject = objectInFront;
+            transform.localScale = Vector3.one;
+
+            characterController.animationsManager.SetAnimationToPush();
+            inPushState = true;
         }
+    }
+
+    void FixedUpdate()
+    {
+        GameObject objectInFront = characterController.objectsInFrontDetector.detectedObject;
         if (inPushState)
         {
             Rigidbody rb = pushedObject.GetComponent<Rigidbody>();
+            if (rb.linearVelocity.y < -0.1f)
+            {
+                StopPushing();
+                return;
+            }
+
+            rb.linearVelocity = transform.forward;
+
+            characterController.rigidbody.linearVelocity = rb.linearVelocity;
             if (ActionKeys.IsKeyHold(ActionKeys.LEFT_KEY))
             {
                 pushedObject.transform.Rotate(new Vector3(0, ROTATION_SPEED, 0));
                 rb.linearVelocity = Vector3.zero;
-                rb.AddForce(transform.forward * pushForce, ForceMode.Force);
             }
             if (ActionKeys.IsKeyHold(ActionKeys.RIGHT_KEY))
             {
                 pushedObject.transform.Rotate(new Vector3(0, -ROTATION_SPEED, 0));
                 rb.linearVelocity = Vector3.zero;
-                rb.AddForce(transform.forward * pushForce, ForceMode.Force);
-            }
-
-            if (rb.linearVelocity.y < -0.1f)
-            {
-                StopPushing();
             }
         }
     }
 
     public void StopPushing()
     {
+        characterController.rigidbody.linearVelocity = Vector3.zero;
         GameObject objectInFront = characterController.obstacleDetector.obstacle;
         Rigidbody rb = objectInFront.GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
         characterController.transform.parent = null;
         characterController.stateMachine.ChangeState(characterController.stateMachine.runState);
-        inPushState = false;
-        rb.isKinematic = true;
 
         characterController.animationsManager.setAnimationToMoving();
         pushedObject = null;
+        inPushState = false;
     }
 }

@@ -78,7 +78,7 @@ public class PlayerAnimationsManager
 
     public void SetAnimationToPush()
     {
-        animator.applyRootMotion = true;
+        animator.applyRootMotion = false;
         animator.CrossFade(anim(AnimationName.push), 0.1f);
     }
 
