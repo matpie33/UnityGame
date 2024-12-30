@@ -36,8 +36,11 @@ public class EditorUtilites : EditorWindow
             {
                 if (!component)
                     continue;
-                UnityEditorInternal.ComponentUtility.CopyComponent(component);
-                UnityEditorInternal.ComponentUtility.PasteComponentAsNew(targetGameObject);
+                if (targetGameObject.GetComponent(component.GetType()) == null)
+                {
+                    UnityEditorInternal.ComponentUtility.CopyComponent(component);
+                    UnityEditorInternal.ComponentUtility.PasteComponentAsNew(targetGameObject);
+                }
             }
         }
         copiedComponents = null;

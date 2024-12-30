@@ -126,6 +126,7 @@ public class CharacterController : Observer
     private void OnCollisionEnter(Collision collision)
     {
         rigidbody.isKinematic = false;
+        eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_COLLIDED, null));
     }
 
     public Stats GetStats()
