@@ -23,17 +23,6 @@ public class JumpState : State
 
     public override void FrameUpdate()
     {
-        characterController.rigidbody.linearVelocity = new Vector3(
-            characterController.currentVelocity.x,
-            characterController.rigidbody.linearVelocity.y,
-            characterController.currentVelocity.z
-        );
-        characterController.currentVelocity = Vector3.Lerp(
-            characterController.currentVelocity,
-            Vector3.zero,
-            Time.deltaTime * characterController.horizontalSpeedDecreaseTime
-        );
-
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (IsDetectedObjectAWall())
         {
@@ -54,11 +43,16 @@ public class JumpState : State
 
     public override void PhysicsUpdate()
     {
-        if (characterController.rigidbody.linearVelocity.y < 0)
-        {
-            stateMachine.ChangeState(stateMachine.fallingState);
-            return;
-        }
+        characterController.rigidbody.linearVelocity = new Vector3(
+            characterController.currentVelocity.x,
+            characterController.rigidbody.linearVelocity.y,
+            characterController.currentVelocity.z
+        );
+        characterController.currentVelocity = Vector3.Lerp(
+            characterController.currentVelocity,
+            Vector3.zero,
+            Time.deltaTime * characterController.horizontalSpeedDecreaseTime
+        );
     }
 
     public override void OnTrigger(TriggerType triggerType)

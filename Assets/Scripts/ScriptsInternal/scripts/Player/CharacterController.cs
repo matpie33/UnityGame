@@ -123,6 +123,11 @@ public class CharacterController : Observer
         Physics.gravity = new Vector3(0, -20.0F, 0);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        rigidbody.isKinematic = false;
+    }
+
     public Stats GetStats()
     {
         return objectWithHealth.stats;

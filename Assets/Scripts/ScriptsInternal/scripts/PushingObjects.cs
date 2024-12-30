@@ -47,7 +47,6 @@ public class PushingObjects : MonoBehaviour
 
     void FixedUpdate()
     {
-        GameObject objectInFront = characterController.objectsInFrontDetector.detectedObject;
         if (inPushState)
         {
             Rigidbody rb = pushedObject.GetComponent<Rigidbody>();
@@ -76,8 +75,7 @@ public class PushingObjects : MonoBehaviour
     public void StopPushing()
     {
         characterController.rigidbody.linearVelocity = Vector3.zero;
-        GameObject objectInFront = characterController.obstacleDetector.obstacle;
-        Rigidbody rb = objectInFront.GetComponent<Rigidbody>();
+        Rigidbody rb = pushedObject.GetComponent<Rigidbody>();
         rb.linearVelocity = Vector3.zero;
         characterController.transform.parent = null;
         characterController.stateMachine.ChangeState(characterController.stateMachine.runState);
