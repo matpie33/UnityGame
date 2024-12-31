@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CameraController : Observer
 {
-    [Header("Framing")]
-    [SerializeField]
     private new Camera camera = null;
 
     [SerializeField]
@@ -49,6 +47,8 @@ public class CameraController : Observer
     private Vector3 targetPosition;
 
     private float targetDistance;
+
+    private Animator animator;
 
     public Vector3 cameraPlanarDirection
     {
@@ -96,6 +96,8 @@ public class CameraController : Observer
 
     private void Start()
     {
+        camera = GetComponent<Camera>();
+        animator = GetComponent<Animator>();
         obstructionLayers = 1 << 2;
         obstructionLayers = ~obstructionLayers;
         playerPositionOffset = new Vector3(0, 0, 0);
@@ -180,10 +182,24 @@ public class CameraController : Observer
         camera.transform.rotation = newRotation;
     }
 
+    public void EnableMe()
+    {
+        animator.enabled = false;
+        enabled = true;
+    }
+
     public override void OnEvent(EventDTO eventDTO)
     {
         switch (eventDTO.eventType)
         {
+            case EventType.WALL_STARTS_FALLING:
+                AnimationClip o = (AnimationClip)eventDTO.eventData;
+                animator.enabled = true;
+
+                animator.Play(animator.GetLayerName(0) + "." + o.name);
+                enabled = false;
+                break;
+
             case EventType.LEVER_OPENING:
             case EventType.QUEST_CONFIRMATION_NEEDED:
                 enabled = false;

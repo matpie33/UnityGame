@@ -27,7 +27,6 @@ public class DisappearingGround : MonoBehaviour
 
     private IEnumerator DisappearAndAppear()
     {
-        Debug.Log(isRunning);
         yield return new WaitForSeconds(initialDelay);
         while (isRunning)
         {

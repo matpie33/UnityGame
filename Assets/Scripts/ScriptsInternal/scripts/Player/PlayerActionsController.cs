@@ -74,11 +74,16 @@ public class PlayerActionsController : Observer
                 GetComponent<PlayerMovementController>()
                     .SetMoveToDestination(targetPosition, objectPositionFlat, objectToInteractWith);
             }
+            else if (objectToInteractWith.GetType() == typeof(WallPushButton))
+            {
+                animationsManager.SetAnimationToPushTheButton();
+                stateMachine.ChangeState(stateMachine.doingAnimationState);
+            }
             else if (objectToInteractWith.GetType() == typeof(Pickable))
             {
                 animationsManager.setAnimationToPickup();
                 stateMachine.ChangeState(stateMachine.doingAnimationState);
-                playerState.isPickingObject = true; //true
+                playerState.isPickingObject = true;
             }
             else if (objectToInteractWith.GetType() == typeof(LockedDoor))
             {

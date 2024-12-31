@@ -44,8 +44,13 @@ public class AnimationEventHandler : Observer
     public void AdjustHeight()
     {
         transform.Translate(
-            transform.up * 2 * (characterController.currentWallHeight - properStepHeight)
+            transform.up * (characterController.currentWallHeight - properStepHeight)
         );
+    }
+
+    public void PushTheButton()
+    {
+        characterController.playerState.objectToInteractWith.Interact(gameObject);
     }
 
     public void ClearRightHandRigWeight()

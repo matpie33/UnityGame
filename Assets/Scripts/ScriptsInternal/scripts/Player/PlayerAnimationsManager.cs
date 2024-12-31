@@ -39,13 +39,19 @@ public class PlayerAnimationsManager
         dodge_left,
         push,
         walk,
-        idle
+        idle,
+        push_the_button
     }
 
     public PlayerAnimationsManager(Animator animator)
     {
         this.animator = animator;
         animator.applyRootMotion = false;
+    }
+
+    public void SetAnimationToPushTheButton()
+    {
+        animator.CrossFade(anim(AnimationName.push_the_button), 0.1f);
     }
 
     public void SetAnimationToIdle()

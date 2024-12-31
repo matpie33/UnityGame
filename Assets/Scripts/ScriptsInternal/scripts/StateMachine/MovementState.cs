@@ -40,9 +40,11 @@ public abstract class MovementState : State
             {
                 Vector3 verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
 
-                characterController.currentWallHeight = objectsInFrontDetector.detectedObject
-                    .GetComponent<Collider>()
-                    .bounds.extents.y;
+                Vector3 playerPosition = characterController.transform.position;
+                characterController.currentWallHeight =
+                    objectsInFrontDetector.verticalCollisionPosition.y
+                    - characterController.transform.position.y;
+
                 characterController.GetComponent<Collider>().enabled = false;
                 characterController.animationsManager.setAnimationToStepUp();
                 characterController.rigidbody.isKinematic = true;
@@ -116,7 +118,6 @@ public abstract class MovementState : State
         }
 
         newVelocity = _moveInputVector * newSpeed;
-        newVelocity = Vector3.ProjectOnPlane(newVelocity, vectorNormalToGround);
         float slerpTime = 0.2f;
         if (targetSpeed != 0)
         {
@@ -126,7 +127,7 @@ public abstract class MovementState : State
                     PlayerInputs.MoveAxisForwardRaw != 0
                         ? PlayerInputs.MoveAxisForwardRaw
                         : Mathf.Abs(PlayerInputs.MoveAxisRightRaw)
-                ) * Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround),
+                ) * _moveInputVector,
                 slerpTime
             );
         }

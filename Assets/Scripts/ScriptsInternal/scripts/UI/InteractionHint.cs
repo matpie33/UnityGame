@@ -41,6 +41,11 @@ public class InteractionHint : Observer
                     }
                     textField.enabled = true;
                 }
+                else if (eventObject.GetComponent<WallPushButton>() != null)
+                {
+                    textField.text = $"Press {ActionKeys.INTERACT} to push. ";
+                    textField.enabled = true;
+                }
                 else if (eventObject.GetComponent<Pickable>() != null)
                 {
                     textField.text = $"Press {ActionKeys.INTERACT} to pickup. ";

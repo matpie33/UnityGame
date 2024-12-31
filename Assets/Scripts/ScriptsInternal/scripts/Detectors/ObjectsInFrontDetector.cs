@@ -127,6 +127,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             {
                 obstacleFoundInFrontOfCamera = true;
                 detectedObject = objectsInFrontVerticalDetector.collider.gameObject;
+                verticalCollisionPosition = objectsInFrontVerticalDetector.point;
             }
 
             if (

@@ -101,7 +101,7 @@ public class CharacterController : Observer
         eventQueue = FindAnyObjectByType<EventQueue>();
         objectsInFrontDetector = GetComponent<ObjectsInFrontDetector>();
 
-        cameraController = GetComponent<CameraController>();
+        cameraController = FindAnyObjectByType<CameraController>();
         rigidbody = GetComponent<Rigidbody>();
         animationsManager = new PlayerAnimationsManager(GetComponent<Animator>());
         capsuleCollider = GetComponent<CapsuleCollider>();
