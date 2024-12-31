@@ -30,6 +30,7 @@ public class CubeSpawner : MonoBehaviour
         while (isRunning)
         {
             GameObject clone = Instantiate(cubePrefab);
+            cubePrefab.transform.rotation = transform.rotation;
             clone.transform.position = initialPosition.position;
             yield return new WaitForSeconds(interval);
         }

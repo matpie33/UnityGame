@@ -63,6 +63,7 @@ public class JumpState : State
                 stateMachine.ChangeState(stateMachine.runState);
                 break;
             case TriggerType.PLAYER_COLLIDED:
+                characterController.rigidbody.linearVelocity = Vector3.up * -1;
                 characterController.currentVelocity = Vector3.up * -1 * Time.deltaTime;
                 stateMachine.ChangeState(stateMachine.fallingState);
                 break;

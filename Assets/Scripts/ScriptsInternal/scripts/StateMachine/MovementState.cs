@@ -58,7 +58,9 @@ public abstract class MovementState : State
                 return;
             }
 
-            if (newVelocity.magnitude < 0.01f)
+            if (
+                newVelocity.magnitude < 0.01f || objectsInFrontDetector.obstacleFoundInFrontOfCamera
+            )
             {
                 characterController.animationsManager.setAnimationToStandingJump();
             }
