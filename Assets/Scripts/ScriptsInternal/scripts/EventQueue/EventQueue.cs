@@ -6,9 +6,12 @@ public class EventQueue : MonoBehaviour
 {
     private List<Observer> observers = new List<Observer>();
 
+    public static EventQueue INSTANCE = null;
+
     private void Awake()
     {
         observers = FindObjectsByType<Observer>(FindObjectsSortMode.None).ToList();
+        INSTANCE = this;
     }
 
     public void SubmitEvent(EventDTO eventDTO)

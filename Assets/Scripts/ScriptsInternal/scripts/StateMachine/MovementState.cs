@@ -7,7 +7,7 @@ public abstract class MovementState : State
     protected CharacterController characterController;
     private CameraController cameraController;
     protected PlayerStateMachine stateMachine;
-    private Vector3 vectorNormalToGround = Vector3.zero;
+    public Vector3 vectorNormalToGround { get; private set; }
 
     protected float targetSpeed;
     public Vector3 newVelocity { get; protected set; }
