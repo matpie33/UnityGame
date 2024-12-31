@@ -9,7 +9,7 @@
 
     public StatsAddingDTO()
     {
-        statsLeft = PlayerConstants.AMOUNT_OF_STATS_TO_ADD_PER_LEVER;
+        statsLeft = PlayerConstants.AMOUNT_OF_STATS_TO_ADD_PER_LEVEL;
     }
 
     public void Reset()
@@ -18,7 +18,7 @@
         agilityIncrease = 0;
         defenceIncrease = 0;
         healthIncrease = 0;
-        this.statsLeft = PlayerConstants.AMOUNT_OF_STATS_TO_ADD_PER_LEVER;
+        this.statsLeft = PlayerConstants.AMOUNT_OF_STATS_TO_ADD_PER_LEVEL;
     }
 
     public void IncreaseStrength()

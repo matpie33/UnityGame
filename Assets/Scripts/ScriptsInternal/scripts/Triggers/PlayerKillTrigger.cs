@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerKill : MonoBehaviour
+public class PlayerKillTrigger : MonoBehaviour
 {
     private EventQueue eventQueue;
 

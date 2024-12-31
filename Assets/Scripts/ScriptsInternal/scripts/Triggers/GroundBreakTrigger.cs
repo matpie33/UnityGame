@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BreakableWall : MonoBehaviour
+public class GroundBreakTrigger : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
