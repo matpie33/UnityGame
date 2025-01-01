@@ -35,14 +35,6 @@ public class FallingState : MovementState
     public override void FrameUpdate()
     {
         base.Move(characterController.currentVelocity.normalized);
-        if (
-            characterController.IsColliding()
-            && characterController.rigidbody.linearVelocity.magnitude == 0
-        )
-        {
-            stateMachine.ChangeState(stateMachine.runState);
-            characterController.animationsManager.setAnimationToLandingFromStand();
-        }
     }
 
     private bool IsDetectedObjectAWall()
