@@ -14,6 +14,8 @@ public class CharacterController : Observer
     [SerializeField]
     public float horizontalSpeedDecreaseTime;
 
+    private int collisionCount;
+
     public WallData wallData { get; private set; }
     public PlayerAnimationsManager animationsManager { get; private set; }
     public CapsuleCollider capsuleCollider { get; private set; }
@@ -123,10 +125,21 @@ public class CharacterController : Observer
         Physics.gravity = new Vector3(0, -20.0F, 0);
     }
 
+    public bool IsColliding()
+    {
+        return collisionCount > 0;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         rigidbody.isKinematic = false;
         eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_COLLIDED, null));
+        collisionCount++;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        collisionCount--;
     }
 
     public Stats GetStats()

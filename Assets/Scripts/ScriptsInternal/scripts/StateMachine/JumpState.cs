@@ -32,6 +32,14 @@ public class JumpState : State
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
             }
         }
+        if (
+            characterController.IsColliding()
+            && characterController.rigidbody.linearVelocity.magnitude < 0.1f
+        )
+        {
+            stateMachine.ChangeState(stateMachine.runState);
+            characterController.animationsManager.setAnimationToLandingFromStand();
+        }
     }
 
     private bool IsDetectedObjectAWall()

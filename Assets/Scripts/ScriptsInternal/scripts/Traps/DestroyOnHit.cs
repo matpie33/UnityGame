@@ -28,9 +28,12 @@ public class DestroyOnHit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        colliderComponent.isTrigger = false;
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        if (!other.isTrigger)
+        {
+            colliderComponent.isTrigger = false;
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
