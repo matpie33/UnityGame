@@ -106,6 +106,7 @@ public class Enemy : MonoBehaviour
 
             if (distance < minimumDistanceToAttack)
             {
+                navMeshAgent.ResetPath();
                 Quaternion current = gameObject.transform.rotation;
 
                 gameObject.transform.rotation = Quaternion.Lerp(
@@ -126,7 +127,7 @@ public class Enemy : MonoBehaviour
         else
         {
             wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
-            navMeshAgent.ResetPath();
+
             attackedPerson = null;
         }
     }
