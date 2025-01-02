@@ -14,7 +14,6 @@ public class FallingState : MovementState
     {
         fallingHeight = characterController.transform.position.y;
         releasedLedge = null;
-        playerMoving = true;
         characterController.UnparentFromRotatingObject();
     }
 

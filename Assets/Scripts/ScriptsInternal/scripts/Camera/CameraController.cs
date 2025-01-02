@@ -26,7 +26,10 @@ public class CameraController : Observer
     private float zoomSpeed = 10f;
 
     [SerializeField]
-    private float rotationSharpness = 25;
+    private float rotationSharpnessDuringMovement = 25;
+
+    [SerializeField]
+    private float rotationSharpnessDuringFocusOnEnemy = 5;
 
     [SerializeField]
     private float minDistance;
@@ -72,6 +75,10 @@ public class CameraController : Observer
 
     private float modifiedDistance;
 
+    private CharacterController characterController;
+
+    private float rotationSharpness;
+
     private void OnValidate()
     {
         defaultDistance = Mathf.Clamp(defaultDistance, minDistance, maxDistance);
@@ -96,6 +103,7 @@ public class CameraController : Observer
 
     private void Start()
     {
+        characterController = FindAnyObjectByType<CharacterController>();
         camera = GetComponent<Camera>();
         animator = GetComponent<Animator>();
         obstructionLayers = 1 << 2;
@@ -150,11 +158,38 @@ public class CameraController : Observer
             mouseY *= -1;
         }
 
+        Vector3 cameraLookTarget;
+
+        if (mouseX != 0)
+        {
+            characterController.rotationTarget = PlayerRotationTarget.MOVEMENT_DIRECTION;
+        }
+
+        switch (characterController.rotationTarget)
+        {
+            case PlayerRotationTarget.MOVEMENT_DIRECTION:
+                rotationSharpness = rotationSharpnessDuringMovement;
+                cameraLookTarget = playerCenterPoint.position;
+                planarDirection = Quaternion.Euler(0, mouseX, 0) * planarDirection; //rotate planar direction (mouseX degrees) around y axis
+                break;
+
+            case PlayerRotationTarget.ENEMY:
+                rotationSharpness = rotationSharpnessDuringFocusOnEnemy;
+                cameraLookTarget = characterController.objectToRotateTo.transform.position;
+                planarDirection =
+                    characterController.objectToRotateTo.transform.position
+                    - characterController.transform.position;
+                break;
+            default:
+                throw new Exception("No target to look at in camera controller.");
+        }
+
         Vector3 focusPosition =
+            cameraLookTarget + new Vector3(playerPositionOffset.x, playerPositionOffset.y, 0);
+        Vector3 cameraPosition =
             playerCenterPoint.position
             + new Vector3(playerPositionOffset.x, playerPositionOffset.y, 0);
 
-        planarDirection = Quaternion.Euler(0, mouseX, 0) * planarDirection; //rotate planar direction (mouseX degrees) around y axis
         targetDistance = Mathf.Clamp(targetDistance + zoom, minDistance, maxDistance);
         targetVerticalAngle = Mathf.Clamp(
             targetVerticalAngle + mouseY,
@@ -166,7 +201,7 @@ public class CameraController : Observer
 
         targetRotation =
             Quaternion.LookRotation(planarDirection) * Quaternion.Euler(targetVerticalAngle, 0, 0);
-        targetPosition = focusPosition - (targetRotation * Vector3.forward) * (smallestDistance);
+        targetPosition = cameraPosition - targetRotation * Vector3.forward * smallestDistance;
         newRotation = Quaternion.Lerp(
             camera.transform.rotation,
             targetRotation,

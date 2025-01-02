@@ -4,8 +4,12 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    private readonly float minimumDistanceToChase = 10;
-    private float minimumDistanceToAttack = 2;
+    [SerializeField]
+    private float minimumDistanceToChase;
+
+    [SerializeField]
+    private float minimumDistanceToAttack;
+
     private bool isAttacking;
     public bool isInRange { get; set; }
     public NavMeshAgent navMeshAgent { get; private set; }

@@ -93,6 +93,16 @@ public class CharacterController : Observer
 
     public ObstacleDetector obstacleDetector { get; private set; }
 
+    [field: SerializeField]
+    public float moveSharpness { get; private set; }
+
+    [field: SerializeField]
+    public float rotationSharpness { get; private set; }
+
+    public PlayerRotationTarget rotationTarget { get; set; }
+
+    public GameObject objectToRotateTo { get; set; }
+
     private void Awake()
     {
         wallData = new WallData();
@@ -123,6 +133,7 @@ public class CharacterController : Observer
         uiUpdater.InitializeStatsPanel(GetStats());
         uiUpdater.UpdatePlayerHealth(objectWithHealth.healthState);
         Physics.gravity = new Vector3(0, -20.0F, 0);
+        rotationTarget = PlayerRotationTarget.MOVEMENT_DIRECTION;
     }
 
     public bool IsColliding()
@@ -140,6 +151,21 @@ public class CharacterController : Observer
     private void OnCollisionExit(Collision collision)
     {
         collisionCount--;
+    }
+
+    public void FocusOnEnemy(GameObject enemy)
+    {
+        if (objectToRotateTo == null)
+        {
+            objectToRotateTo = enemy;
+            rotationTarget = PlayerRotationTarget.ENEMY;
+        }
+    }
+
+    public void ClearFocusedEnemy()
+    {
+        objectToRotateTo = null;
+        rotationTarget = PlayerRotationTarget.MOVEMENT_DIRECTION;
     }
 
     public Stats GetStats()

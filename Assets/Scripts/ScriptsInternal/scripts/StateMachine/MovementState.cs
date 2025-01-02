@@ -13,9 +13,6 @@ public abstract class MovementState : State
     public Vector3 newVelocity { get; protected set; }
     private float newSpeed;
 
-    private float moveSharpness = 10;
-    protected Boolean playerMoving = true;
-
     public MovementState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
         this.characterController = characterController;
@@ -33,44 +30,7 @@ public abstract class MovementState : State
     {
         if (this.GetType() != typeof(CrouchState) && ActionKeys.IsKeyPressed(ActionKeys.JUMP))
         {
-            ObjectsInFrontDetector objectsInFrontDetector =
-                characterController.objectsInFrontDetector;
-            WallType detectedWallType = objectsInFrontDetector.detectedWallType;
-            if (detectedWallType.Equals(WallType.BELOW_HIPS) && IsDetectedObjectAWall())
-            {
-                Vector3 verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
-
-                Vector3 playerPosition = characterController.transform.position;
-                characterController.currentWallHeight =
-                    objectsInFrontDetector.verticalCollisionPosition.y
-                    - characterController.transform.position.y;
-
-                characterController.GetComponent<Collider>().enabled = false;
-                characterController.animationsManager.setAnimationToStepUp();
-                characterController.rigidbody.isKinematic = true;
-                stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
-                return;
-            }
-            else if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
-            {
-                stateMachine.ChangeState(stateMachine.doingAnimationState);
-                characterController.rigidbody.isKinematic = true;
-                characterController.capsuleCollider.enabled = false;
-                characterController.animationsManager.PlayMiddleWallClimb();
-                return;
-            }
-
-            if (
-                newVelocity.magnitude < 0.01f || objectsInFrontDetector.obstacleFoundInFrontOfCamera
-            )
-            {
-                characterController.animationsManager.setAnimationToStandingJump();
-            }
-            else
-            {
-                characterController.animationsManager.setAnimationToRunningJump();
-                stateMachine.ChangeState(stateMachine.jumpState);
-            }
+            HandleJump();
             return;
         }
 
@@ -83,16 +43,16 @@ public abstract class MovementState : State
         Quaternion _cameraPlanarRotation = Quaternion.LookRotation(_cameraPlanarDirection);
 
         _moveInputVector = _cameraPlanarRotation * _moveInputVector;
+        if (_moveInputVector != Vector3.zero)
+        {
+            characterController.rotationTarget = PlayerRotationTarget.MOVEMENT_DIRECTION;
+        }
+        else if (characterController.objectToRotateTo != null)
+        {
+            characterController.rotationTarget = PlayerRotationTarget.ENEMY;
+        }
 
         targetSpeed = _moveInputVector == Vector3.zero ? 0 : getTargetSpeed();
-        if (targetSpeed == 0)
-        {
-            playerMoving = false;
-        }
-        else
-        {
-            playerMoving = true;
-        }
         if (PlayerInputs.MoveAxisForwardRaw == -1)
         {
             targetSpeed = 1.3f;
@@ -103,7 +63,7 @@ public abstract class MovementState : State
             && PlayerInputs.MoveAxisForwardRaw != -1
         )
         {
-            newSpeed = Mathf.Lerp(newSpeed, 0, Time.deltaTime * moveSharpness);
+            newSpeed = Mathf.Lerp(newSpeed, 0, Time.deltaTime * characterController.moveSharpness);
         }
         else if (
             characterController.objectsInFrontDetector.obstacleBehindPlayerDetected
@@ -114,23 +74,44 @@ public abstract class MovementState : State
         }
         else
         {
-            newSpeed = Mathf.Lerp(newSpeed, targetSpeed, Time.deltaTime * moveSharpness);
+            newSpeed = Mathf.Lerp(
+                newSpeed,
+                targetSpeed,
+                Time.deltaTime * characterController.moveSharpness
+            );
         }
 
         newVelocity = _moveInputVector * newSpeed;
-        float slerpTime = 0.2f;
-        if (targetSpeed != 0)
+
+        switch (characterController.rotationTarget)
         {
-            characterController.transform.forward = Vector3.Slerp(
-                characterController.transform.forward,
-                (
-                    PlayerInputs.MoveAxisForwardRaw != 0
-                        ? PlayerInputs.MoveAxisForwardRaw
-                        : Mathf.Abs(PlayerInputs.MoveAxisRightRaw)
-                ) * _moveInputVector,
-                slerpTime
-            );
+            case PlayerRotationTarget.MOVEMENT_DIRECTION:
+                if (targetSpeed != 0)
+                {
+                    characterController.transform.forward = Vector3.Slerp(
+                        characterController.transform.forward,
+                        (
+                            PlayerInputs.MoveAxisForwardRaw != 0
+                                ? PlayerInputs.MoveAxisForwardRaw
+                                : Mathf.Abs(PlayerInputs.MoveAxisRightRaw)
+                        ) * _moveInputVector,
+                        characterController.rotationSharpness * Time.deltaTime
+                    );
+                }
+                break;
+
+            case PlayerRotationTarget.ENEMY:
+                characterController.transform.rotation = Quaternion.Slerp(
+                    characterController.transform.rotation,
+                    Quaternion.LookRotation(
+                        characterController.objectToRotateTo.transform.position
+                            - characterController.transform.position
+                    ),
+                    characterController.rotationSharpness * Time.deltaTime
+                );
+                break;
         }
+
         if (PlayerInputs.MoveAxisForwardRaw != -1)
         {
             characterController.animationsManager.setRunningSpeedParameter(newSpeed);
@@ -140,6 +121,44 @@ public abstract class MovementState : State
             characterController.animationsManager.setRunningSpeedParameter(-newSpeed);
         }
         characterController.currentVelocity = newVelocity;
+    }
+
+    private void HandleJump()
+    {
+        ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
+        WallType detectedWallType = objectsInFrontDetector.detectedWallType;
+        if (detectedWallType.Equals(WallType.BELOW_HIPS) && IsDetectedObjectAWall())
+        {
+            Vector3 verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
+
+            Vector3 playerPosition = characterController.transform.position;
+            characterController.currentWallHeight =
+                objectsInFrontDetector.verticalCollisionPosition.y
+                - characterController.transform.position.y;
+
+            characterController.GetComponent<Collider>().enabled = false;
+            characterController.animationsManager.setAnimationToStepUp();
+            characterController.rigidbody.isKinematic = true;
+            stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
+        }
+        else if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
+        {
+            stateMachine.ChangeState(stateMachine.doingAnimationState);
+            characterController.rigidbody.isKinematic = true;
+            characterController.capsuleCollider.enabled = false;
+            characterController.animationsManager.PlayMiddleWallClimb();
+        }
+        else if (
+            newVelocity.magnitude < 0.01f || objectsInFrontDetector.obstacleFoundInFrontOfCamera
+        )
+        {
+            characterController.animationsManager.setAnimationToStandingJump();
+        }
+        else
+        {
+            characterController.animationsManager.setAnimationToRunningJump();
+            stateMachine.ChangeState(stateMachine.jumpState);
+        }
     }
 
     public override void PhysicsUpdate()

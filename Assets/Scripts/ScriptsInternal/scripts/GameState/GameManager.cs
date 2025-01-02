@@ -20,6 +20,12 @@ public class GameManager : Observer
 
     public static GameStateManager gameStateManager = new GameStateManager();
 
+    [SerializeField]
+    private float minDistanceToFocusOnEnemy;
+
+    [SerializeField]
+    private float maxVerticalDistanceToFocusOnEnemies;
+
     private void OnApplicationQuit()
     {
         gameStateManager = new GameStateManager();
@@ -136,6 +142,13 @@ public class GameManager : Observer
             ReloadFromCheckpoint();
         }
         objectsToDelete.Clear();
+        if (
+            characterController.objectToRotateTo != null
+            && PlayersFocusedEnemyIsTooHighOrLow(characterController.objectToRotateTo)
+        )
+        {
+            characterController.ClearFocusedEnemy();
+        }
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
             if (!objectWithHealth.gameObject.activeInHierarchy)
@@ -156,6 +169,7 @@ public class GameManager : Observer
                         characterController.AddExperience(
                             objectWithHealth.GetComponent<Enemy>().experienceValue
                         );
+                        characterController.ClearFocusedEnemy();
                     }
                     eventQueue.SubmitEvent(
                         new EventDTO(EventType.ENEMY_KILLED, objectWithHealth.gameObject)
@@ -191,6 +205,13 @@ public class GameManager : Observer
         }
     }
 
+    private bool PlayersFocusedEnemyIsTooHighOrLow(GameObject playersFocusedEnemy)
+    {
+        return Mathf.Abs(
+                playersFocusedEnemy.transform.position.y - characterController.transform.position.y
+            ) > maxVerticalDistanceToFocusOnEnemies;
+    }
+
     private void HandleEnemy(ObjectWithHealth enemyObject)
     {
         Enemy enemy = enemyObject.GetComponent<Enemy>();
@@ -202,6 +223,14 @@ public class GameManager : Observer
                     characterController.GetStats().strength
                 )
             );
+        }
+        if (
+            Vector3.Distance(characterController.transform.position, enemyObject.transform.position)
+                < minDistanceToFocusOnEnemy
+            && !PlayersFocusedEnemyIsTooHighOrLow(enemyObject.gameObject)
+        )
+        {
+            characterController.FocusOnEnemy(enemy.gameObject);
         }
         if (enemy.GetIsAttacking())
         {

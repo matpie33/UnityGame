@@ -1845,7 +1845,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f903bf7f6709834da674cedefb66886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <experienceValue>k__BackingField: 0
+  minimumDistanceToChase: 20
+  minimumDistanceToAttack: 2
+  <experienceValue>k__BackingField: 10
   <enemyType>k__BackingField: 0
 --- !u!1 &18894806
 GameObject:
@@ -3282,7 +3284,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f903bf7f6709834da674cedefb66886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <experienceValue>k__BackingField: 0
+  minimumDistanceToChase: 20
+  minimumDistanceToAttack: 2
+  <experienceValue>k__BackingField: 10
   <enemyType>k__BackingField: 0
 --- !u!1 &37584418
 GameObject:
@@ -11519,6 +11523,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uuid: b9e765f1-ef6e-4b10-ab07-d542e02a3f49
   gameOverText: {fileID: 1348044456}
+  minDistanceToFocusOnEnemy: 10
+  maxVerticalDistanceToFocusOnEnemies: 0.2
 --- !u!4 &124623010
 Transform:
   m_ObjectHideFlags: 0
@@ -21508,7 +21514,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f903bf7f6709834da674cedefb66886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <experienceValue>k__BackingField: 0
+  minimumDistanceToChase: 20
+  minimumDistanceToAttack: 2
+  <experienceValue>k__BackingField: 10
   <enemyType>k__BackingField: 0
 --- !u!4 &259314046
 Transform:
@@ -33906,7 +33914,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f903bf7f6709834da674cedefb66886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <experienceValue>k__BackingField: 0
+  minimumDistanceToChase: 20
+  minimumDistanceToAttack: 2
+  <experienceValue>k__BackingField: 10
   <enemyType>k__BackingField: 0
 --- !u!1 &423578953
 GameObject:
@@ -46447,7 +46457,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f903bf7f6709834da674cedefb66886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <experienceValue>k__BackingField: 0
+  minimumDistanceToChase: 20
+  minimumDistanceToAttack: 2
+  <experienceValue>k__BackingField: 10
   <enemyType>k__BackingField: 0
 --- !u!4 &602259988 stripped
 Transform:
@@ -51446,31 +51458,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -96.24336
+      value: -93.436676
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 35.968685
+      value: 34.760582
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1871.3312
+      value: 1875.3428
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.98110205
+      value: -0.7408307
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0000000029016998
+      value: -0.0000000012814778
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.19349124
+      value: 0.6716918
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000023362363
+      value: -0.000000003497953
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -51478,7 +51490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -2902.313
+      value: -2964.396
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -54530,6 +54542,8 @@ MonoBehaviour:
   minHeightToDecreaseHp: 6
   hpDecreaseFromFallingPerOneUnit: 10
   offsetForLedgeGrabbing: {x: 0, y: 0, z: -0.3}
+  <moveSharpness>k__BackingField: 10
+  <rotationSharpness>k__BackingField: 10
 --- !u!114 &677224133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78733,7 +78747,8 @@ MonoBehaviour:
   minVerticalAngle: -90
   maxVerticalAngle: 90
   zoomSpeed: 10
-  rotationSharpness: 25
+  rotationSharpnessDuringMovement: 25
+  rotationSharpnessDuringFocusOnEnemy: 5
   minDistance: 1
   maxDistance: 10
   defaultDistance: 3
@@ -85741,7 +85756,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f903bf7f6709834da674cedefb66886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <experienceValue>k__BackingField: 0
+  minimumDistanceToChase: 20
+  minimumDistanceToAttack: 2
+  <experienceValue>k__BackingField: 10
   <enemyType>k__BackingField: 0
 --- !u!114 &1056458677
 MonoBehaviour:
@@ -154932,7 +154949,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f903bf7f6709834da674cedefb66886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <experienceValue>k__BackingField: 0
+  minimumDistanceToChase: 20
+  minimumDistanceToAttack: 2
+  <experienceValue>k__BackingField: 10
   <enemyType>k__BackingField: 0
 --- !u!1001 &1839088131
 PrefabInstance:
