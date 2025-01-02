@@ -26,6 +26,8 @@ public class GameManager : Observer
     [SerializeField]
     private float maxVerticalDistanceToFocusOnEnemies;
 
+    private CameraController cameraController;
+
     private void OnApplicationQuit()
     {
         gameStateManager = new GameStateManager();
@@ -66,6 +68,7 @@ public class GameManager : Observer
     {
         objectsWithHealth = FindObjectsByType<ObjectWithHealth>(FindObjectsSortMode.None).ToList();
         eventQueue = FindAnyObjectByType<EventQueue>();
+        cameraController = FindAnyObjectByType<CameraController>();
     }
 
     private void ReloadScene()
@@ -73,14 +76,15 @@ public class GameManager : Observer
         gameStateManager.ClearNotSavedKilledEnemies();
         ISet<string> killedEnemies = gameStateManager.GetKilledEnemiesUUids();
         List<ObjectWithHealth> objectsToDelete = new List<ObjectWithHealth>();
-        foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
-        {
-            if (killedEnemies.Contains(objectWithHealth.GetUUid()))
+        objectsWithHealth
+            .Where(obj => killedEnemies.Contains(obj.GetUUid()))
+            .ToList()
+            .ForEach(objectWithHealth =>
             {
                 Destroy(objectWithHealth.gameObject);
                 objectsToDelete.Add(objectWithHealth);
-            }
-        }
+            });
+
         foreach (ObjectWithHealth o in objectsToDelete)
         {
             objectsWithHealth.Remove(o);
@@ -91,27 +95,15 @@ public class GameManager : Observer
             characterController
                 .GetComponent<ObjectWithHealth>()
                 .healthState.SetHealth(gameStateManager.checkpointData.playerHealth);
-            foreach (string gateUUID in gameStateManager.openedGates)
-            {
-                foreach (Gate gate in FindObjectsByType<Gate>(FindObjectsSortMode.InstanceID))
-                {
-                    if (gate.GetUUid().Equals(gateUUID))
-                    {
-                        gate.DoOpen();
-                    }
-                }
-            }
+            FindObjectsByType<Gate>(FindObjectsSortMode.InstanceID)
+                .Where(gate => gameStateManager.openedGates.Contains(gate.GetUUid()))
+                .ToList()
+                .ForEach(gate => gate.DoOpen());
 
-            foreach (string leverUUID in gameStateManager.openedLevers)
-            {
-                foreach (Lever lever in FindObjectsByType<Lever>(FindObjectsSortMode.InstanceID))
-                {
-                    if (lever.GetUUid().Equals(leverUUID))
-                    {
-                        lever.canBeInteracted = false;
-                    }
-                }
-            }
+            FindObjectsByType<Lever>(FindObjectsSortMode.InstanceID)
+                .Where(lever => gameStateManager.openedLevers.Contains(lever.GetUUid()))
+                .ToList()
+                .ForEach(lever => lever.canBeInteracted = false);
         }
     }
 
@@ -143,8 +135,88 @@ public class GameManager : Observer
         }
     }
 
+    private float DistanceBetweenEnemies(ObjectWithHealth enemy, Direction direction)
+    {
+        return Vector3.Distance(
+            characterController.objectToRotateTo.transform.position
+                + cameraController.transform.right * (int)direction,
+            enemy.transform.position
+        );
+    }
+
+    private void GetClosestEnemy(Direction direction)
+    {
+        List<ObjectWithHealth> toLeft = objectsWithHealth
+            .Where(obj => obj.GetComponent<Enemy>() != null)
+            .Where(
+                obj =>
+                    Vector3.Distance(obj.transform.position, characterController.transform.position)
+                    < minDistanceToFocusOnEnemy
+            )
+            .Where(obj => obj.gameObject != characterController.objectToRotateTo)
+            .Where(obj =>
+            {
+                float relativePositionX = characterController.transform
+                    .InverseTransformPoint(obj.transform.position)
+                    .x;
+                return direction.Equals(Direction.RIGHT)
+                    ? relativePositionX > 0
+                    : relativePositionX <= 0;
+            })
+            .ToList();
+
+        bool invert = false;
+        if (toLeft.Count == 0)
+        {
+            direction = direction.Equals(Direction.LEFT) ? Direction.RIGHT : Direction.LEFT;
+            toLeft = objectsWithHealth
+                .Where(obj => obj.GetComponent<Enemy>() != null)
+                .Where(
+                    obj =>
+                        Vector3.Distance(
+                            obj.transform.position,
+                            characterController.transform.position
+                        ) < minDistanceToFocusOnEnemy
+                )
+                .Where(obj =>
+                {
+                    float relativePositionX = characterController.transform
+                        .InverseTransformPoint(obj.transform.position)
+                        .x;
+                    return direction.Equals(Direction.RIGHT)
+                        ? relativePositionX > 0
+                        : relativePositionX <= 0;
+                })
+                .ToList();
+            invert = true;
+        }
+        ObjectWithHealth ob = toLeft.Aggregate(
+            (ob1, ob2) =>
+                DistanceBetweenEnemies(ob1, direction) < DistanceBetweenEnemies(ob2, direction)
+                    ? (invert ? ob2 : ob1)
+                    : (invert ? ob1 : ob2)
+        );
+
+        characterController.SwitchFocusOnEnemy(ob.gameObject);
+    }
+
     void Update()
     {
+        if (
+            ActionKeys.IsKeyPressed(ActionKeys.SWITCH_ENEMY_RIGHT)
+            && characterController.objectToRotateTo != null
+        )
+        {
+            GetClosestEnemy(Direction.RIGHT);
+        }
+        if (
+            ActionKeys.IsKeyPressed(ActionKeys.SWITCH_ENEMY_LEFT)
+            && characterController.objectToRotateTo != null
+        )
+        {
+            GetClosestEnemy(Direction.LEFT);
+        }
+
         if (UnityEngine.Input.GetKeyDown(ActionKeys.RELOAD_SCENE))
         {
             ReloadFromCheckpoint();

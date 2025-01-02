@@ -25,6 +25,8 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode LEFT_KEY = KeyCode.A;
     public const KeyCode RIGHT_KEY = KeyCode.D;
     public const KeyCode RELOAD_SCENE = KeyCode.F1;
+    public const KeyCode SWITCH_ENEMY_LEFT = KeyCode.Alpha1;
+    public const KeyCode SWITCH_ENEMY_RIGHT = KeyCode.Alpha3;
 
     public static bool IsKeyHold(KeyCode key)
     {

@@ -153,6 +153,12 @@ public class CharacterController : Observer
         collisionCount--;
     }
 
+    public void SwitchFocusOnEnemy(GameObject enemy)
+    {
+        objectToRotateTo = enemy;
+        rotationTarget = PlayerRotationTarget.ENEMY;
+    }
+
     public void FocusOnEnemy(GameObject enemy)
     {
         if (objectToRotateTo == null)
