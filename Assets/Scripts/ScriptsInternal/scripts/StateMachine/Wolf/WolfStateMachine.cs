@@ -5,6 +5,7 @@ public class WolfStateMachine : StateMachine
     public WolfRunState wolfRunState { get; private set; }
     public WolfIdleState wolfIdleState { get; private set; }
     public WolfBiteState wolfBiteState { get; private set; }
+    public WolfStunnedState wolfStunState { get; private set; }
 
     public WolfAnimationsManager wolfAnimationsManager { get; private set; }
 
@@ -15,6 +16,7 @@ public class WolfStateMachine : StateMachine
         wolfRunState = new WolfRunState(this);
         wolfIdleState = new WolfIdleState(this);
         wolfBiteState = new WolfBiteState(this);
+        wolfStunState = new WolfStunnedState(this);
         wolfAnimationsManager = new WolfAnimationsManager(GetComponentInParent<Animator>());
 
         currentState = wolfIdleState;

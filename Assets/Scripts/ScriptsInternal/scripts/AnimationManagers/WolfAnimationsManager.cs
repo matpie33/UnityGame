@@ -11,7 +11,8 @@ public class WolfAnimationsManager
     {
         run,
         idle,
-        bite
+        bite,
+        stunned
     }
 
     private String anim(Animation animation)
@@ -27,6 +28,11 @@ public class WolfAnimationsManager
     public void setAnimationToRun()
     {
         animator.CrossFade(anim(Animation.run), 0.03f);
+    }
+
+    public void setAnimationToStunned()
+    {
+        animator.CrossFade(anim(Animation.stunned), 0.1f);
     }
 
     public void setAnimationToIdle()

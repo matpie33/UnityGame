@@ -38,6 +38,14 @@ public class GameManager : Observer
             case EventType.PLAYER_DIED:
                 DoGameOver();
                 break;
+            case EventType.ENEMY_STUN:
+                objectsWithHealth
+                    .Where(o => o.type.Equals(TypeOfObjectWithHealth.ENEMY))
+                    .Select(o => o.GetComponent<Enemy>())
+                    .Where(o => o.isInRange)
+                    .ToList()
+                    .ForEach(u => u.Stun((float)eventDTO.eventData));
+                break;
         }
     }
 

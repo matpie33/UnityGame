@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour
     public EnemyType enemyType { get; private set; }
 
     private WolfStateMachine wolfStateMachine;
+    private bool isStunned;
 
     private void Start()
     {
@@ -68,6 +69,10 @@ public class Enemy : MonoBehaviour
     {
         float minDistance = Mathf.Infinity;
         Vector3 closestObject = Vector3.zero;
+        if (isStunned)
+        {
+            return;
+        }
         if (attackedPerson != null)
         {
             closestObject = attackedPerson.transform.position;
@@ -98,6 +103,19 @@ public class Enemy : MonoBehaviour
         }
 
         ChaseAndAttack(closestObject, minDistance);
+    }
+
+    public void Stun(float stunTime)
+    {
+        wolfStateMachine.ChangeState(wolfStateMachine.wolfStunState);
+        isStunned = true;
+        CancelInvoke(nameof(CancelStun));
+        Invoke(nameof(CancelStun), stunTime);
+    }
+
+    private void CancelStun()
+    {
+        isStunned = false;
     }
 
     private void ChaseAndAttack(Vector3 targetPosition, float distance)

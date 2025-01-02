@@ -15,11 +15,13 @@ public class PlayerAttackController : MonoBehaviour
     private Animator animator;
     private bool comboCompleted = false;
     private CharacterController characterController;
+    private EventQueue eventQueue;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
+        eventQueue = EventQueue.INSTANCE;
     }
 
     void Update()
@@ -52,6 +54,12 @@ public class PlayerAttackController : MonoBehaviour
                 characterController.stateMachine.ChangeState(
                     characterController.stateMachine.doingAnimationState
                 );
+                if (currentAttack.stunTime > 0)
+                {
+                    eventQueue.SubmitEvent(
+                        new EventDTO(EventType.ENEMY_STUN, currentAttack.stunTime)
+                    );
+                }
 
                 comboCounter++;
                 if (comboCounter >= attacksList.Count)
