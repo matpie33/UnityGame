@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6522322928410980535}
   - component: {fileID: 8809584887623161088}
   - component: {fileID: 8086858900381649450}
-  - component: {fileID: 2069041212583245062}
   - component: {fileID: -3878107741683807707}
   m_Layer: 0
   m_Name: FallingCube
@@ -30,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7875589768839200171}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0.026094276, z: -0, w: 0.9996595}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -138,19 +137,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2069041212583245062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7875589768839200171}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e743b13cfcd11e649a8592d7852da71c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forceCoefficient: 3
 --- !u!114 &-3878107741683807707
 MonoBehaviour:
   m_ObjectHideFlags: 0

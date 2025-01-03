@@ -14,6 +14,9 @@ public class CubeSpawner : MonoBehaviour
     [SerializeField]
     private Transform initialPosition;
 
+    [SerializeField]
+    private float startingForce;
+
     void Start()
     {
         isRunning = true;
@@ -30,9 +33,18 @@ public class CubeSpawner : MonoBehaviour
         while (isRunning)
         {
             GameObject clone = Instantiate(cubePrefab);
+            Rigidbody rb = clone.GetComponent<Rigidbody>();
+            rb.AddForce(transform.forward * rb.mass * startingForce, ForceMode.Impulse);
+            StartCoroutine(DestroyObject(clone));
             cubePrefab.transform.rotation = transform.rotation;
             clone.transform.position = initialPosition.position;
             yield return new WaitForSeconds(interval);
         }
+    }
+
+    private IEnumerator DestroyObject(GameObject gameObject)
+    {
+        yield return new WaitForSeconds(4);
+        Destroy(gameObject);
     }
 }
