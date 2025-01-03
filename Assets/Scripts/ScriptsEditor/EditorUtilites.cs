@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Component = UnityEngine.Component;
@@ -19,6 +19,58 @@ public class EditorUtilites : EditorWindow
     static void Copy()
     {
         copiedComponents = Selection.activeGameObject.GetComponents<Component>();
+    }
+
+    [MenuItem("GameObject/Check for duplicated components instances")]
+    static void CheckComponents()
+    {
+        List<GameObject> collidersGO = FindObjectsByType<BoxCollider>(FindObjectsSortMode.None)
+            .Select(collider => collider.gameObject)
+            .ToList();
+
+        collidersGO.ForEach(go =>
+        {
+            int boxColliders = go.GetComponents<BoxCollider>().Count();
+            if (boxColliders > 1)
+            {
+                for (int i = 0; i < boxColliders - 1; i++)
+                {
+                    DestroyImmediate(go.GetComponent<BoxCollider>());
+                }
+            }
+            int meshColliders = go.GetComponents<MeshCollider>().Count();
+            if (meshColliders > 1)
+            {
+                for (int i = 0; i < meshColliders - 1; i++)
+                {
+                    DestroyImmediate(go.GetComponent<MeshCollider>());
+                }
+            }
+            int colliders = go.GetComponents<Collider>().Count();
+            if (colliders > 1)
+            {
+                Debug.LogError("Object has many colliders of different type: " + go.name);
+            }
+        });
+    }
+
+    [MenuItem("GameObject/Update box colliders %F3")]
+    static void UpdateBoxColliders()
+    {
+        List<GameObject> collidersGO = FindObjectsByType<BoxCollider>(FindObjectsSortMode.None)
+            .Select(collider => collider.gameObject)
+            .ToList();
+
+        collidersGO.ForEach(go =>
+        {
+            if (!go.GetComponent<BoxCollider>().isTrigger)
+            {
+                go.GetComponents<BoxCollider>()
+                    .ToList()
+                    .ForEach(collider => DestroyImmediate(collider));
+                go.AddComponent<BoxCollider>();
+            }
+        });
     }
 
     [MenuItem("GameObject/Paste all components")]
