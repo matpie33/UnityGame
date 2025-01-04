@@ -165,7 +165,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
     {
         RaycastHit objectsInFrontVerticalDetector = CastRayVertical(
             verticalDetectorHeight - CrouchingAdjustment(),
-            true,
+            false,
             verticalDetectorMaxDistance - CrouchingAdjustment(),
             forwardOffsetVerticalDetector
         );

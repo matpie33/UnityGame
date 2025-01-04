@@ -54,7 +54,7 @@ public class UIUpdater : Observer
     private void CreateHealthBarForObject(ObjectWithHealth objectWithHealth)
     {
         Canvas healthBar = Instantiate(healthBarPrefab);
-        float halfHeight = objectWithHealth.GetComponent<Collider>().bounds.extents.y;
+        float halfHeight = objectWithHealth.GetComponentInChildren<Collider>().bounds.extents.y;
         TextMeshProUGUI hpTextField = findHpTextInObject(healthBar.gameObject);
         HealthState healthState = objectWithHealth.healthState;
         hpTextField.text = healthState.value + "/" + healthState.maxHealth;

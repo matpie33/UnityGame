@@ -103,6 +103,8 @@ public class CharacterController : Observer
 
     public GameObject objectToRotateTo { get; set; }
 
+    public float playerColliderRadius { get; private set; }
+
     private void Awake()
     {
         wallData = new WallData();
@@ -120,6 +122,7 @@ public class CharacterController : Observer
         ledgeContinuationDetector = GetComponent<LedgeContinuationDetector>();
 
         playerState = new PlayerState();
+        playerColliderRadius = capsuleCollider.radius;
         initialHeight = capsuleCollider.height;
         initialColliderCenter = capsuleCollider.center;
 

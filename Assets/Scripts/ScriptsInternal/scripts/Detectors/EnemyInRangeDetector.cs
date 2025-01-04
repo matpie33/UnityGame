@@ -20,6 +20,6 @@ public class EnemyInRangeDetector : MonoBehaviour
 
     private static void SetEnemyInRange(Collider collider, bool isInRange)
     {
-        collider.gameObject.GetComponent<Enemy>().isInRange = isInRange;
+        collider.gameObject.GetComponentInParent<Enemy>().isInRange = isInRange;
     }
 }

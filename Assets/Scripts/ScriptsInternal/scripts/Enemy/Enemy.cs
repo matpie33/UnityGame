@@ -7,9 +7,6 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float minimumDistanceToChase;
 
-    [SerializeField]
-    private float minimumDistanceToAttack;
-
     private bool isAttacking;
     public bool isInRange { get; set; }
     public NavMeshAgent navMeshAgent { get; private set; }
@@ -31,6 +28,15 @@ public class Enemy : MonoBehaviour
 
     private WolfStateMachine wolfStateMachine;
     private bool isStunned;
+    private float minDistanceToAttack;
+    private float offset = .3f;
+
+    [SerializeField]
+    private bool debugMinDistanceToAttack;
+
+    private Vector3 calculatedPositionForEnemy;
+
+    private EnemyAttackPositionSearch enemyAttackPositionSearch;
 
     private void Start()
     {
@@ -40,6 +46,7 @@ public class Enemy : MonoBehaviour
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         wolfStateMachine = GetComponent<WolfStateMachine>();
+        enemyAttackPositionSearch = EnemyAttackPositionSearch.INSTANCE;
     }
 
     public bool GetIsAttacking()
@@ -65,10 +72,29 @@ public class Enemy : MonoBehaviour
         isAttacking = false;
     }
 
+    private void OnDrawGizmos()
+    {
+        if (debugMinDistanceToAttack)
+        {
+            Gizmos.color = Color.gray;
+            Gizmos.DrawSphere(transform.position, minDistanceToAttack);
+        }
+    }
+
     private void Update()
     {
-        float minDistance = Mathf.Infinity;
+        float localMinDistance = Mathf.Infinity;
         Vector3 closestObject = Vector3.zero;
+
+        minDistanceToAttack =
+            Vector3
+                .Scale(
+                    GetComponentInChildren<Collider>().bounds.extents
+                        + characterController.GetComponent<Collider>().bounds.extents,
+                    transform.forward
+                )
+                .magnitude + 0;
+
         if (isStunned)
         {
             return;
@@ -76,7 +102,7 @@ public class Enemy : MonoBehaviour
         if (attackedPerson != null)
         {
             closestObject = attackedPerson.transform.position;
-            minDistance = Vector3.Distance(
+            localMinDistance = Vector3.Distance(
                 navMeshAgent.transform.position,
                 attackedPerson.transform.position
             );
@@ -89,20 +115,27 @@ public class Enemy : MonoBehaviour
                 {
                     continue;
                 }
+
                 float distance = Vector3.Distance(
                     navMeshAgent.transform.position,
                     objectWithHealth.transform.position
                 );
-                if (distance < minDistance && distance < minimumDistanceToChase)
+                if (distance < localMinDistance && distance < minimumDistanceToChase)
                 {
+                    calculatedPositionForEnemy = enemyAttackPositionSearch.GetPositionForEnemy(
+                        this
+                    );
                     closestObject = objectWithHealth.transform.position;
-                    minDistance = distance;
+                    localMinDistance = Vector3.Distance(
+                        navMeshAgent.transform.position,
+                        calculatedPositionForEnemy
+                    );
                     attackedPerson = objectWithHealth;
                 }
             }
         }
 
-        ChaseAndAttack(closestObject, minDistance);
+        ChaseAndAttack(closestObject, localMinDistance);
     }
 
     public void Stun(float stunTime)
@@ -122,13 +155,9 @@ public class Enemy : MonoBehaviour
     {
         if (distance < minimumDistanceToChase)
         {
-            navMeshAgent.SetDestination(
-                targetPosition - gameObject.transform.position.normalized * 1.5f
-            );
-
-            if (distance < minimumDistanceToAttack)
+            if (distance < minDistanceToAttack)
             {
-                navMeshAgent.ResetPath();
+                navMeshAgent.isStopped = true;
                 Quaternion current = gameObject.transform.rotation;
 
                 gameObject.transform.rotation = Quaternion.Lerp(
@@ -143,7 +172,17 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                wolfStateMachine.ChangeState(wolfStateMachine.wolfRunState);
+                navMeshAgent.isStopped = false;
+                Vector3 destination = enemyAttackPositionSearch.GetPositionForEnemy(this);
+                if (destination.Equals(Vector3.zero))
+                {
+                    wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
+                }
+                else
+                {
+                    navMeshAgent.SetDestination(destination);
+                    wolfStateMachine.ChangeState(wolfStateMachine.wolfRunState);
+                }
             }
         }
         else
