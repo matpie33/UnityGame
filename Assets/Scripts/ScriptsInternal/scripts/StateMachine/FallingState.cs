@@ -17,8 +17,9 @@ public class FallingState : MovementState
         characterController.UnparentFromRotatingObject();
     }
 
-    public override void PhysicsUpdate()
+    public override void FrameUpdate()
     {
+        base.Move(characterController.currentVelocity.normalized);
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (
             objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
@@ -29,11 +30,6 @@ public class FallingState : MovementState
             characterController.animationsManager.setAnimationToLedgePrepareHold();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
-    }
-
-    public override void FrameUpdate()
-    {
-        base.Move(characterController.currentVelocity.normalized);
     }
 
     private bool IsDetectedObjectAWall()

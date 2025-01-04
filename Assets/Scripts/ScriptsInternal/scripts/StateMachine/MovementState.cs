@@ -138,8 +138,8 @@ public abstract class MovementState : State
 
             characterController.GetComponent<Collider>().enabled = false;
             characterController.animationsManager.setAnimationToStepUp();
-            characterController.rigidbody.isKinematic = true;
             stateMachine.ChangeState(new ClimbState(characterController, stateMachine));
+            characterController.rigidbody.isKinematic = true;
         }
         else if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HIPS))
         {

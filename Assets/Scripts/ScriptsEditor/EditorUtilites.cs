@@ -65,10 +65,12 @@ public class EditorUtilites : EditorWindow
         {
             if (!go.GetComponent<BoxCollider>().isTrigger)
             {
+                PhysicsMaterial m = go.GetComponent<BoxCollider>().material;
                 go.GetComponents<BoxCollider>()
                     .ToList()
                     .ForEach(collider => DestroyImmediate(collider));
-                go.AddComponent<BoxCollider>();
+                BoxCollider boxCollider = go.AddComponent<BoxCollider>();
+                boxCollider.material = m;
             }
         });
     }
