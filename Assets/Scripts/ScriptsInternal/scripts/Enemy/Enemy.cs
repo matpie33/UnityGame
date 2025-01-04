@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -188,6 +189,7 @@ public class Enemy : MonoBehaviour
         else
         {
             wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
+            enemyAttackPositionSearch.ClearEnemyPlaceIfWasNearPlayer(this);
 
             attackedPerson = null;
         }
@@ -198,5 +200,11 @@ public class Enemy : MonoBehaviour
         transform.position = initialPosition;
         transform.rotation = initialRotation;
         attackedPerson = null;
+    }
+
+    internal void ClearPath()
+    {
+        navMeshAgent.isStopped = true;
+        wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
     }
 }

@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class EnemyAttackPositionSearch : MonoBehaviour
 {
-    [SerializeField]
-    private int maxEnemies;
-
     private Dictionary<Enemy, Direction> enemyToPositionDictionary = new();
 
     private CharacterController characterController;
@@ -54,6 +51,25 @@ public class EnemyAttackPositionSearch : MonoBehaviour
             }
             if (freeDirections.Count == 0)
             {
+                foreach (Direction direction in Enum.GetValues(typeof(Direction)))
+                {
+                    Vector3 position = GetPositionForEnemy(enemy, direction);
+                    float myDistance = Vector3.Distance(enemy.transform.position, position);
+                    Enemy other = enemyToPositionDictionary
+                        .Where(entry => entry.Value.Equals(direction))
+                        .First()
+                        .Key;
+                    float hisDistance = Vector3.Distance(other.transform.position, position);
+
+                    if (myDistance < hisDistance)
+                    {
+                        enemyToPositionDictionary.Remove(other);
+                        enemyToPositionDictionary.Add(enemy, direction);
+                        other.ClearPath();
+                        return position;
+                    }
+                }
+
                 return Vector3.zero;
             }
             float localMinDistance = Mathf.Infinity;
@@ -77,6 +93,11 @@ public class EnemyAttackPositionSearch : MonoBehaviour
     }
 
     public void EnemyGone(Enemy enemy)
+    {
+        enemyToPositionDictionary.Remove(enemy);
+    }
+
+    internal void ClearEnemyPlaceIfWasNearPlayer(Enemy enemy)
     {
         enemyToPositionDictionary.Remove(enemy);
     }
