@@ -19,16 +19,16 @@ public class Lever : Pullable
 
     private Checkpoint checkpoint;
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponentInParent<Animator>();
-        eventQueue = FindAnyObjectByType<EventQueue>();
+        eventQueue = EventQueue.INSTANCE;
         checkpoint = FindAnyObjectByType<Checkpoint>();
     }
 
     public override void Interact(Object data)
     {
-        PlayAnimation();
+        PlayOpenAnimation();
     }
 
     private void SaveCheckpoint()
@@ -66,8 +66,13 @@ public class Lever : Pullable
         }
     }
 
-    public void PlayAnimation()
+    public void PlayOpenAnimation()
     {
         animator.Play("Base Layer.open");
+    }
+
+    public void SwitchToOpenedAnimation()
+    {
+        animator.Play("Base Layer.Opened");
     }
 }

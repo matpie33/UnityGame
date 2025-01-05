@@ -105,7 +105,11 @@ public class GameManager : Observer
             FindObjectsByType<Lever>(FindObjectsSortMode.InstanceID)
                 .Where(lever => gameStateManager.openedLevers.Contains(lever.GetUUid()))
                 .ToList()
-                .ForEach(lever => lever.canBeInteracted = false);
+                .ForEach(lever =>
+                {
+                    lever.canBeInteracted = false;
+                    lever.SwitchToOpenedAnimation();
+                });
         }
     }
 
