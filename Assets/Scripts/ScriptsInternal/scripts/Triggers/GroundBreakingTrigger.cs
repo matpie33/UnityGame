@@ -4,6 +4,7 @@ public class GroundBreakingTrigger : MonoBehaviour
 {
     private GroundBreakingExecutor groundBreakingExecutor;
     private Animator animator;
+    private bool wasTriggered;
 
     private void Start()
     {
@@ -13,8 +14,9 @@ public class GroundBreakingTrigger : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag(Tags.PLAYER))
+        if (!wasTriggered && collision.collider.CompareTag(Tags.PLAYER))
         {
+            wasTriggered = true;
             Invoke(nameof(BreakGround), .3f);
         }
     }

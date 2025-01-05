@@ -21,15 +21,6 @@ public class CameraFocusOnObject : Observer
     {
         switch (eventDTO.eventType)
         {
-            case EventType.FALLING_BALL_TRIGGERED:
-                cameraController.enabled = false;
-                GameObject gameObject = (GameObject)eventDTO.eventData;
-                cam.transform.position = gameObject.transform.position - transform.forward * 3f;
-                cam.transform.LookAt(gameObject.transform);
-                Time.timeScale = 0.3f;
-                Invoke(nameof(EnableCameraController), 1 * Time.timeScale);
-                break;
-
             case EventType.LEVER_OPENING:
                 ObjectWithPositionDTO objectWithPosition = (ObjectWithPositionDTO)
                     eventDTO.eventData;
