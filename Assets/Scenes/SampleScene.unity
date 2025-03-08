@@ -133012,8 +133012,8 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -5754060345647867467, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
   m_PrefabInstance: {fileID: 1793108666}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1534960355
-BoxCollider:
+--- !u!64 &1534960359
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -133030,9 +133030,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.023235284, y: 0.031804767, z: 0.013453438}
-  m_Center: {x: 0.0016176128, y: -0.0059023835, z: -0.0032732794}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7414509850709746518, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
 --- !u!1 &1535149902
 GameObject:
   m_ObjectHideFlags: 0
@@ -156116,6 +156117,10 @@ PrefabInstance:
       value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 1835210009659533079, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1835210009659533079, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -156134,6 +156139,10 @@ PrefabInstance:
     - target: {fileID: 2170244763605361671, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2380718651202138832, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2438169498243050634, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -156935,7 +156944,7 @@ PrefabInstance:
       addedObject: {fileID: 351819459}
     - targetCorrespondingSourceObject: {fileID: -5754060345647867467, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1534960355}
+      addedObject: {fileID: 1534960359}
     - targetCorrespondingSourceObject: {fileID: 6248574976466802116, guid: 8bb63f1ac825d774fa3c2fdcc66c9862, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1724139872}
