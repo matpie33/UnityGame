@@ -9,9 +9,6 @@ public class CharacterController : Observer
     private GameObject destination;
 
     [SerializeField]
-    public Boolean debugPlayerStates;
-
-    [SerializeField]
     public float horizontalSpeedDecreaseTime;
 
     private int collisionCount;

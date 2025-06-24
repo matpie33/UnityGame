@@ -12,6 +12,9 @@ public class PlayerStateMachine : StateMachine
 
     private CharacterController characterController;
 
+    [SerializeField]
+    public bool debugPlayerStates;
+
     public float fallingStartingPositionY { get; private set; }
 
     private void Awake()
@@ -80,7 +83,7 @@ public class PlayerStateMachine : StateMachine
     private void Update()
     {
         base.BaseUpdate();
-        if (characterController.debugPlayerStates)
+        if (debugPlayerStates)
         {
             Debug.Log(currentState);
         }

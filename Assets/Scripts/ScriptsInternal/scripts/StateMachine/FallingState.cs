@@ -32,6 +32,15 @@ public class FallingState : MovementState
         }
     }
 
+    public override void PhysicsUpdate()
+    {
+        if (Mathf.Abs(characterController.rigidbody.linearVelocity.y) < 0.01f)
+        {
+            characterController.animationsManager.setAnimationToMoving();
+            stateMachine.ChangeState(stateMachine.runState);
+        }
+    }
+
     private bool IsDetectedObjectAWall()
     {
         return characterController.objectsInFrontDetector.detectedObject != null
