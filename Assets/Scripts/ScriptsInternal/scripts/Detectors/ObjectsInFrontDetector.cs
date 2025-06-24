@@ -98,9 +98,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedWallType = WallType.ABOVE_HEAD;
             detectedObject = objectsInFrontVerticalDetector.collider.gameObject;
             verticalCollisionPosition = objectsInFrontVerticalDetector.point;
-            Vector3 extremePoint = objectsInFrontVerticalDetector.collider.ClosestPoint(
-                transform.position
-            );
+            Vector3 extremePoint = objectsInFrontVerticalDetector.point;
             Vector3 directionFromPlayerToWall = extremePoint - transform.position;
             directionFromPlayerToWall.y = 0;
             horizontalCollisionPosition = extremePoint;
