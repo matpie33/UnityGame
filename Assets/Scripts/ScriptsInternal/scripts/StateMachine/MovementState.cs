@@ -12,6 +12,7 @@ public abstract class MovementState : State
     protected float targetSpeed;
     public Vector3 newVelocity { get; protected set; }
     private float newSpeed;
+    private float currentSlopeAngle;
 
     public MovementState(CharacterController characterController, PlayerStateMachine stateMachine)
     {
@@ -127,7 +128,11 @@ public abstract class MovementState : State
     {
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         WallType detectedWallType = objectsInFrontDetector.detectedWallType;
-        if (detectedWallType.Equals(WallType.BELOW_HIPS) && IsDetectedObjectAWall())
+        if (
+            detectedWallType.Equals(WallType.BELOW_HIPS)
+            && IsDetectedObjectAWall()
+            && currentSlopeAngle < 10
+        )
         {
             Vector3 verticalCollisionPoint = objectsInFrontDetector.verticalCollisionPosition;
 
@@ -175,6 +180,7 @@ public abstract class MovementState : State
         {
             vectorNormalToGround = result.normal;
         }
+        currentSlopeAngle = Vector3.Angle(vectorNormalToGround, Vector3.up);
 
         Move(newVelocity);
     }
@@ -188,7 +194,18 @@ public abstract class MovementState : State
 
     protected void Move(Vector3 newVelocity)
     {
-        if (characterController.objectsInFrontDetector.isCollidingWithGround)
+        if (
+            currentSlopeAngle > 0
+            && currentSlopeAngle < characterController.maxSlope
+            && newVelocity.magnitude == 0
+        )
+        {
+            characterController.rigidbody.linearVelocity = vectorNormalToGround * -1;
+        }
+        else if (
+            characterController.objectsInFrontDetector.isCollidingWithGround
+            && currentSlopeAngle < characterController.maxSlope
+        )
         {
             characterController.rigidbody.linearVelocity = new Vector3(
                 newVelocity.x,

@@ -29,6 +29,9 @@ public class CharacterController : Observer
     [SerializeField]
     public float upOffset;
 
+    [SerializeField]
+    public float maxSlope;
+
     [field: SerializeField]
     public float jumpForce { get; private set; }
 
