@@ -22,7 +22,7 @@ public class Lever : Pullable
     private void Awake()
     {
         animator = GetComponentInParent<Animator>();
-        eventQueue = EventQueue.INSTANCE;
+        eventQueue = FindAnyObjectByType<EventQueue>();
         checkpoint = FindAnyObjectByType<Checkpoint>();
     }
 

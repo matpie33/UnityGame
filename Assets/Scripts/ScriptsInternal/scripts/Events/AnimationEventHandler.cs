@@ -60,7 +60,7 @@ public class AnimationEventHandler : Observer
 
     public void SetRightHandTargetPosition(Lever lever)
     {
-        rightHandTargetObject = lever.transform.parent.Find("Armature/Bone/Target").gameObject;
+        rightHandTargetObject = lever.transform.Find("HandTarget").gameObject;
     }
 
     public void JumpStart()

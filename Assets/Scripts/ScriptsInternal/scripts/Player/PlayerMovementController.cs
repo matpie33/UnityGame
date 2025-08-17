@@ -70,7 +70,7 @@ public class PlayerMovementController : MonoBehaviour
 
     private bool IsFarFromDistance(Vector3 destination)
     {
-        return Vector3.Distance(destination, transform.position) > stoppingDistance; //sssrrrrqwe
+        return Vector3.Distance(destination, transform.position) > stoppingDistance; 
     }
 
     void Update()

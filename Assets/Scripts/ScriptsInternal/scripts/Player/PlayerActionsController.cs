@@ -5,6 +5,10 @@ public class PlayerActionsController : Observer
     private CharacterController characterController;
     private EventQueue eventQueue;
 
+    [SerializeField]
+    private float offsetForward;
+
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -65,12 +69,9 @@ public class PlayerActionsController : Observer
                     objectToInteractWith.transform.position.z
                 );
                 Vector3 targetPosition =
-                    objectPositionFlat
-                    - Vector3.Scale(
-                        objectToInteractWith.GetComponent<Collider>().bounds.extents * 5
-                            + GetComponent<Collider>().bounds.extents,
-                        objectToInteractWith.transform.right
-                    );
+                    objectPositionFlat - objectToInteractWith.transform.parent.right * offsetForward;
+
+
                 GetComponent<PlayerMovementController>()
                     .SetMoveToDestination(targetPosition, objectPositionFlat, objectToInteractWith);
             }
