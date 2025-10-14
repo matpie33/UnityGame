@@ -21,19 +21,6 @@ public class JumpState : State
         characterController.UnparentFromRotatingObject();
     }
 
-    public override void FrameUpdate()
-    {
-        ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
-        if (IsDetectedObjectAWall())
-        {
-            if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD))
-            {
-                characterController.animationsManager.setAnimationToLedgePrepareHold();
-                stateMachine.ChangeState(stateMachine.ledgeGrabState);
-            }
-        }
-    }
-
     private bool IsDetectedObjectAWall()
     {
         return !characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.NO_WALL)
@@ -53,6 +40,17 @@ public class JumpState : State
             Vector3.zero,
             Time.deltaTime * characterController.horizontalSpeedDecreaseTime
         );
+
+        ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
+        if (IsDetectedObjectAWall())
+        {
+            if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD))
+            {
+                characterController.RotatePlayerTowardsWall();
+                characterController.animationsManager.setAnimationToLedgePrepareHold();
+                stateMachine.ChangeState(stateMachine.ledgeGrabState);
+            }
+        }
     }
 
     public override void OnTrigger(TriggerType triggerType)

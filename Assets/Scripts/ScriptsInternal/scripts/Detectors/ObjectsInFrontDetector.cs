@@ -98,10 +98,14 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedWallType = WallType.ABOVE_HEAD;
             detectedObject = objectsInFrontVerticalDetector.collider.gameObject;
             verticalCollisionPosition = objectsInFrontVerticalDetector.point;
-            Vector3 extremePoint = objectsInFrontVerticalDetector.point;
-            Vector3 directionFromPlayerToWall = extremePoint - transform.position;
+            Vector3 collisionPoint = objectsInFrontVerticalDetector.point;
+            Vector3 pointOnObstacleClosestToPlayerSameHeight =  detectedObject
+                    .GetComponent<Collider>()
+                    .ClosestPointOnBounds(transform.position);
+            Vector3 playerPositionSameHeight = new Vector3(transform.position.x, pointOnObstacleClosestToPlayerSameHeight.y, transform.position.z);
+            Vector3 directionFromPlayerToWall = pointOnObstacleClosestToPlayerSameHeight - playerPositionSameHeight;
             directionFromPlayerToWall.y = 0;
-            horizontalCollisionPosition = extremePoint;
+            horizontalCollisionPosition = collisionPoint;
             this.directionFromPlayerToWall = directionFromPlayerToWall;
         }
     }
