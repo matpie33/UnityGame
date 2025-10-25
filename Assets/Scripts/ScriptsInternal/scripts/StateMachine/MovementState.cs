@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public abstract class MovementState : State
@@ -44,6 +43,7 @@ public abstract class MovementState : State
         Quaternion _cameraPlanarRotation = Quaternion.LookRotation(_cameraPlanarDirection);
 
         _moveInputVector = _cameraPlanarRotation * _moveInputVector;
+        _moveInputVector = Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround);
         if (_moveInputVector != Vector3.zero)
         {
             characterController.rotationTarget = PlayerRotationTarget.MOVEMENT_DIRECTION;
@@ -89,15 +89,18 @@ public abstract class MovementState : State
             case PlayerRotationTarget.MOVEMENT_DIRECTION:
                 if (targetSpeed != 0)
                 {
-                    characterController.transform.forward = Vector3.Slerp(
-                        characterController.transform.forward,
-                        (
-                            PlayerInputs.MoveAxisForwardRaw != 0
-                                ? PlayerInputs.MoveAxisForwardRaw
-                                : Mathf.Abs(PlayerInputs.MoveAxisRightRaw)
-                        ) * _moveInputVector,
-                        characterController.rotationSharpness * Time.deltaTime
-                    );
+                    Vector3 slopeForward = Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround);
+
+                    if (slopeForward.sqrMagnitude > 0.001f)
+                    {
+                        Vector3 targetForward = Vector3.ProjectOnPlane(slopeForward, Vector3.up).normalized;
+
+                        characterController.transform.forward = Vector3.Slerp(
+                            characterController.transform.forward,
+                            targetForward,
+                            characterController.rotationSharpness * Time.deltaTime
+                        );
+                    }
                 }
                 break;
 
@@ -182,17 +185,17 @@ public abstract class MovementState : State
         }
         currentSlopeAngle = Vector3.Angle(vectorNormalToGround, Vector3.up);
 
-        Move(newVelocity);
+        Move(newVelocity, vectorNormalToGround);
     }
 
     public override void ExitState()
     {
         base.ExitState();
         newVelocity = Vector3.zero;
-        Move(newVelocity);
+        Move(newVelocity, Vector3.zero);
     }
 
-    protected void Move(Vector3 newVelocity)
+    protected void Move(Vector3 newVelocity, Vector3 vectorNormalToGround)
     {
         if (
             currentSlopeAngle > 0
@@ -200,18 +203,24 @@ public abstract class MovementState : State
             && newVelocity.magnitude == 0
         )
         {
-            characterController.rigidbody.linearVelocity = vectorNormalToGround * -1;
+            Vector3 gravity = Physics.gravity;
+            Vector3 slopeParallel = Vector3.ProjectOnPlane(gravity, vectorNormalToGround);
+            characterController.rigidbody.AddForce(-slopeParallel, ForceMode.Acceleration);
         }
         else if (
             characterController.objectsInFrontDetector.isCollidingWithGround
             && currentSlopeAngle < characterController.maxSlope
         )
         {
-            characterController.rigidbody.linearVelocity = new Vector3(
+            Vector3 targetVelocity = new(
                 newVelocity.x,
-                characterController.rigidbody.linearVelocity.y,
+                newVelocity.y,
                 newVelocity.z
             );
+            Vector3 currentVelocity = characterController.rigidbody.linearVelocity;
+            Vector3 velocityChange = targetVelocity - currentVelocity;
+            
+            characterController.rigidbody.AddForce(velocityChange, ForceMode.Impulse);
         }
     }
 

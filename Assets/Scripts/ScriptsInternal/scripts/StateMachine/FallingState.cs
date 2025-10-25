@@ -19,7 +19,7 @@ public class FallingState : MovementState
 
     public override void FrameUpdate()
     {
-        base.Move(characterController.currentVelocity.normalized);
+        
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (
             objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
@@ -34,6 +34,7 @@ public class FallingState : MovementState
 
     public override void PhysicsUpdate()
     {
+        base.Move(characterController.currentVelocity.normalized, characterController.transform.forward);
         if (Mathf.Abs(characterController.rigidbody.linearVelocity.y) < 0.01f)
         {
             characterController.animationsManager.setAnimationToMoving();
