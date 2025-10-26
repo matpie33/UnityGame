@@ -41,6 +41,8 @@ public class PushingObjects : MonoBehaviour
             transform.localScale = Vector3.one;
 
             characterController.animationsManager.SetAnimationToPush();
+            characterController.transform.parent = pushedObject.transform;
+            RigidbodyConstraints constraints = pushedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationZ;
             inPushState = true;
         }
     }
@@ -49,38 +51,34 @@ public class PushingObjects : MonoBehaviour
     {
         if (inPushState)
         {
-            Rigidbody rb = pushedObject.GetComponent<Rigidbody>();
-            if (rb.linearVelocity.y < -0.1f)
+            characterController.rigidbody.isKinematic = true;
+            Rigidbody pushedObjectRb = pushedObject.GetComponent<Rigidbody>();
+            if (pushedObjectRb.linearVelocity.y < -0.1f)
             {
                 StopPushing();
                 return;
             }
+            Vector3 targetPlayerVelocity = characterController.transform.forward;
+            Vector3 currentPlayerVelocity = pushedObjectRb.linearVelocity;
+            Vector3 velocityChange = targetPlayerVelocity - currentPlayerVelocity;
 
-            rb.linearVelocity = transform.forward;
+            float massDelta = pushedObjectRb.mass - characterController.rigidbody.mass;
+            if (massDelta > 0)
+            {
+                velocityChange *= massDelta ;
+            }
 
-            characterController.rigidbody.linearVelocity = rb.linearVelocity;
-            if (ActionKeys.IsKeyHold(ActionKeys.LEFT_KEY))
-            {
-                pushedObject.transform.Rotate(new Vector3(0, ROTATION_SPEED, 0));
-                rb.linearVelocity = Vector3.zero;
-            }
-            if (ActionKeys.IsKeyHold(ActionKeys.RIGHT_KEY))
-            {
-                pushedObject.transform.Rotate(new Vector3(0, -ROTATION_SPEED, 0));
-                rb.linearVelocity = Vector3.zero;
-            }
+            pushedObjectRb.AddForceAtPosition(velocityChange, pushedObject.transform.position, ForceMode.Impulse);
         }
     }
 
     public void StopPushing()
     {
-        characterController.rigidbody.linearVelocity = Vector3.zero;
         Rigidbody rb = pushedObject.GetComponent<Rigidbody>();
-        rb.linearVelocity = Vector3.zero;
-        characterController.transform.parent = null;
         characterController.stateMachine.ChangeState(characterController.stateMachine.runState);
-
+        characterController.transform.parent = null;
         characterController.animationsManager.setAnimationToMoving();
+        RigidbodyConstraints constraints = rb.constraints &= ~RigidbodyConstraints.FreezeRotationZ;
         pushedObject = null;
         inPushState = false;
     }

@@ -30,10 +30,15 @@ public class JumpState : State
 
     public override void PhysicsUpdate()
     {
-        characterController.rigidbody.linearVelocity = new Vector3(
-            characterController.currentVelocity.x,
+        Vector3 targetVelocity = new(
+                characterController.currentVelocity.x,
             characterController.rigidbody.linearVelocity.y,
             characterController.currentVelocity.z
+            );
+        Vector3 currentVelocity = characterController.rigidbody.linearVelocity;
+        Vector3 velocityChange = targetVelocity - currentVelocity;
+        characterController.rigidbody.AddForce(
+            velocityChange, ForceMode.Impulse
         );
         characterController.currentVelocity = Vector3.Lerp(
             characterController.currentVelocity,
