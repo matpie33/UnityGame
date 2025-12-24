@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DisappearingGround : MonoBehaviour
@@ -14,14 +15,18 @@ public class DisappearingGround : MonoBehaviour
 
     private bool isRunning = true;
 
-    private Collider colliderObject;
+    private List<Collider> colliderObjects;
 
-    private MeshRenderer meshRenderer;
+    private List<MeshRenderer> meshRenderers;
 
     void Start()
     {
-        colliderObject = GetComponent<Collider>();
-        meshRenderer = GetComponent<MeshRenderer>();
+        colliderObjects = new List<Collider>();
+        meshRenderers = new List<MeshRenderer>();
+        colliderObjects.Add(GetComponent<Collider>());
+        colliderObjects.AddRange(GetComponentsInChildren<Collider>());
+        meshRenderers.Add(GetComponent<MeshRenderer>()); 
+        meshRenderers.AddRange(GetComponentsInChildren<MeshRenderer>());
         StartCoroutine(DisappearAndAppear());
     }
 
@@ -30,11 +35,11 @@ public class DisappearingGround : MonoBehaviour
         yield return new WaitForSeconds(initialDelay);
         while (isRunning)
         {
-            colliderObject.enabled = false;
-            meshRenderer.enabled = false;
+            colliderObjects.ForEach(collider => collider.enabled = false);
+            meshRenderers.ForEach(renderer => renderer.enabled = false);
             yield return new WaitForSeconds(invisibleTime);
-            colliderObject.enabled = true;
-            meshRenderer.enabled = true;
+            colliderObjects.ForEach(collider => collider.enabled = true);
+            meshRenderers.ForEach(renderer => renderer.enabled = true);
             yield return new WaitForSeconds(visibleTime);
         }
     }
