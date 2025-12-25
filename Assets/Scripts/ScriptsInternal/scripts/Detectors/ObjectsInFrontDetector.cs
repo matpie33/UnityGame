@@ -99,11 +99,8 @@ public class ObjectsInFrontDetector : MonoBehaviour
             detectedObject = objectsInFrontVerticalDetector.collider.gameObject;
             verticalCollisionPosition = objectsInFrontVerticalDetector.point;
             Vector3 collisionPoint = objectsInFrontVerticalDetector.point;
-            Vector3 pointOnObstacleClosestToPlayerSameHeight =  detectedObject
-                    .GetComponent<Collider>()
-                    .ClosestPointOnBounds(transform.position);
-            Vector3 playerPositionSameHeight = new Vector3(transform.position.x, pointOnObstacleClosestToPlayerSameHeight.y, transform.position.z);
-            Vector3 directionFromPlayerToWall = pointOnObstacleClosestToPlayerSameHeight - playerPositionSameHeight;
+            Vector3 playerPositionSameHeight = new Vector3(transform.position.x, collisionPoint.y, transform.position.z);
+            Vector3 directionFromPlayerToWall = collisionPoint - playerPositionSameHeight;
             directionFromPlayerToWall.y = 0;
             horizontalCollisionPosition = collisionPoint;
             this.directionFromPlayerToWall = directionFromPlayerToWall;
