@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class TrapFieldsInitializer6x6 : TrapFieldsInitializer
 {
