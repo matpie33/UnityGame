@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerKillTrigger : MonoBehaviour
@@ -19,8 +20,8 @@ public class PlayerKillTrigger : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (
-            collision.collider.tag.Equals(Tags.PLAYER)
-            
+            collision.collider.tag.Equals(Tags.PLAYER) && rigidBody.linearVelocity.magnitude >= minSpeedToDefeatPlayer
+
         )
         {
             eventQueue.SubmitEvent(new EventDTO(EventType.PLAYER_DIED, null));

@@ -23,7 +23,7 @@ public class WallPushButton : Interactable
 
     public void PushWall()
     {
-        rb.AddForce(transform.forward * force * rb.mass);
+        rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
     }
 
     public override void Interact(Object data)
