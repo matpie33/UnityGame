@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class Lever : Pullable
+public class Lever : Pullable, Restorable
 {
     private Animator animator;
 
@@ -31,16 +31,7 @@ public class Lever : Pullable
         PlayOpenAnimation();
     }
 
-    private void SaveCheckpoint()
-    {
-        GameManager.gameStateManager.AddOpenedLever(this);
-        Checkpoint newCheckpoint = Instantiate(checkpoint);
-        Destroy(newCheckpoint.GetComponent<Collider>());
-        newCheckpoint.transform.position =
-            FindAnyObjectByType<CharacterController>().transform.position;
-        newCheckpoint.SaveCheckpoint();
-        Destroy(newCheckpoint);
-    }
+    
 
     public void SubmitEvent()
     {
@@ -62,7 +53,7 @@ public class Lever : Pullable
             && eventDTO.eventData.Equals(gateToOpen.gameObject)
         )
         {
-            SaveCheckpoint();
+            FindAnyObjectByType<GameManager>().SaveCheckpoint(this);
         }
     }
 
@@ -74,5 +65,12 @@ public class Lever : Pullable
     public void SwitchToOpenedAnimation()
     {
         animator.Play("Base Layer.Opened");
+    }
+
+    public void RestoreState()
+    {
+        canBeInteracted = false;
+        SwitchToOpenedAnimation();
+        gateToOpen.DoOpen();
     }
 }

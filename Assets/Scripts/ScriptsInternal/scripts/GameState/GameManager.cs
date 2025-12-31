@@ -97,19 +97,6 @@ public class GameManager : Observer
             characterController
                 .GetComponent<ObjectWithHealth>()
                 .healthState.SetHealth(gameStateManager.checkpointData.playerHealth);
-            FindObjectsByType<Gate>(FindObjectsSortMode.InstanceID)
-                .Where(gate => gameStateManager.openedGates.Contains(gate.GetUUid()))
-                .ToList()
-                .ForEach(gate => gate.DoOpen());
-
-            FindObjectsByType<Lever>(FindObjectsSortMode.InstanceID)
-                .Where(lever => gameStateManager.openedLevers.Contains(lever.GetUUid()))
-                .ToList()
-                .ForEach(lever =>
-                {
-                    lever.canBeInteracted = false;
-                    lever.SwitchToOpenedAnimation();
-                });
 
             FindObjectsByType<Object>(FindObjectsSortMode.InstanceID)
                .OfType<Restorable>()
@@ -347,4 +334,17 @@ public class GameManager : Observer
         int playerHealth = characterController.GetComponent<ObjectWithHealth>().healthState.value;
         gameStateManager.SaveCheckpoint(checkpoint, playerHealth);
     }
+
+    public void SaveCheckpoint(Restorable restorable)
+    {
+        gameStateManager.AddRestorableObject(restorable);
+        Checkpoint checkpoint = FindAnyObjectByType<Checkpoint>();
+        Checkpoint newCheckpoint = Instantiate(checkpoint);
+        Destroy(newCheckpoint.GetComponent<Collider>());
+        newCheckpoint.transform.position =
+            FindAnyObjectByType<CharacterController>().transform.position;
+        newCheckpoint.SaveCheckpoint();
+        Destroy(newCheckpoint);
+    }
+
 }

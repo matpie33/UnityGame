@@ -6,18 +6,11 @@ public class GameStateManager
 {
     private Dictionary<string, bool> killedEnemiesWithCheckpointFlag =
         new Dictionary<string, bool>();
-    public ISet<string> openedGates { get; private set; }
-    public ISet<string> openedLevers { get; private set; }
 
     public ISet<string> restorableObjects { get; private set; } =  new HashSet<string>();
 
     public CheckpointData checkpointData { get; private set; }
 
-    public GameStateManager()
-    {
-        openedGates = new HashSet<string>();
-        openedLevers = new HashSet<string>();
-    }
 
     public void AddKilledEnemy(ObjectWithHealth enemy)
     {
@@ -25,12 +18,6 @@ public class GameStateManager
         {
             killedEnemiesWithCheckpointFlag.Add(enemy.GetUUid(), false);
         }
-    }
-
-    public void AddOpenedLever(Lever lever)
-    {
-        openedGates.Add(lever.gateToOpen.GetUUid());
-        openedLevers.Add(lever.GetUUid());
     }
 
     public void AddRestorableObject(Restorable restorable)

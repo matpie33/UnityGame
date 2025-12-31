@@ -26,21 +26,10 @@ public class WallPushButton : Interactable, Restorable
         rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
     }
 
-    private void SaveCheckpoint()
-    {
-        Checkpoint checkpoint = FindAnyObjectByType<Checkpoint>();
-        GameManager.gameStateManager.AddRestorableObject(this);
-        Checkpoint newCheckpoint = Instantiate(checkpoint);
-        Destroy(newCheckpoint.GetComponent<Collider>());
-        newCheckpoint.transform.position =
-            FindAnyObjectByType<CharacterController>().transform.position;
-        newCheckpoint.SaveCheckpoint();
-        Destroy(newCheckpoint);
-    }
 
     public override void Interact(Object data)
     {
-        SaveCheckpoint();
+        FindAnyObjectByType<GameManager>().SaveCheckpoint(this);
         eventQueue.SubmitEvent(new EventDTO(EventType.WALL_STARTS_FALLING, cameraAnimation));
     }
 
