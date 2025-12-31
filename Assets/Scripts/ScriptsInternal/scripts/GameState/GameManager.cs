@@ -110,6 +110,15 @@ public class GameManager : Observer
                     lever.canBeInteracted = false;
                     lever.SwitchToOpenedAnimation();
                 });
+
+            FindObjectsByType<Object>(FindObjectsSortMode.InstanceID)
+               .OfType<Restorable>()
+               .Where(restorable => gameStateManager.restorableObjects.Contains(restorable.GetBaseObject().GetUUid()))
+               .ToList()
+               .ForEach(restorable =>
+               {
+                   restorable.RestoreState();
+               });
         }
     }
 

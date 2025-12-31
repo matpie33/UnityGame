@@ -20,7 +20,7 @@ public class PlayerKillTrigger : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (
-            collision.collider.tag.Equals(Tags.PLAYER) && rigidBody.linearVelocity.magnitude >= minSpeedToDefeatPlayer
+            collision.collider.tag.Equals(Tags.PLAYER) && (minSpeedToDefeatPlayer == 0 || rigidBody.linearVelocity.magnitude >= minSpeedToDefeatPlayer)
 
         )
         {

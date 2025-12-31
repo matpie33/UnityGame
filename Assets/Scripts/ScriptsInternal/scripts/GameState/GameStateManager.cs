@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +8,8 @@ public class GameStateManager
         new Dictionary<string, bool>();
     public ISet<string> openedGates { get; private set; }
     public ISet<string> openedLevers { get; private set; }
+
+    public ISet<string> restorableObjects { get; private set; } =  new HashSet<string>();
 
     public CheckpointData checkpointData { get; private set; }
 
@@ -28,6 +31,11 @@ public class GameStateManager
     {
         openedGates.Add(lever.gateToOpen.GetUUid());
         openedLevers.Add(lever.GetUUid());
+    }
+
+    public void AddRestorableObject(Restorable restorable)
+    {
+        restorableObjects.Add(restorable.GetBaseObject().GetUUid());
     }
 
     public void ClearNotSavedKilledEnemies()
@@ -54,4 +62,5 @@ public class GameStateManager
         }
         checkpointData = new CheckpointData(playerHealth, checkpoint.transform.position);
     }
+
 }
