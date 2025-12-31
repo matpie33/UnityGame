@@ -50,6 +50,7 @@ public class BackpackUI : MonoBehaviour
     private bool rotateCamera;
 
     private Quaternion targetCameraRotation;
+    private GameManager gameManager;
 
     private void Start()
     {
@@ -60,6 +61,7 @@ public class BackpackUI : MonoBehaviour
         blurringBackground.SetActive(false);
         backpackPanel.SetActive(false);
         characterController = FindAnyObjectByType<CharacterController>();
+        gameManager = FindAnyObjectByType<GameManager>();
     }
 
     private void Toggle()
@@ -221,7 +223,7 @@ public class BackpackUI : MonoBehaviour
                 moveRight = false;
             }
         }
-        if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_BACKPACK))
+        if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_BACKPACK) && gameManager.interruptableAnimationsHandler == null)
         {
             Toggle();
         }

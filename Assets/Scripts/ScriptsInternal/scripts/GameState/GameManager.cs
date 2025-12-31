@@ -30,6 +30,8 @@ public class GameManager : Observer
 
     private EnemyAttackPositionSearch enemyAttackPositionSearch;
 
+    public InterruptableAnimationsHandler interruptableAnimationsHandler { get; set; }
+
     private void OnApplicationQuit()
     {
         gameStateManager = new GameStateManager();
@@ -203,8 +205,20 @@ public class GameManager : Observer
         characterController.SwitchFocusOnEnemy(ob.gameObject);
     }
 
+    private void ClearInterruptableAnimationsHandler ()
+    {
+        interruptableAnimationsHandler = null;
+    }
+
     void Update()
     {
+
+        if (ActionKeys.IsKeyPressed(ActionKeys.INTERRUPT_ANIMATION) && interruptableAnimationsHandler != null)
+        {
+            interruptableAnimationsHandler.InterruptAnimation();
+            Invoke(nameof(ClearInterruptableAnimationsHandler), 1f);
+        }
+
         if (
             ActionKeys.IsKeyPressed(ActionKeys.SWITCH_ENEMY_RIGHT)
             && characterController.objectToRotateTo != null

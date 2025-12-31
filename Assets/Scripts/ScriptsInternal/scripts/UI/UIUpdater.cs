@@ -29,6 +29,8 @@ public class UIUpdater : Observer
     [SerializeField]
     private GameObject checkpointSaveText;
 
+    private GameManager gameManager;
+
     private void Awake()
     {
         playerUI = GetComponent<PlayerUI>();
@@ -37,6 +39,7 @@ public class UIUpdater : Observer
         characterController = FindAnyObjectByType<CharacterController>();
         addStatsIcon.SetActive(false);
         checkpointSaveText.SetActive(false);
+        gameManager = FindAnyObjectByType<GameManager>();
     }
 
     private void Start()
@@ -209,7 +212,7 @@ public class UIUpdater : Observer
         {
             OpenStatsPanel();
         }
-        if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_BACKPACK))
+        if (ActionKeys.IsKeyPressed(ActionKeys.OPEN_BACKPACK) && gameManager.interruptableAnimationsHandler == null)
         {
             statsPanel.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;

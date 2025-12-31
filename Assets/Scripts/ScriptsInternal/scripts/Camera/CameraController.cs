@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : Observer
+public class CameraController : Observer, InterruptableAnimationsHandler
 {
     private new Camera camera = null;
 
@@ -230,6 +230,7 @@ public class CameraController : Observer
             case EventType.WALL_STARTS_FALLING:
                 AnimationClip o = (AnimationClip)eventDTO.eventData;
                 animator.enabled = true;
+                FindAnyObjectByType<GameManager>().interruptableAnimationsHandler = this;
 
                 animator.Play(animator.GetLayerName(0) + "." + o.name);
                 enabled = false;
@@ -245,5 +246,10 @@ public class CameraController : Observer
                 enabled = true;
                 break;
         }
+    }
+    public void InterruptAnimation()
+    {
+        animator.Play(animator.GetLayerName(0) + ".Root");
+        FindAnyObjectByType<CameraAnimationEventsHandler>().PushWall();
     }
 }

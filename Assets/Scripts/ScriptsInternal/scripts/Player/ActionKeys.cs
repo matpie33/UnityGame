@@ -15,7 +15,7 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode SPRINT = KeyCode.LeftShift;
     public const KeyCode WALK_DOWN_LEDGE = KeyCode.LeftControl;
     public const KeyCode OPEN_STATS_PANEL = KeyCode.Tab;
-    public const KeyCode OPEN_BACKPACK = KeyCode.Escape;
+    
     public const KeyCode DODGE_RIGHT = KeyCode.R;
     public const KeyCode DODGE_LEFT = KeyCode.Q;
     public const KeyCode PUSH_OBJECT = KeyCode.E;
@@ -27,6 +27,8 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode RELOAD_SCENE = KeyCode.F1;
     public const KeyCode SWITCH_ENEMY_LEFT = KeyCode.Alpha1;
     public const KeyCode SWITCH_ENEMY_RIGHT = KeyCode.Alpha3;
+    public const KeyCode INTERRUPT_ANIMATION = KeyCode.Escape;
+    public const KeyCode OPEN_BACKPACK = KeyCode.Escape;
 
     public static bool IsKeyHold(KeyCode key)
     {

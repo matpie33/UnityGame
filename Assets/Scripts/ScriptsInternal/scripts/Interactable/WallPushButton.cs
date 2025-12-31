@@ -26,7 +26,6 @@ public class WallPushButton : Interactable, Restorable
         rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
     }
 
-
     public override void Interact(Object data)
     {
         FindAnyObjectByType<GameManager>().SaveCheckpoint(this);
