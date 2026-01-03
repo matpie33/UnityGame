@@ -15,8 +15,7 @@ public class PlayerStateMachine : StateMachine
     [SerializeField]
     public bool debugPlayerStates;
 
-    public float fallingStartingPositionY { get; private set; }
-
+    
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -89,8 +88,4 @@ public class PlayerStateMachine : StateMachine
         }
     }
 
-    internal void StartedFalling()
-    {
-        fallingStartingPositionY = transform.position.y;
-    }
 }

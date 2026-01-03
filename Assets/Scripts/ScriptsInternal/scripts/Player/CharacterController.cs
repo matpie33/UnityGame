@@ -66,7 +66,7 @@ public class CharacterController : Observer
 
     public PlayerBackpack playerBackpack { get; private set; }
 
-    private EventQueue eventQueue;
+    public EventQueue eventQueue { get; private set; }
 
     [SerializeField]
     private Quest quest;
@@ -104,6 +104,8 @@ public class CharacterController : Observer
     public GameObject objectToRotateTo { get; set; }
 
     public float playerColliderRadius { get; private set; }
+
+    private float fallingStartingHeight;
 
     private void Awake()
     {
@@ -263,7 +265,7 @@ public class CharacterController : Observer
         switch (eventDTO.eventType)
         {
             case EventType.STARTED_FALLING:
-                stateMachine.StartedFalling();
+                fallingStartingHeight = transform.position.y;
                 break;
             case EventType.OBJECT_NOW_IN_RANGE:
                 GameObject eventData = (GameObject)eventDTO.eventData;
@@ -298,8 +300,30 @@ public class CharacterController : Observer
                 stateMachine.OnTriggerType(TriggerType.GROUND_DETECTED);
                 ParentToRotatingObject();
                 UnparentIfNotRotatingObject();
+                float fallingHeight = HandleGrounding();
+                modifyHealthAfterLanding(fallingHeight);
                 break;
         }
+    }
+
+
+    private float HandleGrounding()
+    {
+        float fallingHeight =
+                            fallingStartingHeight
+                            - transform.position.y;
+        stateMachine.ChangeState(stateMachine.runState);
+        Vector3 horizontalVelocity = new Vector3(currentVelocity.x, 0, currentVelocity.z);
+        if (horizontalVelocity.magnitude > 0.01f)
+        {
+            animationsManager.setAnimationToLandingFromRun();
+        }
+        else
+        {
+            animationsManager.setAnimationToLandingFromStand();
+        }
+
+        return fallingHeight;
     }
 
     internal void IncreaseMaxHealth(int healthIncrease)

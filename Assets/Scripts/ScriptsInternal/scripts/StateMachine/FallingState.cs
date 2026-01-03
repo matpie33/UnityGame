@@ -35,11 +35,6 @@ public class FallingState : MovementState
     public override void PhysicsUpdate()
     {
         base.Move(characterController.currentVelocity.normalized, characterController.transform.forward);
-        if (Mathf.Abs(characterController.rigidbody.linearVelocity.y) < 0.01f)
-        {
-            characterController.animationsManager.setAnimationToMoving();
-            stateMachine.ChangeState(stateMachine.runState);
-        }
     }
 
     private bool IsDetectedObjectAWall()
@@ -58,23 +53,6 @@ public class FallingState : MovementState
     {
         switch (triggerType)
         {
-            case TriggerType.GROUND_DETECTED:
-                fallingHeight =
-                    characterController.stateMachine.fallingStartingPositionY
-                    - characterController.transform.position.y;
-                stateMachine.ChangeState(stateMachine.runState);
-                Vector3 velo = characterController.currentVelocity;
-                Vector3 forwardVelocity = new Vector3(velo.x, 0, velo.z);
-                if (forwardVelocity.magnitude > 0.01f)
-                {
-                    characterController.animationsManager.setAnimationToLandingFromRun();
-                }
-                else
-                {
-                    characterController.animationsManager.setAnimationToLandingFromStand();
-                }
-                characterController.modifyHealthAfterLanding(fallingHeight);
-                break;
 
             case TriggerType.PLAYER_COLLIDED:
                 characterController.currentVelocity = Vector3.up * -1 * Time.deltaTime;
