@@ -312,16 +312,7 @@ public class CharacterController : Observer
         float fallingHeight =
                             fallingStartingHeight
                             - transform.position.y;
-        stateMachine.ChangeState(stateMachine.runState);
-        Vector3 horizontalVelocity = new Vector3(currentVelocity.x, 0, currentVelocity.z);
-        if (horizontalVelocity.magnitude > 0.01f)
-        {
-            animationsManager.setAnimationToLandingFromRun();
-        }
-        else
-        {
-            animationsManager.setAnimationToLandingFromStand();
-        }
+        
 
         return fallingHeight;
     }

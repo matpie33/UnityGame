@@ -57,6 +57,18 @@ public class FallingState : MovementState
             case TriggerType.PLAYER_COLLIDED:
                 characterController.currentVelocity = Vector3.up * -1 * Time.deltaTime;
                 break;
+            case TriggerType.GROUND_DETECTED:
+                stateMachine.ChangeState(stateMachine.runState);
+                Vector3 horizontalVelocity = new Vector3(characterController.currentVelocity.x, 0, characterController.currentVelocity.z);
+                if (horizontalVelocity.magnitude > 0.01f)
+                {
+                    characterController.animationsManager.setAnimationToLandingFromRun();
+                }
+                else
+                {
+                    characterController.animationsManager.setAnimationToLandingFromStand();
+                }
+                break;
         }
     }
 }
