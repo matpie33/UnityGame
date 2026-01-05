@@ -38,7 +38,7 @@ public class PlayerStateMachine : StateMachine
     private void FixedUpdate()
     {
         if (
-            !characterController.objectsInFrontDetector.isCollidingWithGround
+            !characterController.groundDetector.isCollidingWithGround
             && currentState != doingAnimationState
             && characterController.rigidbody.linearVelocity.y < -1f
         )

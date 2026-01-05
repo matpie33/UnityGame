@@ -19,10 +19,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     public bool obstacleFoundInFrontOfCamera { get; private set; }
 
-    private EventQueue eventQueue;
-
-    public bool isCollidingWithGround;
-
     [SerializeField]
     private float heightAdjustmentForCrouch;
 
@@ -67,17 +63,17 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     private bool adjustHeightForCrouch;
 
+    private CharacterController characterController;
+
     private void Start()
     {
         detectedWallType = WallType.NO_WALL;
-        eventQueue = FindAnyObjectByType<EventQueue>();
-        isCollidingWithGround = false;
+        characterController = FindAnyObjectByType<CharacterController>();
     }
 
     private void FixedUpdate()
     {
         detectedWallType = WallType.NO_WALL;
-        DetectGround();
         DetectObjectsBehind();
         DetectObjectsInFrontAndLedges();
     }
@@ -176,7 +172,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             forwardOffsetHorizontalDetector,
             false
         );
-        if (isCollidingWithGround)
+        if (characterController.groundDetector.isCollidingWithGround)
         {
             DetectObjectsInFront(objectsInFrontVerticalDetector, objectsInFrontHorizontalDetector);
         }
@@ -223,35 +219,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
         }
     }
 
-    private void DetectGround()
-    {
-        RaycastHit groundHit = CastRayVertical(
-            groundDetectorHeight,
-            true,
-            groundDetectorCollisionMaxDistance
-        );
-        if (
-            groundHit.collider != null
-            && !isCollidingWithGround
-            && groundHit.distance <= groundDetectorMaxDistanceToGround
-        )
-        {
-            isCollidingWithGround = true;
-            detectedObject = groundHit.collider.gameObject;
-            eventQueue.SubmitEvent(new EventDTO(EventType.GROUND_DETECTED, null));
-        }
-
-        if (
-            groundHit.collider == null || groundHit.distance > 2 * groundDetectorMaxDistanceToGround
-        )
-        {
-            if (isCollidingWithGround)
-            {
-                eventQueue.SubmitEvent(new EventDTO(EventType.STARTED_FALLING, null));
-            }
-            isCollidingWithGround = false;
-        }
-    }
 
     private RaycastHit CastRayHorizontal(
         float height,

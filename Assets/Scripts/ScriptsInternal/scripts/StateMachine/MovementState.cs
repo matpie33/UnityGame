@@ -208,7 +208,7 @@ public abstract class MovementState : State
             characterController.rigidbody.AddForce(-slopeParallel, ForceMode.Acceleration);
         }
         else if (
-            characterController.objectsInFrontDetector.isCollidingWithGround
+            characterController.groundDetector.isCollidingWithGround
             && currentSlopeAngle < characterController.maxSlope
         )
         {

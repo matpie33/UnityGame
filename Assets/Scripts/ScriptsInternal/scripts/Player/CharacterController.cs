@@ -107,6 +107,8 @@ public class CharacterController : Observer
 
     private float fallingStartingHeight;
 
+    public GroundDetector groundDetector { get; private set; }
+
     private void Awake()
     {
         wallData = new WallData();
@@ -135,6 +137,7 @@ public class CharacterController : Observer
     private void Start()
     {
         stateMachine = GetComponent<PlayerStateMachine>();
+        groundDetector = FindAnyObjectByType<GroundDetector>();
         uiUpdater.InitializeStatsPanel(GetStats());
         uiUpdater.UpdatePlayerHealth(objectWithHealth.healthState);
         Physics.gravity = new Vector3(0, -20.0F, 0);
@@ -298,7 +301,7 @@ public class CharacterController : Observer
                 break;
             case EventType.GROUND_DETECTED:
                 stateMachine.OnTriggerType(TriggerType.GROUND_DETECTED);
-                ParentToRotatingObject();
+                ParentToRotatingObject(groundDetector.ground);
                 UnparentIfNotRotatingObject();
                 float fallingHeight = HandleGrounding();
                 modifyHealthAfterLanding(fallingHeight);
@@ -356,17 +359,17 @@ public class CharacterController : Observer
         );
     }
 
-    public void ParentToRotatingObject()
+    public void ParentToRotatingObject(GameObject objectToCheck)
     {
         if (
             !IsPlayerParented
             && Utils.DoesParentHaveComponent(
-                objectsInFrontDetector.detectedObject,
+                objectToCheck,
                 typeof(RotatingObject)
             )
         )
         {
-            transform.parent = objectsInFrontDetector.detectedObject.transform.parent;
+            transform.parent = groundDetector.ground.transform.parent;
             IsPlayerParented = true;
         }
     }

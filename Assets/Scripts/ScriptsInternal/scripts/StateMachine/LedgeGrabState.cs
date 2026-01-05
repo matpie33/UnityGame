@@ -17,7 +17,7 @@ public class LedgeGrabState : State
     {
         characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
-        characterController.ParentToRotatingObject();
+        characterController.ParentToRotatingObject(characterController.objectsInFrontDetector.detectedObject);
         if (ledge == null)
         {
             ledge = characterController.objectsInFrontDetector.detectedObject;
