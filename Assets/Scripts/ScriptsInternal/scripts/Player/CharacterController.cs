@@ -301,8 +301,9 @@ public class CharacterController : Observer
                 break;
             case EventType.GROUND_DETECTED:
                 stateMachine.OnTriggerType(TriggerType.GROUND_DETECTED);
+                GameObject ground = (GameObject)eventDTO.eventData;
                 ParentToRotatingObject(groundDetector.ground);
-                UnparentIfNotRotatingObject();
+                UnparentIfNotRotatingObject(ground);
                 float fallingHeight = HandleGrounding();
                 modifyHealthAfterLanding(fallingHeight);
                 break;
@@ -374,12 +375,12 @@ public class CharacterController : Observer
         }
     }
 
-    public void UnparentIfNotRotatingObject()
+    public void UnparentIfNotRotatingObject(GameObject ground)
     {
         if (
             IsPlayerParented
             && !Utils.DoesParentHaveComponent(
-                objectsInFrontDetector.detectedObject,
+                ground,
                 typeof(RotatingObject)
             )
         )

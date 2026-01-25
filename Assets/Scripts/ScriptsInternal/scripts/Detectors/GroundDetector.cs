@@ -21,7 +21,7 @@ public class GroundDetector : MonoBehaviour
         {
             isCollidingWithGround = true;
             ground = other.gameObject;
-            eventQueue.SubmitEvent(new EventDTO(EventType.GROUND_DETECTED, null));
+            eventQueue.SubmitEvent(new EventDTO(EventType.GROUND_DETECTED, ground));
         }
 
     }
