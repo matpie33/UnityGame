@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 2818761}
   - component: {fileID: 2818760}
   - component: {fileID: 2818759}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: CanWalkDownLedgeChecker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31189,7 +31189,7 @@ GameObject:
   - component: {fileID: 575746078}
   - component: {fileID: 575746077}
   - component: {fileID: 575746076}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ObstacleDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36018,15 +36018,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 174.0824
+      value: 158.57788
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 25.447514
+      value: 49.7714
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1907.3912
+      value: 1871.487
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -39015,7 +39015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ea893e6b572d340a6c82c47f63e757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugPlayerStates: 0
+  debugPlayerStates: 1
 --- !u!114 &677224128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40132,6 +40132,7 @@ MonoBehaviour:
   m_Script: {fileID: 1838964483}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Entries: []
 --- !u!4 &683178907
 Transform:
   m_ObjectHideFlags: 19
@@ -46141,7 +46142,7 @@ GameObject:
   - component: {fileID: 794670599}
   - component: {fileID: 794670598}
   - component: {fileID: 794670600}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: CanClimbUpChecker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50907,6 +50908,7 @@ MonoBehaviour:
   m_Script: {fileID: 1838964483}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.SceneObjectIDMapSceneAsset
+  m_Entries: []
 --- !u!4 &896316779
 Transform:
   m_ObjectHideFlags: 19
@@ -78904,7 +78906,7 @@ GameObject:
   - component: {fileID: 1476506215}
   - component: {fileID: 1476506214}
   - component: {fileID: 1476506213}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: InteractableObjectsDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92688,7 +92690,7 @@ GameObject:
   - component: {fileID: 1768972019}
   - component: {fileID: 1768972018}
   - component: {fileID: 1768972020}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: CanStandFromCrouchChecker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106870,7 +106872,7 @@ GameObject:
   - component: {fileID: 1962769459}
   - component: {fileID: 1962769458}
   - component: {fileID: 1962769457}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: GroundDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110780,7 +110782,7 @@ GameObject:
   - component: {fileID: 2084363001}
   - component: {fileID: 2084363000}
   - component: {fileID: 2084362999}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: EnemiesDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
