@@ -160,29 +160,10 @@ public class CameraController : Observer, InterruptableAnimationsHandler
 
         Vector3 cameraLookTarget;
 
-        if (mouseX != 0)
-        {
-            characterController.rotationTarget = PlayerRotationTarget.MOVEMENT_DIRECTION;
-        }
+        rotationSharpness = rotationSharpnessDuringMovement;
+        cameraLookTarget = playerCenterPoint.position;
+        planarDirection = Quaternion.Euler(0, mouseX, 0) * planarDirection; //rotate planar direction (mouseX degrees) around y axis
 
-        switch (characterController.rotationTarget)
-        {
-            case PlayerRotationTarget.MOVEMENT_DIRECTION:
-                rotationSharpness = rotationSharpnessDuringMovement;
-                cameraLookTarget = playerCenterPoint.position;
-                planarDirection = Quaternion.Euler(0, mouseX, 0) * planarDirection; //rotate planar direction (mouseX degrees) around y axis
-                break;
-
-            case PlayerRotationTarget.ENEMY:
-                rotationSharpness = rotationSharpnessDuringFocusOnEnemy;
-                cameraLookTarget = characterController.objectToRotateTo.transform.position;
-                planarDirection =
-                    characterController.objectToRotateTo.transform.position
-                    - characterController.transform.position;
-                break;
-            default:
-                throw new Exception("No target to look at in camera controller.");
-        }
 
         Vector3 focusPosition =
             cameraLookTarget + new Vector3(playerPositionOffset.x, playerPositionOffset.y, 0);

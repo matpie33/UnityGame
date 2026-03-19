@@ -44,14 +44,6 @@ public abstract class MovementState : State
 
         _moveInputVector = _cameraPlanarRotation * _moveInputVector;
         _moveInputVector = Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround);
-        if (_moveInputVector != Vector3.zero)
-        {
-            characterController.rotationTarget = PlayerRotationTarget.MOVEMENT_DIRECTION;
-        }
-        else if (characterController.objectToRotateTo != null)
-        {
-            characterController.rotationTarget = PlayerRotationTarget.ENEMY;
-        }
 
         targetSpeed = _moveInputVector == Vector3.zero ? 0 : getTargetSpeed();
         if (PlayerInputs.MoveAxisForwardRaw == -1)
@@ -84,36 +76,20 @@ public abstract class MovementState : State
 
         newVelocity = _moveInputVector * newSpeed;
 
-        switch (characterController.rotationTarget)
+        if (targetSpeed != 0)
         {
-            case PlayerRotationTarget.MOVEMENT_DIRECTION:
-                if (targetSpeed != 0)
-                {
-                    Vector3 slopeForward = Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround);
+            Vector3 slopeForward = Vector3.ProjectOnPlane(_moveInputVector, vectorNormalToGround);
 
-                    if (slopeForward.sqrMagnitude > 0.001f)
-                    {
-                        Vector3 targetForward = Vector3.ProjectOnPlane(slopeForward, Vector3.up).normalized;
+            if (slopeForward.sqrMagnitude > 0.001f)
+            {
+                Vector3 targetForward = Vector3.ProjectOnPlane(slopeForward, Vector3.up).normalized;
 
-                        characterController.transform.forward = Vector3.Slerp(
-                            characterController.transform.forward,
-                            targetForward,
-                            characterController.rotationSharpness * Time.deltaTime
-                        );
-                    }
-                }
-                break;
-
-            case PlayerRotationTarget.ENEMY:
-                characterController.transform.rotation = Quaternion.Slerp(
-                    characterController.transform.rotation,
-                    Quaternion.LookRotation(
-                        characterController.objectToRotateTo.transform.position
-                            - characterController.transform.position
-                    ),
+                characterController.transform.forward = Vector3.Slerp(
+                    characterController.transform.forward,
+                    targetForward,
                     characterController.rotationSharpness * Time.deltaTime
                 );
-                break;
+            }
         }
 
         if (PlayerInputs.MoveAxisForwardRaw != -1)

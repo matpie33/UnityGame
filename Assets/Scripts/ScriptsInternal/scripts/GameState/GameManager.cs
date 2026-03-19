@@ -140,70 +140,7 @@ public class GameManager : Observer
         }
     }
 
-    private float DistanceBetweenEnemies(ObjectWithHealth enemy, Direction direction)
-    {
-        return Vector3.Distance(
-            characterController.objectToRotateTo.transform.position
-                + cameraController.transform.right * (int)direction,
-            enemy.transform.position
-        );
-    }
 
-    private void GetClosestEnemy(Direction direction)
-    {
-        List<ObjectWithHealth> toLeft = objectsWithHealth
-            .Where(obj => obj.GetComponent<Enemy>() != null)
-            .Where(
-                obj =>
-                    Vector3.Distance(obj.transform.position, characterController.transform.position)
-                    < minDistanceToFocusOnEnemy
-            )
-            .Where(obj => obj.gameObject != characterController.objectToRotateTo)
-            .Where(obj =>
-            {
-                float relativePositionX = characterController.transform
-                    .InverseTransformPoint(obj.transform.position)
-                    .x;
-                return direction.Equals(Direction.RIGHT)
-                    ? relativePositionX > 0
-                    : relativePositionX <= 0;
-            })
-            .ToList();
-
-        bool invert = false;
-        if (toLeft.Count == 0)
-        {
-            direction = direction.Equals(Direction.LEFT) ? Direction.RIGHT : Direction.LEFT;
-            toLeft = objectsWithHealth
-                .Where(obj => obj.GetComponent<Enemy>() != null)
-                .Where(
-                    obj =>
-                        Vector3.Distance(
-                            obj.transform.position,
-                            characterController.transform.position
-                        ) < minDistanceToFocusOnEnemy
-                )
-                .Where(obj =>
-                {
-                    float relativePositionX = characterController.transform
-                        .InverseTransformPoint(obj.transform.position)
-                        .x;
-                    return direction.Equals(Direction.RIGHT)
-                        ? relativePositionX > 0
-                        : relativePositionX <= 0;
-                })
-                .ToList();
-            invert = true;
-        }
-        ObjectWithHealth ob = toLeft.Aggregate(
-            (ob1, ob2) =>
-                DistanceBetweenEnemies(ob1, direction) < DistanceBetweenEnemies(ob2, direction)
-                    ? (invert ? ob2 : ob1)
-                    : (invert ? ob1 : ob2)
-        );
-
-        characterController.SwitchFocusOnEnemy(ob.gameObject);
-    }
 
     private void ClearInterruptableAnimationsHandler ()
     {
@@ -219,33 +156,12 @@ public class GameManager : Observer
             Invoke(nameof(ClearInterruptableAnimationsHandler), 1f);
         }
 
-        if (
-            ActionKeys.IsKeyPressed(ActionKeys.SWITCH_ENEMY_RIGHT)
-            && characterController.objectToRotateTo != null
-        )
-        {
-            GetClosestEnemy(Direction.RIGHT);
-        }
-        if (
-            ActionKeys.IsKeyPressed(ActionKeys.SWITCH_ENEMY_LEFT)
-            && characterController.objectToRotateTo != null
-        )
-        {
-            GetClosestEnemy(Direction.LEFT);
-        }
 
         if (UnityEngine.Input.GetKeyDown(ActionKeys.RELOAD_SCENE))
         {
             ReloadFromCheckpoint();
         }
         objectsToDelete.Clear();
-        if (
-            characterController.objectToRotateTo != null
-            && PlayersFocusedEnemyIsTooHighOrLow(characterController.objectToRotateTo)
-        )
-        {
-            characterController.ClearFocusedEnemy();
-        }
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
             if (!objectWithHealth.gameObject.activeInHierarchy)
@@ -266,7 +182,6 @@ public class GameManager : Observer
                         characterController.AddExperience(
                             objectWithHealth.GetComponent<Enemy>().experienceValue
                         );
-                        characterController.ClearFocusedEnemy();
                     }
                     eventQueue.SubmitEvent(
                         new EventDTO(EventType.ENEMY_KILLED, objectWithHealth.gameObject)
@@ -328,7 +243,7 @@ public class GameManager : Observer
             && !PlayersFocusedEnemyIsTooHighOrLow(enemyObject.gameObject)
         )
         {
-            characterController.FocusOnEnemy(enemy.gameObject);
+            //characterController.FocusOnEnemy(enemy.gameObject);
         }
         if (enemy.GetIsAttacking())
         {
