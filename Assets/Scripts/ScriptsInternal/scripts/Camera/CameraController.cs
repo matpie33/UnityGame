@@ -183,19 +183,9 @@ public class CameraController : Observer, InterruptableAnimationsHandler
         targetRotation =
             Quaternion.LookRotation(planarDirection) * Quaternion.Euler(targetVerticalAngle, 0, 0);
         targetPosition = cameraPosition - targetRotation * Vector3.forward * smallestDistance;
-        newRotation = Quaternion.Lerp(
-            camera.transform.rotation,
-            targetRotation,
-            Time.deltaTime * rotationSharpness
-        );
-        newPosition = Vector3.Lerp(
-            camera.transform.position,
-            targetPosition,
-            Time.deltaTime * rotationSharpness
-        );
 
-        camera.transform.position = newPosition;
-        camera.transform.rotation = newRotation;
+        camera.transform.position = targetPosition;
+        camera.transform.rotation = targetRotation;
     }
 
     public void EnableMe()
