@@ -15,6 +15,14 @@ public class LedgeGrabState : State
 
     public override void EnterState()
     {
+        CapsuleCollider capsuleCollider = characterController.capsuleCollider;
+        float wallTopYCoord = characterController.wallData.verticalCollisionPoint.y;
+        ClearVelocity();
+        characterController.transform.position = new Vector3(characterController.transform.position.x, wallTopYCoord - capsuleCollider.height + characterController.heightAdjustment, characterController.transform.position.z);
+    }
+
+    private void ClearVelocity()
+    {
         characterController.currentVelocity = Vector3.zero;
         characterController.rigidbody.isKinematic = true;
         characterController.ParentToRotatingObject(characterController.objectsInFrontDetector.detectedObject);
@@ -22,6 +30,8 @@ public class LedgeGrabState : State
         {
             ledge = characterController.objectsInFrontDetector.detectedObject;
         }
+        characterController.animationsManager.setAnimationToLedgePrepareHold();
+        
     }
 
     public override void ExitState()

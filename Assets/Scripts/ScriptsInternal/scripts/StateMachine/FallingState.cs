@@ -19,7 +19,7 @@ public class FallingState : MovementState
 
     public override void FrameUpdate()
     {
-        
+
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (
             objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
@@ -27,7 +27,7 @@ public class FallingState : MovementState
             && releasedLedge != characterController.objectsInFrontDetector.detectedObject
         )
         {
-            characterController.animationsManager.setAnimationToLedgePrepareHold();
+            characterController.RotatePlayerTowardsWall();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
         }
     }

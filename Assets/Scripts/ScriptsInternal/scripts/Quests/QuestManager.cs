@@ -23,10 +23,6 @@ public class QuestManager : Observer
         eventQueue = FindAnyObjectByType<EventQueue>();
         eventQueue.SubmitEvent(new EventDTO(EventType.NPC_QUEST_AVAILABLE, npcJim));
         eventQueue.SubmitEvent(new EventDTO(EventType.NPC_QUEST_AVAILABLE, npcWolves));
-    }
-
-    private void Update()
-    {
         uiUpdater = FindAnyObjectByType<UIUpdater>();
     }
 

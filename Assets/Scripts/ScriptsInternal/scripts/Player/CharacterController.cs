@@ -103,6 +103,9 @@ public class CharacterController : Observer
 
     private float fallingStartingHeight;
 
+    [field: SerializeField]
+    public float heightAdjustment { get; private set; }
+
     public GroundDetector groundDetector { get; private set; }
 
     private void Awake()
