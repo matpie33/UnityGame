@@ -29,6 +29,7 @@ public class FallingState : MovementState
         {
             characterController.RotatePlayerTowardsWall();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
+            characterController.animationsManager.setAnimationToLedgePrepareHold();
         }
     }
 

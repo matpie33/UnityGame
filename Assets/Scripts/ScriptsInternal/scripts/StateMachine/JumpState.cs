@@ -53,6 +53,7 @@ public class JumpState : State
             {
                 characterController.RotatePlayerTowardsWall();
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);
+                characterController.animationsManager.setAnimationToLedgePrepareHold();
             }
         }
     }

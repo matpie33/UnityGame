@@ -88,7 +88,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
         float distanceToCollision = objectsInFrontVerticalDetector.distance;
         if (
             objectsInFrontVerticalDetector.collider != null
-            && distanceToCollision < climbBoundaryDistance
         )
         {
             detectedWallType = WallType.ABOVE_HEAD;

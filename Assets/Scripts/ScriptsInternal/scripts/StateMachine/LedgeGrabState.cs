@@ -17,21 +17,12 @@ public class LedgeGrabState : State
     {
         CapsuleCollider capsuleCollider = characterController.capsuleCollider;
         float wallTopYCoord = characterController.wallData.verticalCollisionPoint.y;
-        ClearVelocity();
-        characterController.transform.position = new Vector3(characterController.transform.position.x, wallTopYCoord - capsuleCollider.height + characterController.heightAdjustment, characterController.transform.position.z);
-    }
-
-    private void ClearVelocity()
-    {
-        characterController.currentVelocity = Vector3.zero;
-        characterController.rigidbody.isKinematic = true;
-        characterController.ParentToRotatingObject(characterController.objectsInFrontDetector.detectedObject);
+        
+        characterController.StopPlayerLater(wallTopYCoord);
         if (ledge == null)
         {
             ledge = characterController.objectsInFrontDetector.detectedObject;
         }
-        characterController.animationsManager.setAnimationToLedgePrepareHold();
-        
     }
 
     public override void ExitState()
@@ -51,6 +42,7 @@ public class LedgeGrabState : State
             characterController.rigidbody.isKinematic = false;
             characterController.eventQueue.SubmitEvent(new EventDTO(EventType.STARTED_FALLING, null));
             characterController.animationsManager.setAnimationToFallingFromStanding();
+            characterController.animationsManager.ApplyRootMotion(false);
             stateMachine.ChangeState(stateMachine.fallingState);
             stateMachine.fallingState.releasedLedge = characterController
                 .objectsInFrontDetector

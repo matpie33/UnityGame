@@ -158,6 +158,11 @@ public class PlayerAnimationsManager
         animator.CrossFade(anim(AnimationName.falling_from_stand), 0.1f);
     }
 
+    public void ApplyRootMotion (bool applyRootMotion)
+    {
+        animator.applyRootMotion = applyRootMotion;
+    }
+
     public void setAnimationToFallingFromRunning()
     {
         animator.CrossFade(anim(AnimationName.falling_from_run), 0.1f);

@@ -42,12 +42,7 @@
 
     public override void OnTrigger(TriggerType triggerType)
     {
-        if (triggerType.Equals(TriggerType.GROUND_DETECTED))
-        {
-            characterController.animationsManager.setAnimationToMoving();
-            stateMachine.ChangeState(stateMachine.runState);
-        }
-        else if (triggerType.Equals(TriggerType.MEDIPACK_USED))
+        if (triggerType.Equals(TriggerType.MEDIPACK_USED))
         {
             characterController.UseMedipack();
         }

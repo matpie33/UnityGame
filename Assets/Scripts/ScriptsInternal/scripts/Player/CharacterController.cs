@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class CharacterController : Observer
@@ -325,6 +326,21 @@ public class CharacterController : Observer
 
             objectWithHealth.DecreaseHealth(healthDecrease);
         }
+    }
+
+    public void StopPlayerLater (float wallTopYCoord)
+    {
+        StartCoroutine(StopPlayerCoroutine(wallTopYCoord));
+    }
+
+
+    public IEnumerator StopPlayerCoroutine(float wallTopYCoord)
+    {
+        yield return new WaitForSeconds(.05f);
+        transform.position = new Vector3(transform.position.x, wallTopYCoord - capsuleCollider.height + heightAdjustment, transform.position.z);
+        currentVelocity = Vector3.zero;
+        rigidbody.isKinematic = true;
+        ParentToRotatingObject(objectsInFrontDetector.detectedObject);
     }
 
     public void RotatePlayerTowardsWall()
