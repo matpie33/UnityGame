@@ -70,7 +70,7 @@ public class GameManager : Observer
 
     private void Awake()
     {
-        objectsWithHealth = FindObjectsByType<ObjectWithHealth>(FindObjectsSortMode.None).ToList();
+        objectsWithHealth = FindObjectsByType<ObjectWithHealth>().ToList();
         eventQueue = FindAnyObjectByType<EventQueue>();
         cameraController = FindAnyObjectByType<CameraController>();
     }
@@ -100,7 +100,7 @@ public class GameManager : Observer
                 .GetComponent<ObjectWithHealth>()
                 .healthState.SetHealth(gameStateManager.checkpointData.playerHealth);
 
-            FindObjectsByType<Object>(FindObjectsSortMode.InstanceID)
+            FindObjectsByType<Object>()
                .OfType<Restorable>()
                .Where(restorable => gameStateManager.restorableObjects.Contains(restorable.GetBaseObject().GetUUid()))
                .ToList()
@@ -131,9 +131,7 @@ public class GameManager : Observer
     private void InitializeTraps()
     {
         foreach (
-            SpikeTrapSpawner s in FindObjectsByType<SpikeTrapSpawner>(
-                FindObjectsSortMode.InstanceID
-            )
+            SpikeTrapSpawner s in FindObjectsByType<SpikeTrapSpawner>()
         )
         {
             s.Initialize();

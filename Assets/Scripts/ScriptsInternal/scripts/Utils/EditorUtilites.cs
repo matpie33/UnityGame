@@ -24,7 +24,7 @@ public class EditorUtilites : EditorWindow
     [MenuItem("GameObject/Check for duplicated components instances")]
     static void CheckComponents()
     {
-        List<GameObject> collidersGO = FindObjectsByType<BoxCollider>(FindObjectsSortMode.None)
+        List<GameObject> collidersGO = FindObjectsByType<BoxCollider>()
             .Select(collider => collider.gameObject)
             .ToList();
 
@@ -57,7 +57,7 @@ public class EditorUtilites : EditorWindow
     [MenuItem("GameObject/Update box colliders %F3")]
     static void UpdateBoxColliders()
     {
-        List<GameObject> collidersGO = FindObjectsByType<BoxCollider>(FindObjectsSortMode.None)
+        List<GameObject> collidersGO = FindObjectsByType<BoxCollider>()
             .Select(collider => collider.gameObject)
             .ToList();
 
@@ -104,7 +104,7 @@ public class EditorUtilites : EditorWindow
     {
         if (playModeStateChange.Equals(PlayModeStateChange.ExitingEditMode))
         {
-            foreach (BaseObject o in FindObjectsByType<BaseObject>(FindObjectsSortMode.None))
+            foreach (BaseObject o in FindObjectsByType<BaseObject>())
             {
                 o.SetUuid(System.Guid.NewGuid().ToString());
             }

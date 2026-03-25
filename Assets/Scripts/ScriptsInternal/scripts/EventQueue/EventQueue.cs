@@ -10,7 +10,7 @@ public class EventQueue : MonoBehaviour
 
     private void Awake()
     {
-        observers = FindObjectsByType<Observer>(FindObjectsSortMode.None).ToList();
+        observers = FindObjectsByType<Observer>().ToList();
         INSTANCE = this;
     }
 
