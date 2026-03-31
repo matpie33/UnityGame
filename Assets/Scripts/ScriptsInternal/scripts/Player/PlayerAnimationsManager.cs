@@ -170,7 +170,7 @@ public class PlayerAnimationsManager
 
     public void setAnimationToRunningJump()
     {
-        animator.CrossFade(anim(AnimationName.running_jump), 0.1f);
+        animator.CrossFade(anim(AnimationName.running_jump), 0.3f);
     }
 
     public void setAnimationToLedgeClimbing()

@@ -141,7 +141,6 @@ public abstract class MovementState : State
         else
         {
             characterController.animationsManager.setAnimationToRunningJump();
-            stateMachine.ChangeState(stateMachine.jumpState);
         }
     }
 
