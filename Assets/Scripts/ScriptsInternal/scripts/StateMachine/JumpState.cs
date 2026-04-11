@@ -49,7 +49,7 @@ public class JumpState : State
         ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
         if (IsDetectedObjectAWall())
         {
-            if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD))
+            if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD) && characterController.CanGrabLedge())
             {
                 characterController.RotatePlayerTowardsWall();
                 stateMachine.ChangeState(stateMachine.ledgeGrabState);

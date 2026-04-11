@@ -109,6 +109,9 @@ public class CharacterController : Observer
 
     public GroundDetector groundDetector { get; private set; }
 
+    [field: SerializeField]
+    public TriggerDetector canGrabLedgeDetector { get; private set; }
+
     private void Awake()
     {
         wallData = new WallData();
@@ -401,4 +404,10 @@ public class CharacterController : Observer
     {
         Invoke(nameof(DisableRootMotion), 0.5f);
     }
+
+    public bool CanGrabLedge ()
+    {
+        return !canGrabLedgeDetector.isColliding;
+    }
+
 }

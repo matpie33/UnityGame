@@ -25,6 +25,7 @@ public class FallingState : MovementState
             objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
             && IsDetectedObjectAWall()
             && releasedLedge != characterController.objectsInFrontDetector.detectedObject
+            && characterController.CanGrabLedge()
         )
         {
             characterController.RotatePlayerTowardsWall();
