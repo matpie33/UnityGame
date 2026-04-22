@@ -15,9 +15,15 @@ public class DisappearingGround : MonoBehaviour
 
     private bool isRunning = true;
 
+    private bool isDisappearing = false;
+
     private List<Collider> colliderObjects;
 
     private List<MeshRenderer> meshRenderers;
+
+    private Material material;
+
+    private float timeElapsed = 0f;
 
     void Start()
     {
@@ -27,19 +33,39 @@ public class DisappearingGround : MonoBehaviour
         colliderObjects.AddRange(GetComponentsInChildren<Collider>());
         meshRenderers.Add(GetComponent<MeshRenderer>()); 
         meshRenderers.AddRange(GetComponentsInChildren<MeshRenderer>());
+        material = meshRenderers[0].material;
         StartCoroutine(DisappearAndAppear());
+    }
+
+    private void Update()
+    {
+        Color color = material.color;
+        if (isDisappearing)
+        {
+            timeElapsed += Time.deltaTime;
+            float alpha = Mathf.Clamp01((visibleTime - timeElapsed) / visibleTime);
+            color.a = alpha;
+        }
+        material.color = color;
     }
 
     private IEnumerator DisappearAndAppear()
     {
+
+        Color color = material.color;
+        color.a = 0;
+        material.color = color;
         yield return new WaitForSeconds(initialDelay);
+
         while (isRunning)
         {
             colliderObjects.ForEach(collider => collider.enabled = false);
-            meshRenderers.ForEach(renderer => renderer.enabled = false);
+            isDisappearing = false;
+            timeElapsed = 0f;
             yield return new WaitForSeconds(invisibleTime);
             colliderObjects.ForEach(collider => collider.enabled = true);
-            meshRenderers.ForEach(renderer => renderer.enabled = true);
+            isDisappearing = true;
+            timeElapsed = 0f;
             yield return new WaitForSeconds(visibleTime);
         }
     }
