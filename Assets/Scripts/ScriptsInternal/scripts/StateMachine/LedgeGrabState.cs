@@ -44,9 +44,7 @@ public class LedgeGrabState : State
             characterController.animationsManager.setAnimationToFallingFromStanding();
             characterController.animationsManager.ApplyRootMotion(false);
             stateMachine.ChangeState(stateMachine.fallingState);
-            stateMachine.fallingState.releasedLedge = characterController
-                .objectsInFrontDetector
-                .detectedObject;
+            stateMachine.fallingState.releasedLedge = ledge;
             ledge = null;
         }
         else if (ActionKeys.IsKeyPressed(ActionKeys.CLIMB_LEDGE))

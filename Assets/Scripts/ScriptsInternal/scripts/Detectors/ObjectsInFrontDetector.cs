@@ -87,7 +87,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
     {
         float distanceToCollision = objectsInFrontVerticalDetector.distance;
         if (
-            objectsInFrontVerticalDetector.collider != null
+            objectsInFrontVerticalDetector.collider != null && objectsInFrontVerticalDetector.collider.gameObject != detectedObject
         )
         {
             detectedWallType = WallType.ABOVE_HEAD;
@@ -99,6 +99,10 @@ public class ObjectsInFrontDetector : MonoBehaviour
             directionFromPlayerToWall.y = 0;
             horizontalCollisionPosition = collisionPoint;
             this.directionFromPlayerToWall = directionFromPlayerToWall;
+        }
+        if (objectsInFrontVerticalDetector.collider == null)
+        {
+            detectedObject = null;
         }
     }
 
@@ -259,7 +263,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
             transform.position + transform.forward * forwardOffset + transform.up * height;
         Physics.Raycast(
             originPosition,
-            transform.up * -1,
+            -transform.up,
             out result,
             maxDistance,
             ~0,

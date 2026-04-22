@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DisappearingGround : MonoBehaviour
@@ -21,7 +22,7 @@ public class DisappearingGround : MonoBehaviour
 
     private List<MeshRenderer> meshRenderers;
 
-    private Material material;
+    private Material[] materials;
 
     private float timeElapsed = 0f;
 
@@ -33,28 +34,36 @@ public class DisappearingGround : MonoBehaviour
         colliderObjects.AddRange(GetComponentsInChildren<Collider>());
         meshRenderers.Add(GetComponent<MeshRenderer>()); 
         meshRenderers.AddRange(GetComponentsInChildren<MeshRenderer>());
-        material = meshRenderers[0].material;
+        materials = meshRenderers.Select(meshRenderer => meshRenderer.material).ToArray();
         StartCoroutine(DisappearAndAppear());
     }
 
     private void Update()
     {
-        Color color = material.color;
-        if (isDisappearing)
+        timeElapsed += Time.deltaTime;
+        foreach (Material material in materials)
         {
-            timeElapsed += Time.deltaTime;
-            float alpha = Mathf.Clamp01((visibleTime - timeElapsed) / visibleTime);
-            color.a = alpha;
+            if (isDisappearing)
+            {
+                Color color = material.color;
+                
+                float alpha = Mathf.Clamp01((visibleTime - timeElapsed) / visibleTime);
+                color.a = alpha;
+                material.color = color;
+            }
         }
-        material.color = color;
+        
     }
 
     private IEnumerator DisappearAndAppear()
     {
 
-        Color color = material.color;
-        color.a = 0;
-        material.color = color;
+        foreach (Material material in materials)
+        {
+            Color color = material.color;
+            color.a = 0;
+            material.color = color;
+        }
         yield return new WaitForSeconds(initialDelay);
 
         while (isRunning)

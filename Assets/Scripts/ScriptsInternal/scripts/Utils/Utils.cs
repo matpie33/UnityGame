@@ -9,6 +9,6 @@ public class Utils
         {
             return false;
         }
-        return gameObject.transform.parent.gameObject.GetComponent(component) != null;
+        return gameObject != null && gameObject.transform.parent.gameObject.GetComponent(component) != null;
     }
 }
