@@ -34,7 +34,7 @@ public class DisappearingGround : MonoBehaviour
         colliderObjects.AddRange(GetComponentsInChildren<Collider>());
         meshRenderers.Add(GetComponent<MeshRenderer>()); 
         meshRenderers.AddRange(GetComponentsInChildren<MeshRenderer>());
-        materials = meshRenderers.Select(meshRenderer => meshRenderer.material).ToArray();
+        materials = meshRenderers.SelectMany(meshRenderer => meshRenderer.materials).ToArray();
         StartCoroutine(DisappearAndAppear());
     }
 
