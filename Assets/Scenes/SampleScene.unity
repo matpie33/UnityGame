@@ -18233,8 +18233,12 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
+      propertyPath: spikeRows.Array.data[0].timeUp
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: spikeRows.Array.data[1].timeUp
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: spikeRows.Array.data[2].timeUp
@@ -18242,11 +18246,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: spikeRows.Array.data[0].timeDown
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: spikeRows.Array.data[1].timeDown
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: spikeRows.Array.data[2].timeDown
@@ -18258,7 +18262,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: spikeRows.Array.data[1].initialDelay
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: spikeRows.Array.data[2].initialDelay
@@ -35886,15 +35890,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 192.85721
+      value: 188.27081
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 41.24158
+      value: 40.62
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1781.7455
+      value: 1795.73
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33ce73efe14ee184bb7a497f95dde4af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -112302,6 +112306,22 @@ PrefabInstance:
     - target: {fileID: 1373893077321997260, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: m_Name
       value: spikeTrapParent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
+      propertyPath: spikeRows.Array.data[0].timeUp
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
+      propertyPath: spikeRows.Array.data[1].timeUp
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
+      propertyPath: spikeRows.Array.data[0].timeDown
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141501837723915810, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
+      propertyPath: spikeRows.Array.data[0].initialDelay
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8667013997671756565, guid: f36f5f5e4d0e851479baf8a26e5b0d6b, type: 3}
       propertyPath: m_LocalPosition.x
