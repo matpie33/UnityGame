@@ -48,7 +48,7 @@ public abstract class MovementState : State
         targetSpeed = _moveInputVector == Vector3.zero ? 0 : getTargetSpeed();
         if (PlayerInputs.MoveAxisForwardRaw == -1)
         {
-            targetSpeed = 1.3f;
+            targetSpeed = 2.3f;
         }
 
         if (
@@ -83,6 +83,11 @@ public abstract class MovementState : State
             if (slopeForward.sqrMagnitude > 0.001f)
             {
                 Vector3 targetForward = Vector3.ProjectOnPlane(slopeForward, Vector3.up).normalized;
+
+                if (PlayerInputs.MoveAxisForwardRaw == -1)
+                {
+                     targetForward = -targetForward;
+                }
 
                 characterController.transform.forward = Vector3.Slerp(
                     characterController.transform.forward,
