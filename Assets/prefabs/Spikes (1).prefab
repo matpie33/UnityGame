@@ -83,11 +83,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.023964334, y: 0.021148812, z: 0.018586181}
+  m_Size: {x: 0.023964334, y: 0.021148812, z: 0.01798618}
   m_Center: {x: -0.00039817672, y: -0.00016835934, z: 0.009730879}
 --- !u!114 &5375167218370127977
 MonoBehaviour:
@@ -101,3 +101,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b6ebfa911be044db34f8c90b130ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minSpeedToDefeatPlayer: 0
