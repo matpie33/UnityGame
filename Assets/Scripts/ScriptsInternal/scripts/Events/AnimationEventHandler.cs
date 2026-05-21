@@ -65,7 +65,13 @@ public class AnimationEventHandler : Observer
 
     public void JumpStart()
     {
+        Invoke(nameof(Jump), 0.2f);
+        
+    }
+    private void Jump ()
+    {
         characterController.stateMachine.ChangeState(characterController.stateMachine.jumpState);
+        characterController.rigidbody.isKinematic = false;
     }
 
     public void DoorOpeningSpawnKey()
