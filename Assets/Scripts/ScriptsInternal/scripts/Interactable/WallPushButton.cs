@@ -5,8 +5,6 @@ public class WallPushButton : Interactable, Restorable
     [SerializeField]
     private GameObject wallToPush;
 
-    private Rigidbody rb;
-
     [SerializeField]
     private float force;
 
@@ -15,15 +13,17 @@ public class WallPushButton : Interactable, Restorable
     [SerializeField]
     private AnimationClip cameraAnimation;
 
+    private Animator animator;
+
     private void Start()
     {
-        rb = wallToPush.GetComponent<Rigidbody>();
         eventQueue = FindAnyObjectByType<EventQueue>();
+        animator = wallToPush.GetComponent<Animator>();
     }
 
     public void PushWall()
     {
-        rb.AddForce(transform.forward * force * rb.mass, ForceMode.Impulse);
+        animator.Play("BridgeLowering");
     }
 
     public override void Interact(Object data)
