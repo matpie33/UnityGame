@@ -21,11 +21,18 @@ public class JumpState : State
         characterController.UnparentFromRotatingObject();
     }
 
-    private bool IsDetectedObjectAWall()
+
+    override public void FrameUpdate()
     {
-        return !characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.NO_WALL)
-            && characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
-                == null;
+
+
+        if (characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD) && characterController.CanGrabLedge() && 
+            Vector3.Distance( characterController.objectsInFrontDetector.ledgeCollisionPoint, characterController.transform.position + characterController.capsuleCollider.height * Vector3.up) < 2f)
+        {
+            characterController.RotatePlayerTowardsWall();
+            stateMachine.ChangeState(stateMachine.ledgeGrabState);
+            characterController.animationsManager.setAnimationToLedgePrepareHold();
+        }
     }
 
     public override void PhysicsUpdate()
@@ -46,16 +53,6 @@ public class JumpState : State
             Time.deltaTime * characterController.horizontalSpeedDecreaseTime
         );
 
-        ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
-        if (IsDetectedObjectAWall())
-        {
-            if (objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD) && characterController.CanGrabLedge())
-            {
-                characterController.RotatePlayerTowardsWall();
-                stateMachine.ChangeState(stateMachine.ledgeGrabState);
-                characterController.animationsManager.setAnimationToLedgePrepareHold();
-            }
-        }
     }
 
     public override void OnTrigger(TriggerType triggerType)

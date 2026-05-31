@@ -20,13 +20,10 @@ public class FallingState : MovementState
     public override void FrameUpdate()
     {
 
-        ObjectsInFrontDetector objectsInFrontDetector = characterController.objectsInFrontDetector;
-        if (
-            objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD)
-            && IsDetectedObjectAWall()
-            && releasedLedge != characterController.objectsInFrontDetector.detectedObject
-            && characterController.CanGrabLedge()
-        )
+        if (releasedLedge != characterController.objectsInFrontDetector.detectedObject 
+            && characterController.objectsInFrontDetector.detectedObject != null && 
+            characterController.objectsInFrontDetector.detectedWallType.Equals(WallType.ABOVE_HEAD) && characterController.CanGrabLedge() &&
+            Vector3.Distance(characterController.objectsInFrontDetector.ledgeCollisionPoint, characterController.transform.position + characterController.capsuleCollider.height * Vector3.up) < 0.6f)
         {
             characterController.RotatePlayerTowardsWall();
             stateMachine.ChangeState(stateMachine.ledgeGrabState);
@@ -39,12 +36,6 @@ public class FallingState : MovementState
         base.Move(characterController.currentVelocity.normalized, characterController.transform.forward);
     }
 
-    private bool IsDetectedObjectAWall()
-    {
-        return characterController.objectsInFrontDetector.detectedObject != null
-            && characterController.objectsInFrontDetector.detectedObject.GetComponent<NavMeshAgent>()
-                == null;
-    }
 
     public override float getTargetSpeed()
     {

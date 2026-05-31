@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ObjectsInFrontDetector : MonoBehaviour
 {
@@ -50,20 +51,29 @@ public class ObjectsInFrontDetector : MonoBehaviour
     private float forwardOffsetVerticalDetector;
 
     [SerializeField]
-    private float groundDetectorHeight;
-
-    [SerializeField]
-    private float groundDetectorMaxDistanceToGround;
-
-    [SerializeField]
-    private float groundDetectorCollisionMaxDistance;
-
-    [SerializeField]
     private float slopeMinDistanceToDetector;
 
     private bool adjustHeightForCrouch;
 
+    [FormerlySerializedAs("newDetectorHeight")]
+    [SerializeField]
+    private float ledgeDetectorHeight;
+
+    [FormerlySerializedAs("newDetectorMaxDistance")]
+    [SerializeField]
+    private float ledgeDetectorMaxDistance;
+
     private CharacterController characterController;
+
+    public Vector3 ledgeCollisionPoint;
+
+    [FormerlySerializedAs("aboveHipsModifier")]
+    [SerializeField]
+    private float aboveHipsOffset;
+
+    [FormerlySerializedAs("aboveHeadModifier")]
+    [SerializeField]
+    private float aboveHeadOffset;
 
     private void Start()
     {
@@ -81,29 +91,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
     public void SetIsCrouching(bool crouching)
     {
         adjustHeightForCrouch = crouching;
-    }
-
-    private void DetectLedges(RaycastHit objectsInFrontVerticalDetector)
-    {
-        float distanceToCollision = objectsInFrontVerticalDetector.distance;
-        if (
-            objectsInFrontVerticalDetector.collider != null && objectsInFrontVerticalDetector.collider.gameObject != detectedObject
-        )
-        {
-            detectedWallType = WallType.ABOVE_HEAD;
-            detectedObject = objectsInFrontVerticalDetector.collider.gameObject;
-            verticalCollisionPosition = objectsInFrontVerticalDetector.point;
-            Vector3 collisionPoint = objectsInFrontVerticalDetector.point;
-            Vector3 playerPositionSameHeight = new Vector3(transform.position.x, collisionPoint.y, transform.position.z);
-            Vector3 directionFromPlayerToWall = collisionPoint - playerPositionSameHeight;
-            directionFromPlayerToWall.y = 0;
-            horizontalCollisionPosition = collisionPoint;
-            this.directionFromPlayerToWall = directionFromPlayerToWall;
-        }
-        if (objectsInFrontVerticalDetector.collider == null)
-        {
-            detectedObject = null;
-        }
     }
 
     private void DetectObjectsInFront(
@@ -175,13 +162,59 @@ public class ObjectsInFrontDetector : MonoBehaviour
             forwardOffsetHorizontalDetector,
             false
         );
-        if (characterController.groundDetector.isCollidingWithGround)
+        
+
+        DetectObjectsInFront(objectsInFrontVerticalDetector, objectsInFrontHorizontalDetector);
+
+        float height = ledgeDetectorHeight;
+        if (!characterController.groundDetector.isCollidingWithGround)
         {
-            DetectObjectsInFront(objectsInFrontVerticalDetector, objectsInFrontHorizontalDetector);
+            height -= 2;
         }
-        else
+        RaycastHit ledgeDetector = CastRayVertical(
+            height - CrouchingAdjustment(),
+            true,
+            ledgeDetectorMaxDistance - CrouchingAdjustment(),
+            forwardOffsetVerticalDetector
+        );                    
+        DetectLedges(ledgeDetector);
+    }
+
+    private void DetectLedges(RaycastHit ledgeDetector)
+    {
+        if (ledgeDetector.collider != null)
         {
-            DetectLedges(objectsInFrontVerticalDetector);
+            float distanceToCollision = ledgeDetector.distance;
+            ledgeCollisionPoint = ledgeDetector.point;
+
+            float collisionYPoint = ledgeCollisionPoint.y;
+            if (collisionYPoint > transform.position.y + aboveHeadOffset)
+            {
+
+                detectedWallType = WallType.ABOVE_HEAD;
+            }
+            else if (collisionYPoint > transform.position.y + aboveHipsOffset)
+            {
+                detectedWallType = WallType.ABOVE_HIPS;
+            }
+            else
+            {
+                detectedWallType = WallType.BELOW_HIPS;
+            }
+
+
+            detectedObject = ledgeDetector.collider.gameObject;
+            verticalCollisionPosition = ledgeDetector.point;
+            Vector3 collisionPoint = ledgeDetector.point;
+            Vector3 playerPositionSameHeight = new Vector3(transform.position.x, collisionPoint.y, transform.position.z);
+            Vector3 directionFromPlayerToWall = collisionPoint - playerPositionSameHeight;
+            directionFromPlayerToWall.y = 0;
+            horizontalCollisionPosition = collisionPoint;
+            this.directionFromPlayerToWall = directionFromPlayerToWall;
+        } else
+        {
+            detectedObject = null;
+            detectedWallType = WallType.NO_WALL;
         }
     }
 
