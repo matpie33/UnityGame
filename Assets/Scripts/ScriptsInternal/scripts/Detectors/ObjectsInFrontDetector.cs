@@ -63,6 +63,9 @@ public class ObjectsInFrontDetector : MonoBehaviour
     [SerializeField]
     private float ledgeDetectorMaxDistance;
 
+    [SerializeField]
+    private float ledgeDetectorForwardOffset;
+
     private CharacterController characterController;
 
     public Vector3 ledgeCollisionPoint;
@@ -175,12 +178,12 @@ public class ObjectsInFrontDetector : MonoBehaviour
             height - CrouchingAdjustment(),
             true,
             ledgeDetectorMaxDistance - CrouchingAdjustment(),
-            forwardOffsetVerticalDetector
+            ledgeDetectorForwardOffset
         );                    
-        DetectLedges(ledgeDetector);
+        DetectLedges(ledgeDetector, objectsInFrontVerticalDetector);
     }
 
-    private void DetectLedges(RaycastHit ledgeDetector)
+    private void DetectLedges(RaycastHit ledgeDetector, RaycastHit objectsInFrontVerticalDetector)
     {
         if (ledgeDetector.collider != null)
         {
@@ -188,20 +191,24 @@ public class ObjectsInFrontDetector : MonoBehaviour
             ledgeCollisionPoint = ledgeDetector.point;
 
             float collisionYPoint = ledgeCollisionPoint.y;
-            if (collisionYPoint > transform.position.y + aboveHeadOffset)
+            var angle = Vector3.Angle(ledgeDetector.normal, transform.up);
+            if (angle < .5f || !characterController.groundDetector.isCollidingWithGround)
             {
+                if (collisionYPoint > transform.position.y + aboveHeadOffset)
+                {
 
-                detectedWallType = WallType.ABOVE_HEAD;
+                    detectedWallType = WallType.ABOVE_HEAD;
+                }
+                else if (collisionYPoint > transform.position.y + aboveHipsOffset)
+                {
+                    detectedWallType = WallType.ABOVE_HIPS;
+                }
+                else
+                {
+                    detectedWallType = WallType.BELOW_HIPS;
+                }
             }
-            else if (collisionYPoint > transform.position.y + aboveHipsOffset)
-            {
-                detectedWallType = WallType.ABOVE_HIPS;
-            }
-            else
-            {
-                detectedWallType = WallType.BELOW_HIPS;
-            }
-
+           
 
             detectedObject = ledgeDetector.collider.gameObject;
             verticalCollisionPosition = ledgeDetector.point;
