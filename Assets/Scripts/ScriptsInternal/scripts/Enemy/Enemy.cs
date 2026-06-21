@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
     [field: SerializeField]
     public EnemyType enemyType { get; private set; }
 
-    private WolfStateMachine wolfStateMachine;
+    private AnimalStateMachine animalStateMachine;
     private bool isStunned;
     private float minDistanceToAttack;
     private float offset = .3f;
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
         characterController = FindAnyObjectByType<CharacterController>();
         initialPosition = transform.position;
         initialRotation = transform.rotation;
-        wolfStateMachine = GetComponent<WolfStateMachine>();
+        animalStateMachine = GetComponent<AnimalStateMachine>();
         enemyAttackPositionSearch = EnemyAttackPositionSearch.INSTANCE;
     }
 
@@ -141,7 +141,7 @@ public class Enemy : MonoBehaviour
 
     public void Stun(float stunTime)
     {
-        wolfStateMachine.ChangeState(wolfStateMachine.wolfStunState);
+        animalStateMachine.ChangeState(animalStateMachine.StunState);
         isStunned = true;
         CancelInvoke(nameof(CancelStun));
         Invoke(nameof(CancelStun), stunTime);
@@ -169,7 +169,7 @@ public class Enemy : MonoBehaviour
                     ),
                     0.1f
                 );
-                wolfStateMachine.ChangeState(wolfStateMachine.wolfBiteState);
+                animalStateMachine.ChangeState(animalStateMachine.BiteState);
             }
             else
             {
@@ -177,18 +177,18 @@ public class Enemy : MonoBehaviour
                 Vector3 destination = enemyAttackPositionSearch.GetPositionForEnemy(this);
                 if (destination.Equals(Vector3.zero))
                 {
-                    wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
+                    animalStateMachine.ChangeState(animalStateMachine.IdleState);
                 }
                 else
                 {
                     navMeshAgent.SetDestination(destination);
-                    wolfStateMachine.ChangeState(wolfStateMachine.wolfRunState);
+                    animalStateMachine.ChangeState(animalStateMachine.RunState);
                 }
             }
         }
         else
         {
-            wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
+            animalStateMachine.ChangeState(animalStateMachine.IdleState);
             enemyAttackPositionSearch.ClearEnemyPlaceIfWasNearPlayer(this);
 
             attackedPerson = null;
@@ -205,6 +205,6 @@ public class Enemy : MonoBehaviour
     internal void ClearPath()
     {
         navMeshAgent.isStopped = true;
-        wolfStateMachine.ChangeState(wolfStateMachine.wolfIdleState);
+        animalStateMachine.ChangeState(animalStateMachine.IdleState);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class WolfAnimationsManager
+public class AnimalAnimationsManager
 {
     private Animator animator;
 
@@ -20,7 +20,7 @@ public class WolfAnimationsManager
         return BASE_LAYER + "." + animation;
     }
 
-    public WolfAnimationsManager(Animator animator)
+    public AnimalAnimationsManager(Animator animator)
     {
         this.animator = animator;
     }

@@ -1,18 +1,16 @@
-using UnityEngine;
 
 public class WolfStunnedState : State
 {
-    private WolfStateMachine wolfStateMachine;
+    private AnimalAnimationsManager animationsManager;
 
-    public WolfStunnedState(WolfStateMachine stateMachine)
+    public WolfStunnedState(AnimalAnimationsManager animationsManager)
         : base()
     {
-        this.wolfStateMachine = stateMachine;
+        this.animationsManager = animationsManager;
     }
 
     public override void EnterState()
     {
-        WolfAnimationsManager animationsManager = this.wolfStateMachine.wolfAnimationsManager;
         animationsManager.setAnimationToStunned();
     }
 }

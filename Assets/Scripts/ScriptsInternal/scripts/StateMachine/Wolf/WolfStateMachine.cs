@@ -1,25 +1,15 @@
-using UnityEngine;
 
-public class WolfStateMachine : StateMachine
+public class WolfStateMachine : AnimalStateMachine
 {
-    public WolfRunState wolfRunState { get; private set; }
-    public WolfIdleState wolfIdleState { get; private set; }
-    public WolfBiteState wolfBiteState { get; private set; }
-    public WolfStunnedState wolfStunState { get; private set; }
-
-    public WolfAnimationsManager wolfAnimationsManager { get; private set; }
-
-    private void Awake() { }
 
     private void Start()
     {
-        wolfRunState = new WolfRunState(this);
-        wolfIdleState = new WolfIdleState(this);
-        wolfBiteState = new WolfBiteState(this);
-        wolfStunState = new WolfStunnedState(this);
-        wolfAnimationsManager = new WolfAnimationsManager(GetComponentInParent<Animator>());
+        RunState = new WolfRunState(animalAnimationsManager);
+        IdleState = new WolfIdleState(animalAnimationsManager);
+        BiteState = new WolfBiteState(animalAnimationsManager);
+        StunState = new WolfStunnedState(animalAnimationsManager);
 
-        currentState = wolfIdleState;
+        currentState = IdleState;
         currentState.EnterState();
     }
 }

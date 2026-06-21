@@ -1,19 +1,15 @@
-﻿using UnityEditor;
-using UnityEngine;
-
-public class WolfIdleState : State
+﻿public class WolfIdleState : State
 {
-    private WolfStateMachine wolfStateMachine;
+    private AnimalAnimationsManager animationsManager;
 
-    public WolfIdleState(WolfStateMachine stateMachine)
+    public WolfIdleState(AnimalAnimationsManager animationsManager)
         : base()
     {
-        this.wolfStateMachine = stateMachine;
+        this.animationsManager = animationsManager;
     }
 
     public override void EnterState()
     {
-        WolfAnimationsManager animationsManager = this.wolfStateMachine.wolfAnimationsManager;
         animationsManager.setAnimationToIdle();
     }
 }

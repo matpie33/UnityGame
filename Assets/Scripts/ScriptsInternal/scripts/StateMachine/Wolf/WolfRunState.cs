@@ -1,19 +1,16 @@
-﻿using UnityEditor;
-using UnityEngine;
-
+﻿
 public class WolfRunState : State
 {
-    private WolfStateMachine wolfStateMachine;
+    private AnimalAnimationsManager animationsManager;
 
-    public WolfRunState(WolfStateMachine stateMachine)
+    public WolfRunState(AnimalAnimationsManager animationsManager)
         : base()
     {
-        this.wolfStateMachine = stateMachine;
+        this.animationsManager = animationsManager;
     }
 
     public override void EnterState()
     {
-        WolfAnimationsManager animationsManager = this.wolfStateMachine.wolfAnimationsManager;
         animationsManager.setAnimationToRun();
     }
 }

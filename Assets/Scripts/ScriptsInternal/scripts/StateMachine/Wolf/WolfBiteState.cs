@@ -1,19 +1,16 @@
-﻿using UnityEditor;
-using UnityEngine;
-
+﻿
 public class WolfBiteState : State
 {
-    private WolfStateMachine wolfStateMachine;
+    private AnimalAnimationsManager animationsManager;
 
-    public WolfBiteState(WolfStateMachine stateMachine)
+    public WolfBiteState(AnimalAnimationsManager animationsManager)
         : base()
     {
-        this.wolfStateMachine = stateMachine;
+        this.animationsManager = animationsManager;
     }
 
     public override void EnterState()
     {
-        WolfAnimationsManager animationsManager = this.wolfStateMachine.wolfAnimationsManager;
         animationsManager.setAnimationToBite();
     }
 }
