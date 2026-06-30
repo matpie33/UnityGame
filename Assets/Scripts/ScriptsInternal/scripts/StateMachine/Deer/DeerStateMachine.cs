@@ -8,6 +8,7 @@ public class DeerStateMachine : AnimalStateMachine
         IdleState = new DeerIdleState(animalAnimationsManager);
         BiteState = new DeerBiteState(animalAnimationsManager);
         StunState = new DeerStunnedState(animalAnimationsManager);
+        UseRootMotionForRun = true;
 
         currentState = IdleState;
         currentState.EnterState();

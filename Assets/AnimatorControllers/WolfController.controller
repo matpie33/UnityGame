@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 807bb5269b1c1644d99a78acdcaaf976, type: 2}
+  m_Motion: {fileID: -4213626760757593144, guid: e8887f439d858c64192b0013b97e4e63, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -90,32 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 690c468cecb433346866ad2eeae69419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1102 &-4194379086929874802
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: wolf attack
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a3502f8cd225cae41b80ec9ba5bc675a, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &-3173250673658207643
 AnimatorState:
   serializedVersion: 6
@@ -219,9 +193,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -3173250673658207643}
     m_Position: {x: 310, y: -40, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -4194379086929874802}
-    m_Position: {x: 310, y: 250, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7078248208794771568}
     m_Position: {x: 310, y: 180, z: 0}

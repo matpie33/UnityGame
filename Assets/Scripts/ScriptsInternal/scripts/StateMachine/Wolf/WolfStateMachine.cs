@@ -8,6 +8,7 @@ public class WolfStateMachine : AnimalStateMachine
         IdleState = new WolfIdleState(animalAnimationsManager);
         BiteState = new WolfBiteState(animalAnimationsManager);
         StunState = new WolfStunnedState(animalAnimationsManager);
+        UseRootMotionForRun = false;
 
         currentState = IdleState;
         currentState.EnterState();

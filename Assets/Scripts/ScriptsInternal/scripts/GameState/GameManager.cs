@@ -28,8 +28,6 @@ public class GameManager : Observer
 
     private CameraController cameraController;
 
-    private EnemyAttackPositionSearch enemyAttackPositionSearch;
-
     public InterruptableAnimationsHandler interruptableAnimationsHandler { get; set; }
 
     private void OnApplicationQuit()
@@ -120,7 +118,6 @@ public class GameManager : Observer
         characterController = FindAnyObjectByType<CharacterController>();
         InitializeTraps();
         ReloadScene();
-        enemyAttackPositionSearch = GetComponent<EnemyAttackPositionSearch>();
     }
 
     public void ReloadFromCheckpoint()
@@ -184,7 +181,6 @@ public class GameManager : Observer
                     eventQueue.SubmitEvent(
                         new EventDTO(EventType.ENEMY_KILLED, objectWithHealth.gameObject)
                     );
-                    enemyAttackPositionSearch.EnemyGone(objectWithHealth.GetComponent<Enemy>());
                     gameStateManager.AddKilledEnemy(objectWithHealth);
                     if (objectWithHealth.GetComponentInParent<QuestObject>())
                     {

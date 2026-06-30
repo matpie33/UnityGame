@@ -7,6 +7,8 @@ public abstract class AnimalStateMachine : StateMachine
     public State BiteState { get; set; }
     public State StunState { get; set; }
 
+    public bool UseRootMotionForRun { get; protected set; }
+
     public AnimalAnimationsManager animalAnimationsManager { get; private set; }
 
     private void Awake() {

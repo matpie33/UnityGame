@@ -27,7 +27,8 @@ public class AnimalAnimationsManager
 
     public void setAnimationToRun()
     {
-        animator.CrossFade(anim(Animation.run), 0.03f);
+        animator.applyRootMotion = true;
+        animator.CrossFade(anim(Animation.run), 0.1f);
     }
 
     public void setAnimationToStunned()
@@ -37,11 +38,12 @@ public class AnimalAnimationsManager
 
     public void setAnimationToIdle()
     {
-        animator.CrossFade(anim(Animation.idle), 0.1f);
+        animator.CrossFade(anim(Animation.idle), 0.5f);
     }
 
     public void setAnimationToBite()
     {
-        animator.CrossFade(anim(Animation.bite), 0.1f);
+        animator.applyRootMotion = true;
+        animator.Play(anim(Animation.bite));
     }
 }
