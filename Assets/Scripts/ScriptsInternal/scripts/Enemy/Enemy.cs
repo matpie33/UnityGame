@@ -29,11 +29,7 @@ public class Enemy : MonoBehaviour
 
     private AnimalStateMachine animalStateMachine;
     private bool isStunned;
-    private float minDistanceToAttack;
     private float offsetForStoppingDistance = .5f;
-
-    [SerializeField]
-    private bool debugMinDistanceToAttack;
 
 
     public GameObject dbgObj;
@@ -70,15 +66,6 @@ public class Enemy : MonoBehaviour
     public void FinishedAttack()
     {
         isAttacking = false;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (debugMinDistanceToAttack)
-        {
-            Gizmos.color = Color.gray;
-            Gizmos.DrawSphere(transform.position, minDistanceToAttack);
-        }
     }
 
 
