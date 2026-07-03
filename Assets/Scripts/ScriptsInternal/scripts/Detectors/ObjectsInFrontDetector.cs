@@ -185,7 +185,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
 
     private void DetectLedges(RaycastHit ledgeDetector, RaycastHit objectsInFrontVerticalDetector)
     {
-        if (ledgeDetector.collider != null)
+        if (ledgeDetector.collider != null && !ledgeDetector.collider.gameObject.CompareTag(Tags.ENEMY))
         {
             float distanceToCollision = ledgeDetector.distance;
             ledgeCollisionPoint = ledgeDetector.point;
