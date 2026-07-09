@@ -32,9 +32,6 @@ public class Enemy : MonoBehaviour
     private float offsetForStoppingDistance = .5f;
 
 
-    public GameObject dbgObj;
-
-
     private void Start()
     {
         navMeshAgent = GetComponentInChildren<NavMeshAgent>();
