@@ -5,7 +5,7 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode SKIP_NPC_AUDIO = KeyCode.Return;
     public const KeyCode MOUSE_ENABLE = KeyCode.F1;
     public const KeyCode JUMP = KeyCode.Space;
-    public const KeyCode INTERACT = KeyCode.E;
+    public const KeyCode INTERACT = KeyCode.U;
     public const KeyCode USE_MEDIPACK = KeyCode.Alpha1;
     public const KeyCode CROUCH = KeyCode.C;
     public const KeyCode LEDGE_RELEASE = KeyCode.LeftControl;
@@ -14,7 +14,7 @@ public class ActionKeys : MonoBehaviour
     public const KeyCode WALK_DOWN_LEDGE = KeyCode.LeftControl;
     public const KeyCode OPEN_STATS_PANEL = KeyCode.Tab;
     
-    public const KeyCode DODGE_RIGHT = KeyCode.R;
+    public const KeyCode DODGE_RIGHT = KeyCode.E;
     public const KeyCode DODGE_LEFT = KeyCode.Q;
     public const KeyCode PUSH_OBJECT = KeyCode.E;
 
