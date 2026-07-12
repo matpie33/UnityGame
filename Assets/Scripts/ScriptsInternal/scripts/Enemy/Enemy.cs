@@ -31,6 +31,10 @@ public class Enemy : MonoBehaviour
     private bool isStunned;
     private float offsetForStoppingDistance = .5f;
     private bool isDead;
+    private bool isInStunCooldown;
+    private int stunCooldownSeconds = 15;
+    private float stunTimer;
+    private bool isDoingAttackAnimation;
 
     private void Start()
     {
@@ -47,7 +51,10 @@ public class Enemy : MonoBehaviour
         if (isAttacking)
         {
             isAttacking = false;
-            return true;
+            Vector3 directionToPlayer = (characterController.transform.position - transform.position).normalized;
+            float dot = Vector3.Dot(transform.forward, directionToPlayer);
+            bool isInFront = dot > 0.95f;
+            return IsPlayerInAttackRange() && isInFront;
         }
         else
         {
@@ -63,17 +70,27 @@ public class Enemy : MonoBehaviour
     public void FinishedAttack()
     {
         isAttacking = false;
+        isDoingAttackAnimation = false;
+    }
+
+    public void AttackAnimationStart ()
+    {
+        isDoingAttackAnimation = true;
     }
 
 
     private void Update()
     {
+        stunTimer += Time.deltaTime;
         if (isStunned || isDead)
         {
             return;
         }
 
-        transform.LookAt(characterController.transform.position);
+        if (!isDoingAttackAnimation)
+        {
+            transform.LookAt(characterController.transform.position);
+        }
 
         float localMinDistance = Mathf.Infinity;
         Vector3 closestObject = Vector3.zero;
@@ -102,9 +119,9 @@ public class Enemy : MonoBehaviour
         {
             navMeshAgent.destination = this.attackedPerson.transform.position;
 
-            if (Vector3.Distance(transform.position, navMeshAgent.destination) <= navMeshAgent.stoppingDistance)
+            if (IsPlayerInAttackRange())
             {
-                
+
                 navMeshAgent.isStopped = true;
                 if (animalStateMachine.currentState == animalStateMachine.RunState)
                 {
@@ -112,7 +129,7 @@ public class Enemy : MonoBehaviour
                 }
                 animalStateMachine.ChangeState(animalStateMachine.BiteState);
             }
-            else if (animalStateMachine.currentState != animalStateMachine.RunState)
+            else if (animalStateMachine.currentState != animalStateMachine.RunState && !isDoingAttackAnimation)
             {
                 navMeshAgent.isStopped = false;
                 if (animalStateMachine.currentState == animalStateMachine.BiteState)
@@ -124,8 +141,27 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private bool IsPlayerInAttackRange()
+    {
+        return Vector3.Distance(transform.position, navMeshAgent.destination) <= navMeshAgent.stoppingDistance;
+    }
+
     public void Stun(float stunTime)
     {
+        
+        if (isInStunCooldown)
+        {
+            if (stunTimer >= stunCooldownSeconds)
+            {
+                isInStunCooldown = false;
+            } else
+            {
+                return;
+            }
+        }
+        
+        isInStunCooldown = true;
+        stunTimer = 0;
         animalStateMachine.ChangeState(animalStateMachine.StunState);
         isStunned = true;
         CancelInvoke(nameof(CancelStun));

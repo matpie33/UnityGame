@@ -1,4 +1,6 @@
-﻿public class RunState : MovementState
+﻿using UnityEngine;
+
+public class RunState : MovementState
 {
     private float runSpeed = 6f;
     private float sprintSpeed = 8f;
@@ -30,14 +32,23 @@
         }
         else if (ActionKeys.IsKeyPressed(ActionKeys.DODGE_RIGHT))
         {
+            RotatePlayerToCamera();
             stateMachine.ChangeState(stateMachine.doingAnimationState);
             characterController.animationsManager.SetAnimationToDodgeRight();
         }
         else if (ActionKeys.IsKeyPressed(ActionKeys.DODGE_LEFT))
         {
+            RotatePlayerToCamera();
             stateMachine.ChangeState(stateMachine.doingAnimationState);
             characterController.animationsManager.SetAnimationToDodgeLeft();
         }
+    }
+
+    private void RotatePlayerToCamera()
+    {
+        Vector3 eulerAngles = characterController.transform.eulerAngles;
+        eulerAngles.y = characterController.cameraController.transform.eulerAngles.y;
+        characterController.transform.eulerAngles = eulerAngles;
     }
 
     public override void OnTrigger(TriggerType triggerType)
