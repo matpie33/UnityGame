@@ -188,7 +188,7 @@ public class GameManager : Observer
                     }
                     else
                     {
-                        Destroy(objectWithHealth.gameObject);
+                        objectWithHealth.gameObject.GetComponent<Enemy>().Die();
                         objectsToDelete.Add(objectWithHealth);
                     }
                 }

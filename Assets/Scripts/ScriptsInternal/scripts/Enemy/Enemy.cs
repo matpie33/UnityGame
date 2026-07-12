@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
     private AnimalStateMachine animalStateMachine;
     private bool isStunned;
     private float offsetForStoppingDistance = .5f;
-
+    private bool isDead;
 
     private void Start()
     {
@@ -68,18 +68,15 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (isStunned || isDead)
+        {
+            return;
+        }
 
-        
         transform.LookAt(characterController.transform.position);
 
         float localMinDistance = Mathf.Infinity;
         Vector3 closestObject = Vector3.zero;
-
-
-        if (isStunned)
-        {
-            return;
-        }
         
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
@@ -152,4 +149,17 @@ public class Enemy : MonoBehaviour
         navMeshAgent.isStopped = true;
         animalStateMachine.ChangeState(animalStateMachine.IdleState);
     }
+
+    internal void Die()
+    {
+        isDead = true;
+        
+        Destroy(this.GetComponentInChildren<Collider>());
+        Destroy(this.GetComponentInChildren<Rigidbody>());
+        Destroy(this.GetComponentInChildren<NavMeshAgent>());
+        this.animalStateMachine.animalAnimationsManager.setAnimationToDeath();
+
+    }
+
+
 }

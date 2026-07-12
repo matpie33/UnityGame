@@ -12,7 +12,8 @@ public class AnimalAnimationsManager
         run,
         idle,
         bite,
-        stunned
+        stunned,
+        death
     }
 
     private String anim(Animation animation)
@@ -45,5 +46,10 @@ public class AnimalAnimationsManager
     {
         animator.applyRootMotion = true;
         animator.Play(anim(Animation.bite));
+    }
+
+    public void setAnimationToDeath()
+    {
+        animator.Play(anim(Animation.death));
     }
 }

@@ -99,11 +99,18 @@ public class UIUpdater : Observer
     }
 
     public void UpdateHealthBar(
+        ObjectWithHealth objectWithHealth,
         HealthState healthState,
         TextMeshProUGUI textComponent,
         Image healthBar
     )
     {
+        if (!healthState.IsAlive())
+        {
+            Destroy(objectWithHealth.gameObject.GetComponentInChildren<Canvas>().gameObject);
+            return;
+        }
+
         healthBar.fillAmount = Mathf.MoveTowards(
             healthBar.fillAmount,
             (float)healthState.value / (float)healthState.maxHealth,
@@ -227,7 +234,7 @@ public class UIUpdater : Observer
         UpdateExperience(characterController.levelData);
         foreach (ObjectWithHealth objectWithHealth in objectsWithHealth)
         {
-            UpdateHealthBar(
+            UpdateHealthBar(objectWithHealth,
                 objectWithHealth.healthState,
                 findHpTextInObject(objectWithHealth.gameObject),
                 findHealthBarForegroundInObject(objectWithHealth.gameObject)
@@ -260,7 +267,7 @@ public class UIUpdater : Observer
 
     internal void UpdatePlayerHealth(HealthState healthState)
     {
-        UpdateHealthBar(healthState, playerUI.healthText, playerUI.healthBar);
+        UpdateHealthBar(characterController.GetComponent<ObjectWithHealth>(), healthState, playerUI.healthText, playerUI.healthBar);
     }
 
     public override void OnEvent(EventDTO eventDTO)
