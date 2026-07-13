@@ -29,7 +29,6 @@ public class Enemy : MonoBehaviour
 
     private AnimalStateMachine animalStateMachine;
     private bool isStunned;
-    private float offsetForStoppingDistance = .5f;
     private bool isDead;
     private bool isInStunCooldown;
     private int stunCooldownSeconds = 15;
@@ -123,19 +122,11 @@ public class Enemy : MonoBehaviour
             {
 
                 navMeshAgent.isStopped = true;
-                if (animalStateMachine.currentState == animalStateMachine.RunState)
-                {
-                    navMeshAgent.stoppingDistance += offsetForStoppingDistance;
-                }
                 animalStateMachine.ChangeState(animalStateMachine.BiteState);
             }
             else if (animalStateMachine.currentState != animalStateMachine.RunState && !isDoingAttackAnimation)
             {
                 navMeshAgent.isStopped = false;
-                if (animalStateMachine.currentState == animalStateMachine.BiteState)
-                {
-                    navMeshAgent.stoppingDistance -= offsetForStoppingDistance;
-                }
                 animalStateMachine.ChangeState(animalStateMachine.RunState);
             }
         }
