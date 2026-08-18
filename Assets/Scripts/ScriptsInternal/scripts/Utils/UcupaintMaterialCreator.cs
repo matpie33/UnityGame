@@ -7,19 +7,11 @@ public static class UcupaintMaterialCreator
     private const string MenuPath =
         "Assets/Recreate ucupaint materials";
 
-    // ------------------------------------------------------------
-    // MENU VALIDATION
-    // ------------------------------------------------------------
-
     [MenuItem(MenuPath, true)]
     private static bool ValidateCreateMaterials()
     {
         return GetSelectedFBXPath() != null;
     }
-
-    // ------------------------------------------------------------
-    // MAIN
-    // ------------------------------------------------------------
 
     [MenuItem(MenuPath)]
     private static void CreateMaterials()
@@ -35,7 +27,7 @@ public static class UcupaintMaterialCreator
         string directory =
             Path.GetDirectoryName(fbxPath).Replace("\\", "/");
 
-        Debug.Log($"Processing FBX: {fbxPath}");
+        Debug.Log($"Processing file: {fbxPath}");
 
         Object[] assets =
             AssetDatabase.LoadAllAssetsAtPath(fbxPath);
@@ -52,12 +44,8 @@ public static class UcupaintMaterialCreator
             string materialName = sourceMaterial.name;
 
             Debug.Log(
-                $"Found material in FBX: {materialName}"
+                $"Found material in file: {materialName}"
             );
-
-            // ----------------------------------------------------
-            // Find same-name texture
-            // ----------------------------------------------------
 
             string texturePath =
                 FindTexture(
@@ -92,12 +80,8 @@ public static class UcupaintMaterialCreator
                 continue;
             }
 
-            // ----------------------------------------------------
-            // Create / load material
-            // ----------------------------------------------------
-
             string materialPath =
-                $"{directory}/{materialName}.mat";
+                $"{directory}/Materials/{materialName}.mat";
 
             Material material =
                 AssetDatabase.LoadAssetAtPath<Material>(
@@ -144,10 +128,6 @@ public static class UcupaintMaterialCreator
                 );
             }
 
-            // ----------------------------------------------------
-            // Base Color
-            // ----------------------------------------------------
-
             if (material.HasProperty("_BaseColorMap"))
             {
                 material.SetTexture(
@@ -168,9 +148,6 @@ public static class UcupaintMaterialCreator
                 $"{materialName} → {texturePath}"
             );
 
-            // ----------------------------------------------------
-            // Explicit FBX remapping
-            // ----------------------------------------------------
 
             ModelImporter importer =
                 AssetImporter.GetAtPath(fbxPath)
@@ -192,7 +169,6 @@ public static class UcupaintMaterialCreator
 
         AssetDatabase.SaveAssets();
 
-        // Reimport once, after ALL remaps have been added.
         AssetDatabase.ImportAsset(
             fbxPath,
             ImportAssetOptions.ForceUpdate
@@ -205,10 +181,6 @@ public static class UcupaintMaterialCreator
             $"Skipped: {skipped}"
         );
     }
-
-    // ------------------------------------------------------------
-    // GET SELECTED FBX
-    // ------------------------------------------------------------
 
     private static string GetSelectedFBXPath()
     {
@@ -230,7 +202,6 @@ public static class UcupaintMaterialCreator
         if (string.IsNullOrEmpty(path))
             return null;
 
-        // Normalize path.
         path =
             path.Replace("\\", "/");
 
@@ -244,19 +215,11 @@ public static class UcupaintMaterialCreator
         return path;
     }
 
-    // ------------------------------------------------------------
-    // FIND TEXTURE
-    // ------------------------------------------------------------
-
     private static string FindTexture(
      string directory,
      string materialName)
     {
         string fileName = materialName + ".png";
-
-        // ------------------------------------------------------------
-        // 1. Same directory as the FBX
-        // ------------------------------------------------------------
 
         string path = $"{directory}/{fileName}";
 
@@ -268,10 +231,6 @@ public static class UcupaintMaterialCreator
 
             return path;
         }
-
-        // ------------------------------------------------------------
-        // 2. Textures subfolder
-        // ------------------------------------------------------------
 
         string texturesDirectory =
             $"{directory}/Textures";
@@ -287,10 +246,6 @@ public static class UcupaintMaterialCreator
 
             return path;
         }
-
-        // ------------------------------------------------------------
-        // Also support other common image formats
-        // ------------------------------------------------------------
 
         string[] extensions =
         {
