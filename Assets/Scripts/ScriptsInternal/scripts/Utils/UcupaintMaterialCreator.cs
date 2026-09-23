@@ -219,7 +219,7 @@ public static class UcupaintMaterialCreator
      string directory,
      string materialName)
     {
-        string fileName = materialName + ".png";
+        string fileName = materialName + " Color.png";
 
         string path = $"{directory}/{fileName}";
 
