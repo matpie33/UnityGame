@@ -170,10 +170,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
         DetectObjectsInFront(objectsInFrontVerticalDetector, objectsInFrontHorizontalDetector);
 
         float height = ledgeDetectorHeight;
-        if (!characterController.groundDetector.isCollidingWithGround)
-        {
-            height -= 2;
-        }
         RaycastHit ledgeDetector = CastRayVertical(
             height - CrouchingAdjustment(),
             true,
@@ -196,7 +192,6 @@ public class ObjectsInFrontDetector : MonoBehaviour
             {
                 if (collisionYPoint > transform.position.y + aboveHeadOffset)
                 {
-
                     detectedWallType = WallType.ABOVE_HEAD;
                 }
                 else if (collisionYPoint > transform.position.y + aboveHipsOffset)
@@ -311,7 +306,7 @@ public class ObjectsInFrontDetector : MonoBehaviour
         );
         if (debug)
         {
-            Debug.DrawRay(originPosition, transform.up * -1, Color.red);
+            Debug.DrawLine(originPosition, originPosition -transform.up * maxDistance , Color.red);
         }
         return result;
     }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
@@ -32,7 +34,8 @@ public class PlayerAttackController : MonoBehaviour
 
     void Attack()
     {
-        if (comboCompleted)
+        var currentState = characterController.stateMachine.currentState;
+        if (comboCompleted || !(currentState is  RunState || currentState is DoingAnimationState))
         {
             return;
         }
