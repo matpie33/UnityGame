@@ -4,7 +4,7 @@ public class EnemyInRangeDetector : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.root.tag.Equals(Tags.ENEMY))
+        if (other.GetComponentInParent<Enemy>() != null)
         {
             SetEnemyInRange(other, true);
         }
@@ -12,7 +12,7 @@ public class EnemyInRangeDetector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.root.Equals(Tags.ENEMY))
+        if (other.GetComponentInParent<Enemy>() != null)
         {
             SetEnemyInRange(other, false);
         }
