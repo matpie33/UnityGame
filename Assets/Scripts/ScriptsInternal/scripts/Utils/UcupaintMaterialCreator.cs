@@ -220,6 +220,7 @@ public static class UcupaintMaterialCreator
      string materialName)
     {
         string fileName = materialName + " Color.png";
+        string alternativeFileName = materialName + ".png";
 
         string path = $"{directory}/{fileName}";
 
@@ -237,6 +238,17 @@ public static class UcupaintMaterialCreator
 
         path =
             $"{texturesDirectory}/{fileName}";
+        
+
+        if (File.Exists(path))
+        {
+            Debug.Log(
+                $"Found texture in Textures folder: {path}"
+            );
+
+            return path;
+        }
+        path = $"{texturesDirectory}/{alternativeFileName}";
 
         if (File.Exists(path))
         {
