@@ -53,29 +53,68 @@ public static class UcupaintMaterialCreator
                     materialName
                 );
 
-            if (texturePath == null)
+            string normalTexturePath =
+                FindNormalTexture(
+                    directory,
+                    materialName
+                );
+
+            if (texturePath == null &&
+                normalTexturePath == null)
             {
                 Debug.LogWarning(
-                    $"Texture not found for '{materialName}'.\n" +
-                    $"Expected:\n" +
-                    $"{directory}/{materialName}.png"
+                    $"Textures not found for '{materialName}'.\n" +
+                    $"Expected a diffuse texture and/or a texture ending with:\n" +
+                    $"{materialName}Normal.png"
                 );
 
                 skipped++;
                 continue;
             }
 
-            Texture2D texture =
-                AssetDatabase.LoadAssetAtPath<Texture2D>(
-                    texturePath
-                );
+            Texture2D texture = null;
 
-            if (texture == null)
+            if (texturePath != null)
             {
-                Debug.LogWarning(
-                    $"Could not load texture:\n{texturePath}"
-                );
+                texture =
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(
+                        texturePath
+                    );
 
+                if (texture == null)
+                {
+                    Debug.LogWarning(
+                        $"Could not load texture:\n{texturePath}"
+                    );
+
+                    texturePath = null;
+                }
+            }
+
+            Texture2D normalTexture = null;
+
+            if (normalTexturePath != null)
+            {
+                ConfigureNormalMapTexture(normalTexturePath);
+
+                normalTexture =
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(
+                        normalTexturePath
+                    );
+
+                if (normalTexture == null)
+                {
+                    Debug.LogWarning(
+                        $"Could not load normal texture:\n{normalTexturePath}"
+                    );
+
+                    normalTexturePath = null;
+                }
+            }
+
+            if (texture == null &&
+                normalTexture == null)
+            {
                 skipped++;
                 continue;
             }
@@ -128,7 +167,8 @@ public static class UcupaintMaterialCreator
                 );
             }
 
-            if (material.HasProperty("_BaseColorMap"))
+            if (texture != null &&
+                material.HasProperty("_BaseColorMap"))
             {
                 material.SetTexture(
                     "_BaseColorMap",
@@ -139,14 +179,36 @@ public static class UcupaintMaterialCreator
                     "_BaseColor",
                     Color.white
                 );
+
+                Debug.Log(
+                    $"Assigned Base Color:\n" +
+                    $"{materialName} → {texturePath}"
+                );
+            }
+
+            if (normalTexture != null &&
+                material.HasProperty("_NormalMap"))
+            {
+                material.SetTexture(
+                    "_NormalMap",
+                    normalTexture
+                );
+
+                if (material.HasProperty("_NormalScale"))
+                {
+                    material.SetFloat(
+                        "_NormalScale",
+                        1f
+                    );
+                }
+
+                Debug.Log(
+                    $"Assigned Normal Map:\n" +
+                    $"{materialName} → {normalTexturePath}"
+                );
             }
 
             EditorUtility.SetDirty(material);
-
-            Debug.Log(
-                $"Assigned Base Color:\n" +
-                $"{materialName} → {texturePath}"
-            );
 
 
             ModelImporter importer =
@@ -221,6 +283,7 @@ public static class UcupaintMaterialCreator
     {
         string fileName = materialName + " Color.png";
         string alternativeFileName = materialName + ".png";
+        string diffuseFileName = materialName + " Diffuse.png";
 
         string path = $"{directory}/{fileName}";
 
@@ -259,6 +322,19 @@ public static class UcupaintMaterialCreator
             return path;
         }
 
+        path = $"{texturesDirectory}/{diffuseFileName}";
+
+        if (File.Exists(path))
+        {
+            Debug.Log(
+                $"Found texture in Textures folder: {path}"
+            );
+
+            return path;
+        }
+
+        
+
         string[] extensions =
         {
         ".jpg",
@@ -283,10 +359,87 @@ public static class UcupaintMaterialCreator
                 $"{texturesDirectory}/{materialName}{extension}";
 
             if (File.Exists(path))
+            {
+                Debug.Log($" found diffuse texture: {path}");
                 return path;
+            }
+        }
+        Debug.Log("not found diffuse texture");
+        return null;
+    }
+
+    private static string FindNormalTexture(
+        string directory,
+        string materialName)
+    {
+        string[] searchDirectories =
+        {
+            directory,
+            $"{directory}/Textures"
+        };
+
+        foreach (string searchDirectory in searchDirectories)
+        {
+            if (!Directory.Exists(searchDirectory))
+                continue;
+
+            string[] files =
+                Directory.GetFiles(
+                    searchDirectory
+                );
+
+            foreach (string file in files)
+            {
+                string fileName =
+                    Path.GetFileName(file);
+
+                if (!fileName.StartsWith(
+                        materialName,
+                        System.StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (!fileName.EndsWith(
+                        "Normal.png", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                string path =
+                    file.Replace("\\", "/");
+
+                Debug.Log(
+                    $"Found normal texture: {path}"
+                );
+
+                return path;
+            }
         }
 
         return null;
     }
 
+    private static void ConfigureNormalMapTexture(
+        string texturePath)
+    {
+        TextureImporter importer =
+            AssetImporter.GetAtPath(texturePath)
+            as TextureImporter;
+
+        if (importer == null)
+            return;
+
+        importer.textureType =
+            TextureImporterType.NormalMap;
+
+        importer.sRGBTexture = false;
+
+        EditorUtility.SetDirty(importer);
+        importer.SaveAndReimport();
+
+        Debug.Log(
+            $"Configured normal map texture: {texturePath}"
+        );
+    }
 }
