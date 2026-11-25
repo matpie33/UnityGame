@@ -24,7 +24,7 @@ public static class UcupaintMaterialCreator
             return;
         }
 
-        string directory =
+        string modelsDirectory =
             Path.GetDirectoryName(fbxPath).Replace("\\", "/");
 
         Debug.Log($"Processing file: {fbxPath}");
@@ -44,169 +44,51 @@ public static class UcupaintMaterialCreator
             string materialName = sourceMaterial.name;
 
             Debug.Log(
-                $"Found material in file: {materialName}"
+                $"Found material name: {materialName}"
             );
 
-            string texturePath =
-                FindTexture(
-                    directory,
+            string diffuseTexturePath =
+                FindDiffuseTexture(
+                    modelsDirectory,
                     materialName
                 );
 
             string normalTexturePath =
                 FindNormalTexture(
-                    directory,
+                    modelsDirectory,
                     materialName
                 );
 
-            if (texturePath == null &&
+            if (diffuseTexturePath == null &&
                 normalTexturePath == null)
             {
                 Debug.LogWarning(
-                    $"Textures not found for '{materialName}'.\n" +
-                    $"Expected a diffuse texture and/or a texture ending with:\n" +
-                    $"{materialName}Normal.png"
+                    $"Textures not found for '{materialName}'.\n"
                 );
 
                 skipped++;
                 continue;
             }
 
-            Texture2D texture = null;
+            Texture2D diffuseTexture = LoadDiffuseTexture(ref diffuseTexturePath);
+            Texture2D normalTexture = LoadAndConfigureNormalTexture(ref normalTexturePath);
 
-            if (texturePath != null)
-            {
-                texture =
-                    AssetDatabase.LoadAssetAtPath<Texture2D>(
-                        texturePath
-                    );
-
-                if (texture == null)
-                {
-                    Debug.LogWarning(
-                        $"Could not load texture:\n{texturePath}"
-                    );
-
-                    texturePath = null;
-                }
-            }
-
-            Texture2D normalTexture = null;
-
-            if (normalTexturePath != null)
-            {
-                ConfigureNormalMapTexture(normalTexturePath);
-
-                normalTexture =
-                    AssetDatabase.LoadAssetAtPath<Texture2D>(
-                        normalTexturePath
-                    );
-
-                if (normalTexture == null)
-                {
-                    Debug.LogWarning(
-                        $"Could not load normal texture:\n{normalTexturePath}"
-                    );
-
-                    normalTexturePath = null;
-                }
-            }
-
-            if (texture == null &&
+            if (diffuseTexture == null &&
                 normalTexture == null)
             {
                 skipped++;
                 continue;
             }
 
-            string materialPath =
-                $"{directory}/Materials/{materialName}.mat";
-
-            Material material =
-                AssetDatabase.LoadAssetAtPath<Material>(
-                    materialPath
-                );
-
-            if (material == null)
+            Material material;
+            bool shaderLitFound = CreateMaterial(modelsDirectory, ref created, ref updated, materialName, out material);
+            if (!shaderLitFound)
             {
-                Shader shader =
-                    Shader.Find("HDRP/Lit");
-
-                if (shader == null)
-                {
-                    Debug.LogError(
-                        "HDRP/Lit shader not found."
-                    );
-
-                    return;
-                }
-
-                material =
-                    new Material(shader);
-
-                material.name =
-                    materialName;
-
-                AssetDatabase.CreateAsset(
-                    material,
-                    materialPath
-                );
-
-                created++;
-
-                Debug.Log(
-                    $"Created: {materialPath}"
-                );
-            }
-            else
-            {
-                updated++;
-
-                Debug.Log(
-                    $"Updating: {materialPath}"
-                );
+                return;
             }
 
-            if (texture != null &&
-                material.HasProperty("_BaseColorMap"))
-            {
-                material.SetTexture(
-                    "_BaseColorMap",
-                    texture
-                );
-
-                material.SetColor(
-                    "_BaseColor",
-                    Color.white
-                );
-
-                Debug.Log(
-                    $"Assigned Base Color:\n" +
-                    $"{materialName} → {texturePath}"
-                );
-            }
-
-            if (normalTexture != null &&
-                material.HasProperty("_NormalMap"))
-            {
-                material.SetTexture(
-                    "_NormalMap",
-                    normalTexture
-                );
-
-                if (material.HasProperty("_NormalScale"))
-                {
-                    material.SetFloat(
-                        "_NormalScale",
-                        1f
-                    );
-                }
-
-                Debug.Log(
-                    $"Assigned Normal Map:\n" +
-                    $"{materialName} → {normalTexturePath}"
-                );
-            }
+            AssignDiffuseTexture(materialName, diffuseTexturePath, diffuseTexture, material);
+            AssignNormalTexture(materialName, normalTexturePath, normalTexture, material);
 
             EditorUtility.SetDirty(material);
 
@@ -244,6 +126,154 @@ public static class UcupaintMaterialCreator
         );
     }
 
+    private static Texture2D LoadAndConfigureNormalTexture(ref string normalTexturePath)
+    {
+        Texture2D normalTexture = null;
+
+        if (normalTexturePath != null)
+        {
+            ConfigureNormalMapTexture(normalTexturePath);
+
+            normalTexture =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    normalTexturePath
+                );
+
+            if (normalTexture == null)
+            {
+                Debug.LogWarning(
+                    $"Could not load normal texture:\n{normalTexturePath}"
+                );
+
+                normalTexturePath = null;
+            }
+        }
+
+        return normalTexture;
+    }
+
+    private static Texture2D LoadDiffuseTexture(ref string diffuseTexturePath)
+    {
+        Texture2D diffuseTexture = null;
+
+        if (diffuseTexturePath != null)
+        {
+            diffuseTexture =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    diffuseTexturePath
+                );
+
+            if (diffuseTexture == null)
+            {
+                Debug.LogWarning(
+                    $"Could not load texture:\n{diffuseTexturePath}"
+                );
+
+                diffuseTexturePath = null;
+            }
+        }
+
+        return diffuseTexture;
+    }
+
+    private static void AssignNormalTexture(string materialName, string normalTexturePath, Texture2D normalTexture, Material material)
+    {
+        if (normalTexture != null &&
+                        material.HasProperty("_NormalMap"))
+        {
+            material.SetTexture(
+                "_NormalMap",
+                normalTexture
+            );
+
+            if (material.HasProperty("_NormalScale"))
+            {
+                material.SetFloat(
+                    "_NormalScale",
+                    1f
+                );
+            }
+
+            Debug.Log(
+                $"Assigned Normal Map:\n" +
+                $"{materialName} → {normalTexturePath}"
+            );
+        }
+    }
+
+    private static void AssignDiffuseTexture(string materialName, string diffuseTexturePath, Texture2D diffuseTexture, Material material)
+    {
+        if (diffuseTexture != null &&
+                        material.HasProperty("_BaseColorMap"))
+        {
+            material.SetTexture(
+                "_BaseColorMap",
+                diffuseTexture
+            );
+
+            material.SetColor(
+                "_BaseColor",
+                Color.white
+            );
+
+            Debug.Log(
+                $"Assigned Base Color:\n" +
+                $"{materialName} → {diffuseTexturePath}"
+            );
+        }
+    }
+
+    private static bool CreateMaterial(string modelsDirectory, ref int created, ref int updated, string materialName, out Material material)
+    {
+        string materialPath =
+                        $"{modelsDirectory}/Materials/{materialName}.mat";
+
+        material = AssetDatabase.LoadAssetAtPath<Material>(
+                materialPath
+            );
+        if (material == null)
+        {
+            Shader shader =
+                Shader.Find("HDRP/Lit");
+
+            if (shader == null)
+            {
+                Debug.LogError(
+                    "HDRP/Lit shader not found."
+                );
+
+                return false;
+            }
+
+            material =
+                new Material(shader);
+
+            material.name =
+                materialName;
+
+            AssetDatabase.CreateAsset(
+                material,
+                materialPath
+            );
+
+            created++;
+
+            Debug.Log(
+                $"Created: {materialPath}"
+            );
+        }
+        else
+        {
+            updated++;
+
+            Debug.Log(
+                $"Updating: {materialPath}"
+            );
+        }
+
+        return true;
+    }
+
     private static string GetSelectedFBXPath()
     {
         Object[] selectedObjects =
@@ -277,115 +307,42 @@ public static class UcupaintMaterialCreator
         return path;
     }
 
-    private static string FindTexture(
-     string directory,
+    private static string FindDiffuseTexture(
+     string modelsDirectory,
      string materialName)
     {
-        string fileName = materialName + " Color.png";
-        string alternativeFileName = materialName + ".png";
-        string diffuseFileName = materialName + " Diffuse.png";
 
-        string path = $"{directory}/{fileName}";
-
-        if (File.Exists(path))
+        string[] suffixes =
         {
-            Debug.Log(
-                $"Found texture next to FBX: {path}"
-            );
+            " Color", " Diffuse", ""
+        };
 
-            return path;
-        }
-
-        string texturesDirectory =
-            $"{directory}/Textures";
-
-        path =
-            $"{texturesDirectory}/{fileName}";
-        
-
-        if (File.Exists(path))
+        foreach (string suffix in suffixes)
         {
-            Debug.Log(
-                $"Found texture in Textures folder: {path}"
-            );
-
-            return path;
-        }
-        path = $"{texturesDirectory}/{alternativeFileName}";
-
-        if (File.Exists(path))
-        {
-            Debug.Log(
-                $"Found texture in Textures folder: {path}"
-            );
-
-            return path;
-        }
-
-        path = $"{texturesDirectory}/{diffuseFileName}";
-
-        if (File.Exists(path))
-        {
-            Debug.Log(
-                $"Found texture in Textures folder: {path}"
-            );
-
-            return path;
-        }
-
-        
-
-        string[] extensions =
-        {
-        ".jpg",
-        ".jpeg",
-        ".tga",
-        ".tif",
-        ".tiff",
-        ".exr"
-    };
-
-        foreach (string extension in extensions)
-        {
-            // Same directory
-            path =
-                $"{directory}/{materialName}{extension}";
-
-            if (File.Exists(path))
-                return path;
-
-            // Textures directory
-            path =
-                $"{texturesDirectory}/{materialName}{extension}";
-
+            string path = $"{modelsDirectory}/textures/{materialName}{suffix}.png";
             if (File.Exists(path))
             {
-                Debug.Log($" found diffuse texture: {path}");
+                Debug.Log(
+                    $"Found diffuse texture in textures directory: {path}"
+                );
+
                 return path;
             }
         }
-        Debug.Log("not found diffuse texture");
+
+        Debug.Log($"Did not find diffuse texture in models/textures directory for {materialName}");
         return null;
     }
 
     private static string FindNormalTexture(
-        string directory,
+        string modelsDirectory,
         string materialName)
     {
-        string[] searchDirectories =
-        {
-            directory,
-            $"{directory}/Textures"
-        };
 
-        foreach (string searchDirectory in searchDirectories)
-        {
-            if (!Directory.Exists(searchDirectory))
-                continue;
 
             string[] files =
                 Directory.GetFiles(
-                    searchDirectory
+                    $"{modelsDirectory}/Textures"
                 );
 
             foreach (string file in files)
@@ -393,30 +350,18 @@ public static class UcupaintMaterialCreator
                 string fileName =
                     Path.GetFileName(file);
 
-                if (!fileName.StartsWith(
-                        materialName,
-                        System.StringComparison.OrdinalIgnoreCase))
+                if (fileName.Equals($"{materialName} Normal.png"))
                 {
-                    continue;
+                    Debug.Log(
+                        $"Found normal texture: {file}"
+                    );
+                    return file.Replace("\\", "/");
                 }
 
-                if (!fileName.EndsWith(
-                        "Normal.png", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                string path =
-                    file.Replace("\\", "/");
-
-                Debug.Log(
-                    $"Found normal texture: {path}"
-                );
-
-                return path;
             }
-        }
-
+        Debug.Log(
+                $"Did not find normal texture for {materialName} in models/textures directory"
+            );
         return null;
     }
 
